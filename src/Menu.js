@@ -14,7 +14,7 @@ import GlobalState from "./GlobalState";
 import { List, ListItem } from "@material-ui/core";
 
 import ListItemText from "@material-ui/core/ListItemText";
-import { MenuList , getMenuId } from "./MenuList";
+import { getMenuRole, getMenuId } from "./MenuList";
 import { border, borderBottom } from "@material-ui/system";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,21 +32,24 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1rem",
     color: "#777",
     cursor: "pointer",
-    paddingTop: "15px",
-    paddingBottom: "15px",
+    paddingTop: "10px",
+    paddingBottom: "8px",
     borderBottom: "1px solid #eee",
   },
 
   iconSelected: {
-    color: theme.palette.primary.main,
+    color: "#fff",
+    backgroundColor:  theme.palette.primary.main,
+    transition: "all 0.1s ease-in-out"
   },
 
-  menuText:{
-    fontSize: '0.8rem'
-  }
+  menuText: {
+    fontSize: "1rem",
+    fontWeight: "500"
+  },
 }));
 
-export default function Menu() {
+export default function MyMenu() {
   const classes = useStyles();
   const [state, setState] = React.useContext(GlobalState);
 
@@ -60,44 +63,52 @@ export default function Menu() {
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
-    history.push(`/${getMenuId(index)}`);
+    history.push(`/${getMenuId(state.role,index)}`);
     setState((state) => ({ ...state, currentMenuIndex: index }));
   };
 
   return (
     <React.Fragment>
       <List>
-        {MenuList.map(
-          (item) =>
-            !item.hidden && (
-              // <ListItem button selected={selectedIndex === item.index} onClick={(event) => handleListItemClick(event, item.index)}>
-              // <ListItemIcon>
-              //     {item.icon}
-              // </ListItemIcon>
-              // <ListItemText primary={`${item.title}`} />
-              // </ListItem>
-              <React.Fragment key={`${item.id}`}>
-                <div key={`${item.id}`}
-                  className={clsx(
-                    classes.icon,
-                    selectedIndex === item.index && classes.iconSelected
-                  )}
-                  onClick={(event) => handleListItemClick(event, item.index)}
-                >
-                  <Grid 
-                    container
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
+        {state.role &&
+          getMenuRole(state.role).map(
+            (item) =>
+              !item.hidden && (
+                // <ListItem button selected={selectedIndex === item.index} onClick={(event) => handleListItemClick(event, item.index)}>
+                // <ListItemIcon>
+                //     {item.icon}
+                // </ListItemIcon>
+                // <ListItemText primary={`${item.title}`} />
+                // </ListItem>
+                <React.Fragment key={`${item.id}`}>
+                  <div
+                    key={`${item.id}`}
+                    className={clsx(
+                      classes.icon,
+                      selectedIndex === item.index && classes.iconSelected
+                    )}
+                    onClick={(event) => handleListItemClick(event, item.index)}
                   >
-                    <Grid item>{item.icon}</Grid>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="flex-start"
+                      alignItems="flex-start"
+                      spacing={3}
+                      style={{paddingLeft:"15px"}}
+                    >
+                      <Grid item>{item.icon}</Grid>
 
-                    <Grid item><span className={classes.menuText}>{`${item.title}`}</span> </Grid>
-                  </Grid>
-                </div>
-              </React.Fragment>
-            )
-        )}
+                      <Grid item style={{textAlign:"left"}}>
+                        <span
+                          className={classes.menuText}
+                        >{`${item.title}`}</span>{" "}
+                      </Grid>
+                    </Grid>
+                  </div>
+                </React.Fragment>
+              )
+          )}
       </List>
     </React.Fragment>
   );

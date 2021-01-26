@@ -33,6 +33,11 @@ import { useHistory } from "react-router-dom";
 import UserService from "./services/UserService";
 import { getMenuId } from "./MenuList";
 
+import { useMediaQuery } from 'react-responsive'
+import { borderRadius } from "@material-ui/system";
+import { setRole } from "./Role";
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100vh",
@@ -48,10 +53,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundPosition: "center",
   },
   paper: {
-    margin: theme.spacing(8, 4),
+    // margin: theme.spacing(15, 2),
+    padding: theme.spacing(4,4),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    // border: `2px solid ${theme.palette.primary.main}`,
+    // borderRadius: "8px"
   },
   avatar: {
     margin: theme.spacing(1),
@@ -71,7 +79,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
 
-
   alert: {
     width: "100%",
     marginTop: theme.spacing(2),
@@ -80,13 +87,60 @@ const useStyles = makeStyles((theme) => ({
 
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
+    color: "#fff",
   },
+
+  pageBg:{
+    paddingTop: theme.spacing(15),
+   
+    background: "linear-gradient(3deg, rgba(2,0,36,1) 0%, rgba(9,77,121,1) 35%, rgba(0,212,255,1) 100%)",
+    height: "100vh",
+    margin: 0,
+    padding:0,
+  },
+
+  appbarCenter: {
+    position: "fixed",
+    // width: "260px",
+    top: theme.spacing(9.5),
+    left: "50%",
+    marginLeft: "-145px",
+    alignItems: "center",
+    justify: "center",
+    display: "flex",
+    backgroundColor: "#fff",
+    padding: "5px 20px 15px 20px",
+    borderRadius: "8px"
+  },
+
+  logoImage: {
+    width: "30px",
+    height: "30px",
+    marginLeft: "0px",
+  },
+
+  appbarTitle: {
+    color: "#00a1c5",
+    fontSize: "1.2rem",
+    fontWeight: "500",
+    marginRight: "15px",
+  },
+
+  adminPanelLabel: {
+    color: theme.palette.primary.main, 
+    marginBottom:"20px"
+  }
+
+
+
+
 }));
 
 export default function SignIn() {
   const classes = useStyles();
   const [state, setState] = React.useContext(GlobalState);
+  const isMobile = useMediaQuery({ maxWidth: 1224 })
+
 
   let history = useHistory();
 
@@ -96,62 +150,58 @@ export default function SignIn() {
 
   const [saveChecked, setSaveChecked] = React.useState(false);
 
-  const [showPassword, setShowPassword] = React.useState(false)
+  const [showPassword, setShowPassword] = React.useState(false);
 
-  const [error, setError] = React.useState(null)
-  const [submiting, setSubmiting] = React.useState(false)
+  const [error, setError] = React.useState(null);
+  const [submiting, setSubmiting] = React.useState(false);
 
   const signIn = () => {
+    setSubmiting(true);
 
-      setSubmiting(true)
-
-      UserService.signIn({
-        email: username,
-        password: password
-      }).then( res => {
-
-        setSubmiting(false)
-        if (res.data.status === 'OK')
-        {
-          setError(null)
-          const token = res.data.token
+    UserService.signIn({
+      username: username,
+      password: password,
+    })
+      .then((res) => {
+        setSubmiting(false);
+        if (res.data.status === "OK") {
+          setError(null);
+          const token = res.data.token;
           if (saveChecked) {
-            localStorage.setItem("app-auth-token", token)
+            localStorage.setItem("medexadmin-auth-token", token);
           } else {
-            sessionStorage.setItem("app-auth-token", token)
+            sessionStorage.setItem("medexadmin-auth-token", token);
           }
 
-          setState((state) => ({ ...state, signedIn: true }))
-          history.push(`/${getMenuId(0)}`)
+          setState((state) => ({ ...state, signedIn: true }));
+          setRole(res.data.roles[0])
+          setState((state) => ({ ...state, currentMenuIndex: 0 }));
+          history.push(`/${getMenuId(res.data.roles[0], 0)}`);
+        } else if (res.data.status === "FAILED") {
+          setError(res.data.error);
+        } else {
+          setError("Sorry, something went wrong, please try again.");
         }
-        else if (res.data.status === 'FAILED')
-        {
-          setError(res.data.error)
-        }
-        else
-        {
-          setError('Sorry, something went wrong, please try again.')
-        }
-      }
-      ).catch(err => {
-        setSubmiting(false)
-        console.error(err)
-        setError('Sorry, something went wrong, please try again.')
       })
-  }
+      .catch((err) => {
+        setSubmiting(false);
+        console.error(err);
+        setError("Sorry, something went wrong, please try again.");
+      });
+  };
 
   const usernameChanged = (event) => {
-    setUsername(event.target.value)
-    setError(null)
+    setUsername(event.target.value);
+    setError(null);
   };
 
   const passwordChanged = (event) => {
-    setPassword(event.target.value)
-    setError(null)
+    setPassword(event.target.value);
+    setError(null);
   };
 
   const handleClickShowPassword = () => {
-    setShowPassword(!showPassword)
+    setShowPassword(!showPassword);
   };
 
   const handleMouseDownPassword = (event) => {
@@ -163,120 +213,149 @@ export default function SignIn() {
   };
 
   return (
-    <Grid container component="main" className={classes.root}>
+
+    <div className={classes.pageBg}>
+
+
+<div className={classes.appbarCenter}>
+
+
+    <span className={classes.appbarTitle}>
+      Medical Express Clinic
+    </span>
+
+  <img
+    className={classes.logoImage}
+    src="/images/logo.png"
+    alt="logo image"
+  />
+
+</div>
+
+    <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+
+      <Paper elevation={20}>
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
+          <Typography component="h1" variant="h6" className={classes.adminPanelLabel}>
+            Admin Panel
           </Typography>
-        
-           {error && (
-              <div className={classes.alert}>
-                  <Alert severity="error"> <div style={{lineHeight:"1.5rem", textAlign:"justify"}}>{error}</div></Alert>
-              </div>
-            )}
 
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              value={username}
-              onChange={usernameChanged}
-              on
-              autoFocus
-            />
-            <FormControl
-              fullWidth
-              required
-              className={clsx(classes.margin, classes.textField)}
-              variant="outlined"
-              onKeyPress={(event) => {
-                if (event.key === "Enter") {
-                  signIn();
-                }
-              }}
-            >
-              <InputLabel htmlFor="outlined-adornment-password">
+          {error && (
+            <div className={classes.alert}>
+              <Alert severity="error">
                 {" "}
-                Password{" "}
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                name="outlined-adornment-password"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={passwordChanged}
-                autoComplete = "current-password"
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      tabindex="-1"
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                labelWidth={100}
-              />
-            </FormControl>
+                <div style={{ lineHeight: "1.5rem", textAlign: "justify" }}>
+                  {error}
+                </div>
+              </Alert>
+            </div>
+          )}
 
-            <FormControlLabel style={{textAlign:"left", width:"100%"}}
-              control={<Checkbox value="remember" color="secondary" checked={saveChecked} onChange={saveCheckedChanged} />}
-              label="Remember me"
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            name="email"
+            autoComplete="username"
+            value={username}
+            onChange={usernameChanged}
+            on
+            autoFocus
+          />
+          <FormControl
+            fullWidth
+            required
+            className={clsx(classes.margin, classes.textField)}
+            variant="outlined"
+            onKeyPress={(event) => {
+              if (event.key === "Enter") {
+                signIn();
+              }
+            }}
+          >
+            <InputLabel htmlFor="outlined-adornment-password">
+              {" "}
+              Password{" "}
+            </InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-password"
+              name="outlined-adornment-password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={passwordChanged}
+              autoComplete="current-password"
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    tabindex="-1"
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              labelWidth={100}
             />
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              onClick = {signIn}
-              className={classes.submit}
-            >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="/forgotpassword" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-             
-            </Grid>
+          </FormControl>
 
-            <Backdrop className={classes.backdrop} open={submiting} >
-                     <Grid container direction="column" justify="center" alignItems="center" spacing={2}>
-                         <Grid item>
-                            <CircularProgress color="inherit" />
-                         </Grid>
-                         <Grid item>
-                                 <span style={{textAlign:"center", color:"#fff"}}> Please wait ... </span>
-                         </Grid>
-                     </Grid>
-             </Backdrop>
-
-            <Box mt={5}>
-              <Copyright />
-            </Box>
-         
+          <FormControlLabel
+            style={{ textAlign: "left", width: "100%" }}
+            control={
+              <Checkbox
+                value="remember"
+                color="secondary"
+                checked={saveChecked}
+                onChange={saveCheckedChanged}
+              />
+            }
+            label="Remember me"
+          />
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={signIn}
+            className={classes.submit}
+          >
+            Sign In
+          </Button>
         </div>
-      </Grid>
-    </Grid>
+      </Paper>
+
+      <Backdrop className={classes.backdrop} open={submiting}>
+        <Grid
+          container
+          direction="column"
+          justify="center"
+          alignItems="center"
+          spacing={2}
+        >
+          <Grid item>
+            <CircularProgress color="inherit" />
+          </Grid>
+          <Grid item>
+            <span style={{ textAlign: "center", color: "#fff" }}>
+              {" "}
+              {/* Please wait ...{" "} */}
+            </span>
+          </Grid>
+        </Grid>
+      </Backdrop>
+
+      <Box mt={5} style={{color:"#eee"}}>
+        <Copyright />
+      </Box>
+    </Container>
+
+    </div>
   );
 }

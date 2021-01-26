@@ -10,15 +10,13 @@ import GlobalState from './GlobalState';
 
 
 import SignIn from './SignIn';
-import SignUp from './SignUp';
 import Dashboard from './Dashboard';
 
 import { useLocation, useHistory} from "react-router-dom";
 import { getUserIdFromToken } from './TokenVerifier';
-import ForgotPassword from './ForgotPassword';
-import UserBookingService from './services/UserBookingService';
 import UserService from './services/UserService';
 import { getMenuId } from './MenuList';
+import { getRole, setRole } from './Role';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -65,21 +63,10 @@ export default function Navigator() {
 
       const checkToken = async () =>
       {
-        const authToken = localStorage.getItem('app-auth-token') || sessionStorage.getItem('app-auth-token');
-        UserBookingService.setToken(authToken)
+        const authToken = localStorage.getItem('medexadmin-auth-token') || sessionStorage.getItem('medexadmin-auth-token');
         UserService.setToken(authToken)
 
-        if (location.pathname.startsWith('/signup'))
-        {
-          setState(state => ({...state, signedIn: false, signedUp: true, forgotPassword: false}));
-          setLoaded(true)
-
-        }else if (location.pathname.startsWith('/forgotpassword'))
-        {
-          setState(state => ({...state, signedIn: false, signedUp: false, forgotPassword: true}));
-          setLoaded(true)
-        }
-        else if (!authToken)
+         if (!authToken)
         {
           setState(state => ({...state, signedIn: false, signedUp: false, forgotPassword: false}));
           setLoaded(true)
@@ -95,12 +82,21 @@ export default function Navigator() {
            }
            else if (location.pathname === '/' || location.pathname === '/#' || location.pathname.startsWith('/login'))
            {
-             setState(state => ({...state, signedIn: true, signedUp: false, forgotPassword: false}));
-             history.push(`/${getMenuId(0)}`);
+            if (!getRole())
+            {
+             setRole(userId.roles[0])
+            }
+             setState(state => ({...state, signedIn: true, signedUp: false, forgotPassword: false, userId: userId, role: getRole()}));
+            
+             history.push(`/${getMenuId(getRole(),0)}`);
            }
            else
            {
-             setState(state => ({...state, signedIn: true, userId: userId}));
+              if (!getRole())
+              {
+               setRole(userId.roles[0])
+              }
+             setState(state => ({...state, signedIn: true, userId: userId, role: getRole()}));
            }
 
            setLoaded(true)
@@ -120,11 +116,6 @@ export default function Navigator() {
       }
       else
       {
-        if (state.signedUp)
-          return <SignUp/>
-        else if (state.forgotPassword)
-          return <ForgotPassword/>
-        else
           return <SignIn/>    
       }
     }

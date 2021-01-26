@@ -18,7 +18,6 @@ function App() {
   const [state, setState] = React.useState({currentMenuIndex:0});
 
   return (
-    // <h1 style={{textAlign: "center", paddingTop:"50px"}}> به پنل فروشندگان اینیسا شاپ خوش آمدید</h1>
     <GlobalState.Provider value={[state, setState]}>
       <BrowserRouter>
         <MuiThemeProvider theme={theme}>
