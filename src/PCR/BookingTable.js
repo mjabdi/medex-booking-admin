@@ -30,6 +30,10 @@ import Draggable from 'react-draggable';
 import * as dateformat from 'dateformat';
 
 import DateFnsUtils from '@date-io/date-fns';
+
+import MomentUtils from "@date-io/moment";
+import moment from "moment";
+
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -739,6 +743,10 @@ export default function BookingTable(props) {
   const [selectedBooking, setSelectedBooking] = React.useState(null);
   const [seeDetailsDialogOpen, setSeeDetailsDialogOpen] = React.useState(false);
 
+  const dateFormatter = str => {
+    return str;
+  };
+
   const [corporate, setCorporate] = useState(corporates[0]);
   const corporateChanged = (event) =>
   {
@@ -970,7 +978,7 @@ export default function BookingTable(props) {
         </Grid>
 
         <Grid item md={3}>
-          {props.date === "completed" && state.showCreateExcel && (
+          {props.date === "completed" && state.userId.username === 'admin' && (
             <div style={{ paddingBottom: "5px" }}>
               <Button
                 className={classes.ExportToExcelButton}
@@ -1134,13 +1142,14 @@ export default function BookingTable(props) {
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <Grid row container justify="center" spacing={3}>
                     <Grid item>
-                      <KeyboardDatePicker
+                    <KeyboardDatePicker
+                        autoOk={true}
                         disableToolbar
                         variant="inline"
                         format="dd/MM/yyyy"
                         margin="normal"
-                        id="date-picker-from"
-                        label="From"
+                        id="date-picker-until"
+                        label="Until"
                         value={fromDate}
                         onChange={handleFromDateChange}
                         KeyboardButtonProps={{
@@ -1151,6 +1160,7 @@ export default function BookingTable(props) {
 
                     <Grid item>
                       <KeyboardDatePicker
+                        autoOk={true}
                         disableToolbar
                         variant="inline"
                         format="dd/MM/yyyy"
