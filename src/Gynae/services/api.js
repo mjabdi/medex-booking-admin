@@ -1,10 +1,10 @@
 import axios from 'axios';
+import { authToken, backendAPI } from '../../GlobalPath';
 
 export default axios.create({
-  baseURL: 'http://localhost:9090',
-  // baseURL: 'https://www.travelpcrtest.com',
+  baseURL: backendAPI,
   headers : {
-      'Authorization' : 'Basic QXp1cmXEaWFtb45kOmh1bnRlcjO=',
+      'Authorization' : authToken,
        'Content-Type': 'application/json',
   }
 });

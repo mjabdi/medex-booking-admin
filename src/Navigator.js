@@ -17,6 +17,7 @@ import { getUserIdFromToken } from './TokenVerifier';
 import UserService from './services/UserService';
 import { getMenuId } from './MenuList';
 import { getRole, setRole } from './Role';
+import { getGlobalPath } from './GlobalPath';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -70,7 +71,7 @@ export default function Navigator() {
         {
           setState(state => ({...state, signedIn: false, signedUp: false, forgotPassword: false}));
           setLoaded(true)
-          history.push('/login');
+          history.push(getGlobalPath('/login'));
         }
         else
         {
@@ -78,9 +79,9 @@ export default function Navigator() {
            if (!userId)
            {
               setState(state => ({...state, signedIn: false, signedUp: false, forgotPassword: false}));
-              history.push('/login');
+              history.push(getGlobalPath('/login'));
            }
-           else if (location.pathname === '/' || location.pathname === '/#' || location.pathname.startsWith('/login'))
+           else if (location.pathname === getGlobalPath('/') || location.pathname === getGlobalPath('/#') || location.pathname.startsWith(getGlobalPath('/login')))
            {
             if (!getRole())
             {
@@ -88,7 +89,7 @@ export default function Navigator() {
             }
              setState(state => ({...state, signedIn: true, signedUp: false, forgotPassword: false, userId: userId, role: getRole()}));
             
-             history.push(`/${getMenuId(getRole(),0)}`);
+             history.push(getGlobalPath(`/${getMenuId(getRole(),0)}`));
            }
            else
            {

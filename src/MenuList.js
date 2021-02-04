@@ -22,22 +22,22 @@ import UnmatchedRecords from "./PCR/UnmatchedRecords";
 import CalendarView from "./PCR/calendar/CalendarView";
 import AdminCalendarView from "./PCR/calendar-admin/CalendarView";
 //-----------------------
+
+/// Gynae -------------------
 import GynaeBookingTable from "./Gynae/BookingTable";
 import GynaeDashboardPreview from "./Gynae/DashboardPreview"
 import GynaeFindByRef from "./Gynae/FindByRef"
 import GynaeCalendarView from "./Gynae/calendar-admin/CalendarView"
-/// Gynae -------------------
-
 //----------------------------
+
+
+// Admin ----------------
+import AdminDashBoardPreview from "./DashboardPreview"
+
+//---------------
 
 export const MenuList_Admin = [
   { index: 0, id: `dashboard`, title: `Dashboard`, icon: <DashboardIcon /> },
-  {
-    index: 1,
-    id: `recentBookings`,
-    title: `Recent Bookings`,
-    icon: <AutorenewIcon />,
-  },
 ];
 
 export const MenuList_Gynae = [
@@ -56,29 +56,35 @@ export const MenuList_Gynae = [
   },
   {
     index: 3,
+    id: `oldBookings`,
+    title: `Old Bookings`,
+    icon: <HistoryIcon />,
+  },
+  {
+    index: 4,
     id: `futureBookings`,
     title: `Future Bookings`,
     icon: <TimelineIcon />,
   },
   {
-    index: 4,
+    index: 5,
     id: `allBookings`,
     title: `All Bookings`,
     icon: <DescriptionIcon />,
   },
   {
-    index: 5,
+    index: 6,
     id: `deletedBookings`,
     title: `Deleted Records`,
     icon: <DeleteIcon />,
   },
   {
-    index: 6,
+    index: 7,
     id: `calendarView`,
     title: `Calendar View`,
     icon: <DateRangeIcon />,
   },
-  { index: 7, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
 ];
 
 export const MenuList_PCR = [
@@ -205,14 +211,16 @@ export const getMenuContent = (role, index) => {
       case 2:
         return <GynaeBookingTable date="today" />;
       case 3:
-        return <GynaeBookingTable date="future" />;
+        return <GynaeBookingTable date="old" />;
       case 4:
-        return <GynaeBookingTable date="all" />;
+        return <GynaeBookingTable date="future" />;
       case 5:
-        return <GynaeBookingTable date="deleted" />;
+        return <GynaeBookingTable date="all" />;
       case 6:
-         return <GynaeCalendarView/>
+        return <GynaeBookingTable date="deleted" />;
       case 7:
+         return <GynaeCalendarView/>
+      case 8:
           return <GynaeFindByRef/>     
       default:
         return `Page Not Found!`;
@@ -220,9 +228,7 @@ export const getMenuContent = (role, index) => {
   } else if (role === "admin") {
     switch (index) {
       case 0:
-        return `Dashboard Admin`;
-      case 1:
-        return `Recent Bookings Admin`;
+        return <AdminDashBoardPreview/>;
       default:
         return `Page Not Found!`;
     }

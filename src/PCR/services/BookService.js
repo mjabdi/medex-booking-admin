@@ -32,6 +32,11 @@ export default class BookService {
       return API.get(`/api/book/getbookingscountbydatestr?date=${dateStr}`);
    }
 
+   static getAllBookingsCountAll = () =>
+   {
+      return API.get(`/api/book/getallbookingscountall`);
+   }
+
    static getBookingsCountByDateStrandTime = (dateStr, time, source) =>
    {
       return API.get(`/api/book/getbookingscountbydatestrandtime?date=${dateStr}&time=${time}`, {cancelToken: source.token});

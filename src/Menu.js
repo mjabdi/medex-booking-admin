@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 
 import {
+  Badge,
   Divider,
   Grid,
   IconButton,
@@ -16,6 +17,9 @@ import { List, ListItem } from "@material-ui/core";
 import ListItemText from "@material-ui/core/ListItemText";
 import { getMenuRole, getMenuId } from "./MenuList";
 import { border, borderBottom } from "@material-ui/system";
+import { getGlobalPath } from "./GlobalPath";
+
+import GyaneBookService from "./Gynae/services/BookService"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -47,6 +51,20 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1rem",
     fontWeight: "500"
   },
+
+  Badge:{
+    backgroundColor: "rgb(220, 0, 78)",
+    color: "#fff",
+    fontWeight: "600",
+    textAlign:"center",
+    borderRadius: "50%",
+    fontSize: "0.85rem",
+    lineHeight: "0.85rem",
+    padding:"7px",
+    marginTop:"9px",
+    width:"28px"
+
+  }
 }));
 
 export default function MyMenu() {
@@ -57,14 +75,31 @@ export default function MyMenu() {
 
   let history = useHistory();
 
+  const updateShouldRefundsCount = async () =>
+  {
+    try{
+      const res = await GyaneBookService.getShouldRefundsCount()
+      if (res && res.data && res.data.status === "OK")
+      {
+        setState(state => ({...state, shouldRefunsCount: res.data.count}))
+      }
+    }
+    catch(ex)
+    {
+      console.error(ex)
+    }
+  }
+
   useEffect(() => {
     setSelectedIndex(state.currentMenuIndex);
+    updateShouldRefundsCount()
   }, [state.currentMenuIndex]);
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
-    history.push(`/${getMenuId(state.role,index)}`);
     setState((state) => ({ ...state, currentMenuIndex: index }));
+
+    history.push(getGlobalPath(`/${getMenuId(state.role,index)}`));
   };
 
   return (
@@ -104,6 +139,11 @@ export default function MyMenu() {
                           className={classes.menuText}
                         >{`${item.title}`}</span>{" "}
                       </Grid>
+
+                      {state.role === "gynae" && item.id === "deletedBookings" && state.shouldRefunsCount > 0 && (
+                        <span className={classes.Badge}> {state.shouldRefunsCount} </span>
+                      )}
+
                     </Grid>
                   </div>
                 </React.Fragment>

@@ -40,65 +40,85 @@ const useStyles = makeStyles({
 });
 
 const isWeekend = (date) => {
-  return date.getDay() === 0 || date.getDay() === 6; /// Weekend
+
+  return date.getDay() === 1|| date.getDay() === 2 || date.getDay() === 3 || date.getDay() === 6 || date.getDay() === 0 ; 
 };
 
+const isThursday = (date) =>
+{
+    return (date.getDay() === 4) /// Thursday
+}
+
+const isFriday = (date) =>
+{
+    return (date.getDay() === 5) /// Friday
+}
+
+
 const getCurrentTimeSlot = (now) => {
+  
   if (isWeekend(now)) {
     return null;
   }
 
+
   var min = now.getMinutes();
   var hour = now.getHours();
 
-  if (hour < 9 || hour >= 18) return null;
-
-  if (hour === 9 && min < 45) {
-    return "09:00 AM";
+  if (isThursday(now) && hour < 13)
+  {
+    return null
   }
 
-  if ((hour === 9 && min >= 45) || (hour === 10 && min < 30)) {
-    return "09:45 AM";
+  if (isFriday(now) && hour >= 13)
+  {
+    return null
   }
 
-  if ((hour === 10 && min >= 30) || (hour === 11 && min < 15)) {
-    return "10:30 AM";
+  if (hour < 10 || hour >= 18) return null;
+
+  if (hour === 10 && min < 45) {
+    return "10:00 AM";
   }
 
-  if (hour === 11 && min >= 15) {
-    return "11:15 AM";
+  if ((hour === 10 && min >= 45) || (hour === 11 && min < 30)) {
+    return "10:45 AM";
   }
 
-  if (hour === 12 && min < 45) {
-    return "12:00 PM";
+  if ((hour === 11 && min >= 30) || (hour === 12 && min < 15)) {
+    return "11:30 AM";
   }
 
-  if ((hour === 12 && min >= 45) || (hour === 13 && min < 30)) {
-    return "12:45 PM";
+  if (hour === 12 && min >= 15) {
+    return "12:15 AM";
   }
 
-  if ((hour === 13 && min >= 30) || (hour === 14 && min < 15)) {
-    return "01:30 PM";
+  if (hour === 13 && min < 45) {
+    return "01:00 PM";
   }
 
-  if (hour === 14 && min >= 15) {
-    return "02:15 PM";
+  if ((hour === 13 && min >= 45) || (hour === 14 && min < 30)) {
+    return "01:45 PM";
   }
 
-  if (hour === 15 && min < 45) {
-    return "03:00 PM";
+  if ((hour === 14 && min >= 30) || (hour === 15 && min < 15)) {
+    return "02:30 PM";
   }
 
-  if ((hour === 15 && min >= 45) || (hour === 16 && min < 30)) {
-    return "03:45 PM";
+  if (hour === 15 && min >= 15) {
+    return "03:15 PM";
   }
 
-  if ((hour === 16 && min >= 30) || (hour === 17 && min < 15)) {
-    return "04:30 PM";
+  if (hour === 16 && min < 45) {
+    return "04:00 PM";
   }
 
-  if (hour === 17 && min >= 15) {
-    return "05:15 PM";
+  if ((hour === 16 && min >= 45) || (hour === 17 && min < 30)) {
+    return "04:45 PM";
+  }
+
+  if (hour === 17 && min >= 30) {
+    return "05:30 PM";
   }
 };
 
@@ -109,41 +129,38 @@ const getCurrentTimeSlotLabel = (timeStr) => {
 
   let endTimeStr = "";
   switch (timeStr) {
-    case "09:00 AM":
-      endTimeStr = "09:45 AM";
+    case "10:00 AM":
+      endTimeStr = "10:45 AM";
       break;
-    case "09:45 AM":
-      endTimeStr = "10:30 AM";
+    case "10:45 AM":
+      endTimeStr = "11:30 AM";
       break;
-    case "10:30 AM":
-      endTimeStr = "11:15 AM";
+    case "11:30 AM":
+      endTimeStr = "12:15 PM";
       break;
-    case "11:15 AM":
-      endTimeStr = "12:00 PM";
+    case "12:15 PM":
+      endTimeStr = "01:00 PM";
       break;
-    case "12:00 PM":
-      endTimeStr = "12:45 PM";
+    case "01:00 PM":
+      endTimeStr = "01:45 PM";
       break;
-    case "12:45 PM":
-      endTimeStr = "01:30 PM";
+    case "01:45 PM":
+      endTimeStr = "02:30 PM";
       break;
-    case "01:30 PM":
-      endTimeStr = "02:15 PM";
+    case "02:30 PM":
+      endTimeStr = "03:15 PM";
       break;
-    case "02:15 PM":
-      endTimeStr = "03:00 PM";
+    case "03:15 PM":
+      endTimeStr = "04:00 PM";
       break;
-    case "03:00 PM":
-      endTimeStr = "03:45 PM";
+    case "04:00 PM":
+      endTimeStr = "04:45 PM";
       break;
-    case "03:45 PM":
-      endTimeStr = "04:30 PM";
+    case "04:45 PM":
+      endTimeStr = "05:30 PM";
       break;
-    case "04:30 PM":
-      endTimeStr = "05:15 PM";
-      break;
-    case "05:15 PM":
-      endTimeStr = "06:00 PM";
+    case "05:30 PM":
+      endTimeStr = "06:10 PM";
       break;
     default:
       endTimeStr = "";

@@ -1025,7 +1025,7 @@ export default function BookingDialog(props) {
 
               <div style={{position:"absolute", top: "25x", left: "25px"}}>
                 <Tooltip title="COPY EDIT LINK TO CLIPBOARD">
-                    <IconButton onClick={() => {navigator.clipboard.writeText(`https://travelpcrtest.com/user/edit/${booking.bookingRef}-${booking.birthDate}`); setCopied(true); setTimeout(() => { 
+                    <IconButton onClick={() => {navigator.clipboard.writeText(`https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/pcr/${booking._id}`); setCopied(true); setTimeout(() => { 
                       setCopied(false)
                     }, 1500);}}
 

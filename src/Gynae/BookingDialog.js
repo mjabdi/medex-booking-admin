@@ -1,97 +1,106 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import GlobalState from './../GlobalState';
-import Grid from '@material-ui/core/Grid';
-import { Button, Checkbox, DialogActions, DialogContentText, FormControlLabel, IconButton,  TextField, Tooltip } from '@material-ui/core';
-import PDFService from './services/PDFService';
+import React, { useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import GlobalState from "./../GlobalState";
+import Grid from "@material-ui/core/Grid";
+import {
+  Button,
+  Checkbox,
+  DialogActions,
+  DialogContentText,
+  FormControlLabel,
+  IconButton,
+  TextField,
+  Tooltip,
+} from "@material-ui/core";
+import PDFService from "./services/PDFService";
 
-import {calculatePrice} from './PriceCalculator';
+import { calculatePrice } from "./PriceCalculator";
 
-import bookingService from './services/BookService';
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
+import bookingService from "./services/BookService";
+import CheckIcon from "@material-ui/icons/Check";
+import CloseIcon from "@material-ui/icons/Close";
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Draggable from 'react-draggable';
-import Slide from '@material-ui/core/Slide'  
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Draggable from "react-draggable";
+import Slide from "@material-ui/core/Slide";
 
-import Paper from '@material-ui/core/Paper';
+import Paper from "@material-ui/core/Paper";
 
-import DeleteIcon from '@material-ui/icons/Delete';
-import BookService from './services/BookService';
+import DeleteIcon from "@material-ui/icons/Delete";
+import BookService from "./services/BookService";
 
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import {FormatDateFromString, RevertFormatDateFromString} from './DateFormatter';
-import PayDialog from './PayDialog';
-
-import PrintIcon from '@material-ui/icons/Print';
-import UndoIcon from '@material-ui/icons/Undo';
-
-import HistoryIcon from '@material-ui/icons/History';
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import {
+  FormatDateFromString,
+  RevertFormatDateFromString,
+} from "./DateFormatter";
+import PayDialog from "./PayDialog";
 
 
-import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
+import PrintIcon from "@material-ui/icons/Print";
+import UndoIcon from "@material-ui/icons/Undo";
+
+import HistoryIcon from "@material-ui/icons/History";
+
+import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 
 const useStyles = makeStyles((theme) => ({
   box: {
-    backgroundColor : "#373737",
+    backgroundColor: "#373737",
     color: "#fff",
-    padding : "1px",
-    borderRadius : "4px",
+    padding: "1px",
+    borderRadius: "4px",
     textAlign: "justify",
-    paddingRight: "40px"
+    paddingRight: "40px",
   },
 
   boxRed: {
-    backgroundColor : "#dc2626",
+    backgroundColor: "#dc2626",
     color: "#fff",
-    padding : "1px",
-    borderRadius : "4px",
+    padding: "1px",
+    borderRadius: "4px",
     textAlign: "justify",
-    paddingRight: "40px"
+    paddingRight: "40px",
   },
 
   boxInfo: {
     textAlign: "justify",
-    backgroundColor : "#fafafa",
+    backgroundColor: "#fafafa",
     color: "#333",
-    padding : "1px",
-    borderRadius : "4px",
+    padding: "1px",
+    borderRadius: "4px",
     paddingRight: "40px",
     border: "1px solid #eee",
   },
 
   ul: {
-     listStyle: "none",
-     padding: "0",
-     margin: "0"
+    listStyle: "none",
+    padding: "0",
+    margin: "0",
   },
 
   li: {
-    marginBottom : "15px"
+    marginBottom: "15px",
   },
 
-
   icon: {
-    marginRight : "8px"
+    marginRight: "8px",
   },
 
   root: {
-    width: '100%',
+    width: "100%",
   },
 
-  lineThrough:{
-    textDecoration : "line-through",
+  lineThrough: {
+    textDecoration: "line-through",
   },
-
-
 
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    flexBasis: '33.33%',
+    flexBasis: "33.33%",
     flexShrink: 0,
     color: theme.palette.text.secondary,
   },
@@ -99,54 +108,53 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
   },
 
-  infoDetails:{
+  infoDetails: {
     textAlign: "left",
   },
 
-  infoTitle:{
+  infoTitle: {
     fontWeight: "800",
-    marginRight: "10px"
+    marginRight: "10px",
   },
 
-  infoData:{
+  infoData: {
     fontWeight: "400",
   },
 
-  title:
-  {
+  title: {
     textAlign: "center",
-    fontWeight : "600",
+    fontWeight: "600",
     marginLeft: "10px",
-    marginBottom: "5px"
+    marginBottom: "5px",
   },
 
-  Accordion:{
-    backgroundColor : "#f5f5f5",
-    color: "#222"
+  Accordion: {
+    backgroundColor: "#f5f5f5",
+    color: "#222",
   },
 
-  AccordionDeleted:{
-    backgroundColor : "#aaa",
-    color: "#555"
+  AccordionDeleted: {
+    backgroundColor: "#aaa",
+    color: "#555",
   },
 
-  DownloadForm:{
-      marginTop: "10px",
-      marginBottom : "10px"
+  DownloadForm: {
+    marginTop: "10px",
+    marginBottom: "10px",
   },
 
-  infoDataCharges:{
-    fontSize : "18px",
+  infoDataCharges: {
+    fontSize: "18px",
     color: "green",
-    fontWeight : "600"
+    fontWeight: "600",
   },
 
-  infoDataChargesHigher:{
-    fontSize : "18px",
+  infoDataChargesHigher: {
+    fontSize: "18px",
     color: "red",
-    fontWeight : "600"
+    fontWeight: "600",
   },
-  BookedLabel:{
+  BookedLabel: {
     color: "#606060",
     paddingLeft: "5px",
     paddingBottom: "3px",
@@ -155,10 +163,10 @@ const useStyles = makeStyles((theme) => ({
     borderLeft: "5px solid",
     borderColor: "#606060",
     width: "150px",
-    display: "inline-block"
+    display: "inline-block",
   },
 
-  PatientAttendedLabel:{
+  PatientAttendedLabel: {
     color: "#0066aa",
     paddingLeft: "5px",
     paddingBottom: "3px",
@@ -167,10 +175,10 @@ const useStyles = makeStyles((theme) => ({
     borderLeft: "5px solid",
     borderColor: "#0066aa",
     width: "150px",
-    display: "inline-block"
+    display: "inline-block",
   },
 
-  SampleTakenLabel:{
+  SampleTakenLabel: {
     color: "#0066cc",
     paddingRight: "10px",
     paddingLeft: "5px",
@@ -178,10 +186,10 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "3px",
     fontWeight: "800",
     borderLeft: "5px solid",
-    borderColor: "#0066cc"
+    borderColor: "#0066cc",
   },
 
-  ReportSentLabel:{
+  ReportSentLabel: {
     color: "#009900",
     paddingRight: "10px",
     paddingLeft: "5px",
@@ -189,10 +197,10 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "3px",
     fontWeight: "800",
     borderLeft: "5px solid",
-    borderColor: "#009900"
+    borderColor: "#009900",
   },
 
-  ReportCertSentLabel:{
+  ReportCertSentLabel: {
     color: "#009900",
     paddingRight: "10px",
     paddingLeft: "5px",
@@ -200,10 +208,10 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "3px",
     fontWeight: "800",
     borderLeft: "5px solid",
-    borderColor: "#009900"
+    borderColor: "#009900",
   },
 
-  PositiveLabel:{
+  PositiveLabel: {
     color: "red",
     paddingRight: "10px",
     paddingLeft: "5px",
@@ -211,134 +219,111 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "3px",
     fontWeight: "800",
     borderLeft: "5px solid",
-    borderColor: "red"
+    borderColor: "red",
   },
 
-  EditButton:
-  {
-    marginBottom : "20px",
-    backgroundColor : "#2f942e",
+  EditButton: {
+    marginBottom: "20px",
+    backgroundColor: "#2f942e",
     "&:hover": {
       background: "green",
-      color: "#fff"
+      color: "#fff",
     },
-    textDecoration : "none !important",
-    padding: "10px"   
+    textDecoration: "none !important",
+    padding: "10px",
   },
 
-  ResendEmailsButton:
-  {
+  ResendEmailsButton: {
     // marginBottom : "20px",
-    color : "#2f942e",
+    color: "#2f942e",
     borderColor: "#2f942e",
     "&:hover": {
       background: "#fafffa",
       borderColor: "#2f942e",
     },
-    textDecoration : "none !important",
+    textDecoration: "none !important",
     paddingLeft: "50px",
-    paddingRight: "50px"   
+    paddingRight: "50px",
   },
 
-  PayButton:
-  {
-    marginLeft : "70px",
-    width: "300px"
+  PayButton: {
+    marginLeft: "70px",
+    width: "300px",
   },
 
-  PayLabel:
-  {
-    marginLeft : "20px",
-    
-    color : "#2f942e",
-    fontWeight : "500",
-    textAlign: 'center'
+  PayLabel: {
+    marginLeft: "20px",
 
+    color: "#2f942e",
+    fontWeight: "500",
+    textAlign: "center",
   },
 
-
-
-
-  RestoreButton:
-  {
-    marginBottom : "20px",
-    backgroundColor : "#eee",
+  RestoreButton: {
+    marginBottom: "20px",
+    backgroundColor: "#eee",
     color: "#333",
     "&:hover": {
       background: "#f1f1f1",
-      color: "#111"
+      color: "#111",
     },
-    textDecoration : "none !important",
-    padding: "10px"   
+    textDecoration: "none !important",
+    padding: "10px",
   },
 
-
-  DeleteButton:
-  {
-    marginBottom : "20px",
-    backgroundColor : "#d90015",
+  DeleteButton: {
+    marginBottom: "20px",
+    backgroundColor: "#d90015",
     "&:hover": {
       background: "#b80012",
-      color: "#fff"
+      color: "#fff",
     },
 
-    padding: "10px"
-    
+    padding: "10px",
   },
 
-  SaveButton:
-  {
-    marginBottom : "10px",
+  SaveButton: {
+    marginBottom: "10px",
     padding: "10px",
 
-    backgroundColor : "#d1175e",
+    backgroundColor: "#d1175e",
     "&:hover": {
       background: "#bd0d50",
-      color: "#fff"
+      color: "#fff",
     },
-
   },
 
-  CancelButton:
-  {
-    marginBottom : "20px",
+  CancelButton: {
+    marginBottom: "20px",
     // padding: "10px"
   },
 
   TextBox: {
-    
-    padding : "0px"
-
+    padding: "0px",
   },
 
-  checkIcon:{
-    color: "green",   
-  },
-
-  checkIconSmall:{
+  checkIcon: {
     color: "green",
-    paddingTop: "5px"   
   },
 
-  closeIcon:{
-    color: "red"
+  checkIconSmall: {
+    color: "green",
+    paddingTop: "5px",
   },
 
-  centeredLabel : {
+  closeIcon: {
+    color: "red",
+  },
+
+  centeredLabel: {
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
   },
 
   backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
+    zIndex: theme.zIndex.drawer + 5,
+    color: "#fff",
   },
-
-
-
-
-
-
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -347,468 +332,442 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function PaperComponent(props) {
   return (
-    <Draggable handle="#alert-dialog-slide-title" cancel={'[class*="MuiDialogContent-root"]'}>
+    <Draggable
+      handle="#alert-dialog-slide-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
       <Paper {...props} />
     </Draggable>
   );
 }
 
-
-
 export default function BookingDialog(props) {
-    const classes = useStyles();
+  const classes = useStyles();
 
-    const [state, setState] = React.useContext(GlobalState);
+  const [state, setState] = React.useContext(GlobalState);
 
-    const [copied, setCopied] = useState(false);
-  
-    const [openResendDialog, setOpenResendDialog] = React.useState(false);
-    const [openPayDialog, setOpenPayDialog] = React.useState(false);
-    const [selectedBooking, setSelectedBooking] = React.useState(null);
+  const [copied, setCopied] = useState(false);
 
-    const [editMode, setEditMode] = React.useState({edit : false, person : null});
-    const [deleteMode, setDeleteMode] = React.useState({delete : false, person : null});
-    const [restoreMode, setRestoreMode] = React.useState({restore : false, person : null});
+  const [openResendDialog, setOpenResendDialog] = React.useState(false);
+  const [openPayDialog, setOpenPayDialog] = React.useState(false);
+  const [openRefundDialog, setOpenRefundDialog] = React.useState(false);
 
-    const [saving, setSaving] =  React.useState(false);
-    const [deleting, setDeleting] =  React.useState(false);
-    const [restoring, setRestoring] =  React.useState(false);
+  const [selectedBooking, setSelectedBooking] = React.useState(null);
 
-    const [validationError, setValidationError] = React.useState({});
+  const [editMode, setEditMode] = React.useState({ edit: false, person: null });
+  const [deleteMode, setDeleteMode] = React.useState({
+    delete: false,
+    person: null,
+  });
+  const [restoreMode, setRestoreMode] = React.useState({
+    restore: false,
+    person: null,
+  });
 
+  const [saving, setSaving] = React.useState(false);
+  const [deleting, setDeleting] = React.useState(false);
+  const [restoring, setRestoring] = React.useState(false);
 
-    const [bookingDate, setBookingDate] = React.useState('');
-    const [bookingTime, setBookingTime] = React.useState('');
+  const [validationError, setValidationError] = React.useState({});
 
-    const [fullname, setFullname] = React.useState('');
-    const [email, setEmail] = React.useState('');
-    const [tel, setTel] = React.useState('');
-    const [notes, setNotes] = React.useState('');
-    const [service, setService] = React.useState('');
+  const [bookingDate, setBookingDate] = React.useState("");
+  const [bookingTime, setBookingTime] = React.useState("");
 
-    const [refreshData, setRefreshData] = React.useState(false);
+  const [fullname, setFullname] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [tel, setTel] = React.useState("");
+  const [notes, setNotes] = React.useState("");
+  const [service, setService] = React.useState("");
 
-    const [booking, setBooking] = React.useState(null);
+  const [refreshData, setRefreshData] = React.useState(false);
 
-    const [recordChanged, setRecordChanged] = React.useState(false);
+  const [booking, setBooking] = React.useState(null);
 
-    const [fieldChanged, setFieldChanged] = React.useState(false);
+  const [recordChanged, setRecordChanged] = React.useState(false);
 
-    const [openUndoPayDialog, setOpenUndoPayDialog] = React.useState(false);
+  const [fieldChanged, setFieldChanged] = React.useState(false);
 
-    const [openTimeStampDialog, setOpenTimeStampDialog] = React.useState(false);
+  const [openUndoPayDialog, setOpenUndoPayDialog] = React.useState(false);
 
-    const handleCloseTimeStampDialog = () =>
-    {
-      setOpenTimeStampDialog(false);
-      setSelectedBooking(null);
+  const [openTimeStampDialog, setOpenTimeStampDialog] = React.useState(false);
+
+  const handleCloseTimeStampDialog = () => {
+    setOpenTimeStampDialog(false);
+    setSelectedBooking(null);
+  };
+
+  const handleCloseUndoPayDialog = () => {
+    setOpenUndoPayDialog(false);
+    setSelectedBooking(null);
+  };
+
+  const handleCloseResendDialog = () => {
+    setOpenResendDialog(false);
+    setSelectedBooking(null);
+  };
+
+  const handleClosePayDialog = () => {
+    setOpenPayDialog(false);
+    setSelectedBooking(null);
+  };
+
+  const handleCloseRefundDialog = () => {
+    setOpenRefundDialog(false);
+    setSelectedBooking(null);
+  };
+
+  useEffect(() => {
+    if (booking) {
+      const isChanged =
+        bookingDate !== FormatDateFromString(booking.bookingDate) ||
+        bookingTime !== booking.bookingTime ||
+        fullname !== booking.fullname ||
+        email !== booking.email ||
+        tel !== booking.phone ||
+        service !== booking.service ||
+        notes !== booking.notes;
+
+      setRecordChanged(isChanged);
     }
+  }, [fieldChanged]);
 
-    const handleCloseUndoPayDialog = () =>
-    {
-      setOpenUndoPayDialog(false);
+  useEffect(() => {
+    if (!props.open) {
+      setTimeout(() => {
+        setEditMode({ edit: false, person: null });
+        setRecordChanged(false);
+      }, 500);
     }
+  }, [props.open]);
 
-    const handleCloseResendDialog = () =>
-    {
-      setOpenResendDialog(false);
-      setSelectedBooking(null);
+  const bookingDateChanged = (event) => {
+    setBookingDate(event.target.value);
+    setValidationError({ ...validationError, bookingDateError: false });
+    setFieldChanged(!fieldChanged);
+  };
+
+  const bookingTimeChanged = (event) => {
+    setBookingTime(event.target.value);
+    setValidationError({ ...validationError, bookingTimeError: false });
+    setFieldChanged(!fieldChanged);
+  };
+
+  const fullnameChanged = (event) => {
+    setFullname(event.target.value);
+    setFieldChanged(!fieldChanged);
+  };
+
+  const emailChanged = (event) => {
+    setEmail(event.target.value);
+    setFieldChanged(!fieldChanged);
+  };
+
+  const telChanged = (event) => {
+    setTel(event.target.value);
+    setFieldChanged(!fieldChanged);
+  };
+
+  const serviceChanged = (event) => {
+    setService(event.target.value);
+    setFieldChanged(!fieldChanged);
+  };
+
+  const notesChanged = (event) => {
+    setNotes(event.target.value);
+    setFieldChanged(!fieldChanged);
+  };
+
+  const getStatusLabel = (status) => {
+    if (status === "booked") {
+      return <div className={classes.BookedLabel}> Booking Made </div>;
+    } else if (status === "patient_attended") {
+      return (
+        <div className={classes.PatientAttendedLabel}> Patient Attended </div>
+      );
+    } else {
+      return "Unknown";
     }
+  };
 
-    const handleClosePayDialog = () =>
-    {
-      setOpenPayDialog(false);
-      setSelectedBooking(null);
-    }
-
-    useEffect( () => {
-
-      if (booking)
-      {
-        const isChanged = (             
-           bookingDate !== FormatDateFromString(booking.bookingDate) 
-        || bookingTime !== booking.bookingTime
-        || fullname !== booking.fullname
-        || email !== booking.email
-        || tel !== booking.phone
-        || service !== booking.service
-        || notes !== booking.notes
-
-        );
-
-        setRecordChanged(isChanged);
-
-  
-
+  const handleEditModeChanged = (edit, person) => {
+    if (edit) {
+      setFullname(person.fullname);
+      setBookingDate(FormatDateFromString(person.bookingDate));
+      setBookingTime(person.bookingTime.toUpperCase());
+      setEmail(person.email);
+      setTel(person.phone);
+      setService(person.service);
+      if (person.notes) {
+        setNotes(person.notes);
       }
-    }, [fieldChanged]);
 
-    useEffect( () => {
-      if (!props.open)
-      {
-        setTimeout(() => {
-          setEditMode({edit: false, person: null});
-          setRecordChanged(false);
-        }, 500);
-       
-      }
-    }, [props.open])
+      setEditMode({ edit: edit, person: person });
+    } else if (!edit && !person) {
+      setEditMode({ edit: edit, person: person });
+      setRecordChanged(false);
+    } else if (!edit && person) {
+      const booking = {};
+      const bookingId = person._id;
+      booking.email = email;
+      booking.phone = tel;
+      booking.fullname = fullname;
+      booking.notes = notes;
+      booking.service = service;
+      booking.bookingDate = RevertFormatDateFromString(bookingDate);
+      booking.bookingTime = bookingTime;
+      booking.bookingRef = person.bookingRef;
 
-    const bookingDateChanged = (event) =>
-    {
-      setBookingDate(event.target.value);
-      setValidationError({...validationError, bookingDateError : false});
-      setFieldChanged(!fieldChanged);
-    }
-
-    const bookingTimeChanged = (event) =>
-    {
-      setBookingTime(event.target.value);
-      setValidationError({...validationError, bookingTimeError : false});
-      setFieldChanged(!fieldChanged);
-    }
-
-    const fullnameChanged = (event) =>
-    {
-      setFullname(event.target.value);
-      setFieldChanged(!fieldChanged);
-    }
-
-    const emailChanged = (event) =>
-    {
-      setEmail(event.target.value);
-      setFieldChanged(!fieldChanged);
-    }
-
-    const telChanged = (event) =>
-    {
-      setTel(event.target.value);
-      setFieldChanged(!fieldChanged);
-    }
-
-    const serviceChanged = (event) =>
-    {
-      setService(event.target.value);
-      setFieldChanged(!fieldChanged);
-    }
-
-    const notesChanged = (event) =>
-    {
-      setNotes(event.target.value);
-      setFieldChanged(!fieldChanged);
-    }
-
-    const getStatusLabel = (status) => {
-      if (status === 'booked')
-      {
-        return (
-          <div className={classes.BookedLabel}> Booking Made </div>
-        );
-    
-      }else if (status === 'patient_attended')
-      {
-        return (
-          <div  className={classes.PatientAttendedLabel}> Patient Attended </div>
-        );
-      }
-      else{
-        return 'Unknown';
+      if (validateBooking(booking)) {
+        updateBooking({ bookingId: bookingId, person: booking });
       }
     }
+  };
 
+  const validateDate = (str) => {
+    var error = false;
+    if (!str || str.length !== 10) {
+      error = true;
+    }
 
-   const handleEditModeChanged = (edit, person) => {
+    if (str.charAt(4) !== "-" || str.charAt(7) !== "-") {
+      error = true;
+    }
 
-       if (edit)
-       {
-         setFullname(person.fullname);
-         setBookingDate(FormatDateFromString(person.bookingDate));
-         setBookingTime(person.bookingTime.toUpperCase());
-         setEmail(person.email);
-         setTel(person.phone);
-         setService(person.service)
-         if (person.notes)
-         {
-            setNotes(person.notes);
-         }
-        
-         setEditMode({edit: edit, person: person});
-
-       }
-       else if (!edit && !person)
-       {
-         setEditMode({edit: edit, person: person});
-         setRecordChanged(false);
-       }
-       else if (!edit && person)
-       {
-          const booking = {};
-          const bookingId = person._id;
-          booking.email = email;
-          booking.phone = tel;
-          booking.fullname = fullname;
-          booking.notes = notes;
-          booking.service = service;
-          booking.bookingDate = RevertFormatDateFromString(bookingDate);
-          booking.bookingTime = bookingTime;
-          booking.bookingRef = person.bookingRef;
-
-          if  (validateBooking(booking))
-          {
-            updateBooking({bookingId: bookingId, person: booking});
-          }
-       }
-   }
-
-   const validateDate = (str) =>
-   {
-     var error = false;
-     if (!str || str.length !== 10)
-     {
-       error = true;
-     }
-
-     if (str.charAt(4) !== '-'  || str.charAt(7) !== '-')
-     {
-       error = true;
-     }
-
-     try
-     {
-       
-       const result = /^\d{4}-\d{2}-\d{2}$/.test(str);
-       if (!result)
-       {
-          error = true;
-       }
-
-       const year = parseInt(str.substr(0,4));
-       const month = parseInt(str.substr(5,2));
-       const day = parseInt(str.substr(8,2));
-
-       if (year < 1900)
-       {
-          error = true;
-       }
-
-       if (month < 1 || month > 12)
-       {
-         error = true;
-       }        
-
-       if (day > 31)
-       {
-         error = true;
-       }
-
-     }catch(err)
-     {
-       error = true;
-     }
-
-
-
-     return !error;
-   }
-
-   const validateTime =(str) =>
-   {
-     var error = false;
-
-     const result = /^\d{2}:\d{2} AM$|^\d{2}:\d{2} PM$/.test(str);
-     if (!result)
-     {
+    try {
+      const result = /^\d{4}-\d{2}-\d{2}$/.test(str);
+      if (!result) {
         error = true;
-     }
-
-     try{
-       const hour = parseInt(str.substr(0,2));
-       const minute = parseInt(str.substr(3,2));
-
-       if (hour < 0 || hour > 12)
-       {
-         error = true;
-       }
-
-       if (minute < 0 || minute > 59)
-       {
-         error = true;
-       }
-
-     }catch(err)
-     {
-       error = true;
-     }
-
-     return !error;
-   }
-
-   const validateBooking = (booking) =>
-   {
-      var error = false;
-
-      if (!validateDate(booking.bookingDate))
-      {
-        error = true;
-        setValidationError({...validationError, bookingDateError : true});
       }
 
-      if (!validateTime(booking.bookingTime))
-      {
-        error = true;
-        setValidationError({...validationError, bookingTimeError : true});
-      }
-      return !error;
-   }
+      const year = parseInt(str.substr(0, 4));
+      const month = parseInt(str.substr(5, 2));
+      const day = parseInt(str.substr(8, 2));
 
-   const updateBooking = (payload) =>
-   {
-       setSaving(true);
-       bookingService.updateBooking(payload).then( (res) => {
+      if (year < 1900) {
+        error = true;
+      }
+
+      if (month < 1 || month > 12) {
+        error = true;
+      }
+
+      if (day > 31) {
+        error = true;
+      }
+    } catch (err) {
+      error = true;
+    }
+
+    return !error;
+  };
+
+  const validateTime = (str) => {
+    var error = false;
+
+    const result = /^\d{2}:\d{2} AM$|^\d{2}:\d{2} PM$/.test(str);
+    if (!result) {
+      error = true;
+    }
+
+    try {
+      const hour = parseInt(str.substr(0, 2));
+      const minute = parseInt(str.substr(3, 2));
+
+      if (hour < 0 || hour > 12) {
+        error = true;
+      }
+
+      if (minute < 0 || minute > 59) {
+        error = true;
+      }
+    } catch (err) {
+      error = true;
+    }
+
+    return !error;
+  };
+
+  const validateBooking = (booking) => {
+    var error = false;
+
+    if (!validateDate(booking.bookingDate)) {
+      error = true;
+      setValidationError({ ...validationError, bookingDateError: true });
+    }
+
+    if (!validateTime(booking.bookingTime)) {
+      error = true;
+      setValidationError({ ...validationError, bookingTimeError: true });
+    }
+    return !error;
+  };
+
+  const updateBooking = (payload) => {
+    setSaving(true);
+    bookingService
+      .updateBooking(payload)
+      .then((res) => {
         setSaving(false);
-        setEditMode({edit: false, person: null});
+        setEditMode({ edit: false, person: null });
         setRefreshData(!refreshData);
-        
-
-       }).catch ( (err) => {
-         setSaving(false);
-         setEditMode({edit: false, person: null});
-         console.log(err);
-       });
-   }
-
-   const deleteBooking = (id) =>
-   {
-       setDeleting(true);
-       bookingService.deleteBooking(id).then( (res) => {
-        setDeleting(false);
-        setDeleteMode({delete: false, person: null});
-        setRefreshData(!refreshData);
-
-       }).catch ( (err) => {
-          setDeleting(false);
-          setDeleteMode({delete: false, person: null});
-         console.log(err);
-       });
-   }
-
-   const restoreBooking = (id) =>
-   {
-       setRestoring(true);
-       bookingService.unDeleteBooking(id).then( (res) => {
-        setRestoring(false);
-        setRestoreMode({restore: false, person: null});
-        setRefreshData(!refreshData);
-
-       }).catch ( (err) => {
-        setRestoring(false);
-        setRestoreMode({restore: false, person: null});
-         console.log(err);
-       });
-   }
-
-   const handleDeleteModeChanged = (del, person) => {
-
-    if (del)
-    {
-      setDeleteMode({delete: del, person: person});
-    }
-    else if (!del && !person)
-    {
-      setDeleteMode({delete: del, person: person});
-    }
-    else if (!del && person)
-    {
-        deleteBooking(person._id);
-    }
-  }
-
-  const handleRestoreModeChanged = (restore, person) => {
-
-    if (restore)
-    {
-      setRestoreMode({restore: restore, person: person});
-    }
-    else if (!restore && !person)
-    {
-      setRestoreMode({restore: restore, person: person});
-    }
-    else if (!restore && person)
-    {
-        restoreBooking(person._id);
-    }
-  }
-
-  const changeBackToBookingMade = (event, id) =>
-  {
-    setSaving(true);
-    BookService.changeBackToBookingMade(id).then(res => {
-      setSaving(false);
-      setRefreshData(!refreshData);
-    }).catch(err => {
-      console.log(err);
-      setSaving(false);
-    })
-  }
-
-  const changeToPatientAttended = (event, id) =>
-  {
-    setSaving(true);
-    BookService.changeToPatientAttended(id).then(res => {
-      setSaving(false);
-      setRefreshData(!refreshData);
-    }).catch(err => {
-      console.log(err);
-      setSaving(false);
-    })
-  }
-
-  const Pay = (event, id) =>
-  {
-    setSelectedBooking(booking);
-    setOpenPayDialog(true);
-  }
-
-  useEffect( () => 
-  {
-    if (props.booking)
-    {
-      BookService.getBookingById(props.booking._id).then( res => {
-        setBooking(res.data);
-      }).catch(err => {
+      })
+      .catch((err) => {
+        setSaving(false);
+        setEditMode({ edit: false, person: null });
         console.log(err);
       });
+  };
 
-      setState(state => ({...state, bookingDialogDataChanged : !state.bookingDialogDataChanged ? true : false}));
+  const deleteBooking = (id) => {
+    setDeleting(true);
+    bookingService
+      .deleteBooking(id)
+      .then((res) => {
+        setDeleting(false);
+        setDeleteMode({ delete: false, person: null });
+        setRefreshData(!refreshData);
+      })
+      .catch((err) => {
+        setDeleting(false);
+        setDeleteMode({ delete: false, person: null });
+        console.log(err);
+      });
+  };
+
+  const restoreBooking = (id) => {
+    setRestoring(true);
+    bookingService
+      .unDeleteBooking(id)
+      .then((res) => {
+        setRestoring(false);
+        setRestoreMode({ restore: false, person: null });
+        setRefreshData(!refreshData);
+      })
+      .catch((err) => {
+        setRestoring(false);
+        setRestoreMode({ restore: false, person: null });
+        console.log(err);
+      });
+  };
+
+  const handleDeleteModeChanged = (del, person) => {
+    if (del) {
+      setDeleteMode({ delete: del, person: person });
+    } else if (!del && !person) {
+      setDeleteMode({ delete: del, person: person });
+    } else if (!del && person) {
+      deleteBooking(person._id);
     }
+  };
 
-  } , [refreshData,state.bookingPayChanged]);
+  const handleRestoreModeChanged = (restore, person) => {
+    if (restore) {
+      setRestoreMode({ restore: restore, person: person });
+    } else if (!restore && !person) {
+      setRestoreMode({ restore: restore, person: person });
+    } else if (!restore && person) {
+      restoreBooking(person._id);
+    }
+  };
 
+  const changeBackToBookingMade = (event, id) => {
+    setSaving(true);
+    BookService.changeBackToBookingMade(id)
+      .then((res) => {
+        setSaving(false);
+        setRefreshData(!refreshData);
+      })
+      .catch((err) => {
+        console.log(err);
+        setSaving(false);
+      });
+  };
 
-  useEffect( () => {
-    if (props.booking)
-    {
+  const changeToPatientAttended = (event, id) => {
+    setSaving(true);
+    BookService.changeToPatientAttended(id)
+      .then((res) => {
+        setSaving(false);
+        setRefreshData(!refreshData);
+      })
+      .catch((err) => {
+        console.log(err);
+        setSaving(false);
+      });
+  };
+
+  const Pay = (event, id) => {
+    setSelectedBooking(booking);
+    setOpenPayDialog(true);
+  };
+
+  useEffect(() => {
+    if (props.booking) {
+      BookService.getBookingById(props.booking._id)
+        .then((res) => {
+          setBooking(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      setState((state) => ({
+        ...state,
+        bookingDialogDataChanged: !state.bookingDialogDataChanged
+          ? true
+          : false,
+      }));
+    }
+  }, [refreshData, state.bookingPayChanged]);
+
+  useEffect(() => {
+    if (props.booking) {
       setBooking(props.booking);
     }
-
   }, [props.booking]);
 
-  const undoPaymentClicked = async () =>
-  {
+  const undoPaymentClicked = async () => {
     setSaving(true);
-    try{
+    try {
       await BookService.unPayBooking(booking._id);
       setSaving(false);
       setOpenUndoPayDialog(false);
       setRefreshData(!refreshData);
-    }
-    catch(err)
-    {
+    } catch (err) {
       console.error(err);
       setSaving(false);
       setOpenUndoPayDialog(false);
     }
-  
+  };
+
+  const refundPaymentClicked = async () => {
+    setSaving(true);
+    try {
+      await BookService.refundBooking(booking._id);
+      setSaving(false);
+      updateShouldRefundsCount()
+      setOpenRefundDialog(false);
+      setRefreshData(!refreshData);
+    } catch (err) {
+      console.error(err);
+      setSaving(false);
+      setOpenRefundDialog(false);
+    }
+  };
+
+  const updateShouldRefundsCount = async () =>
+  {
+    try{
+      const res = await BookService.getShouldRefundsCount()
+      if (res && res.data && res.data.status === "OK")
+      {
+        setState(state => ({...state, shouldRefunsCount: res.data.count}))
+      }
+    }
+    catch(ex)
+    {
+      console.error(ex)
+    }
   }
 
   return (
@@ -816,7 +775,7 @@ export default function BookingDialog(props) {
       {booking && (
         <React.Fragment>
           <Dialog
-            maxWidth='sm'
+            maxWidth="sm"
             open={props.open}
             TransitionComponent={Transition}
             keepMounted
@@ -825,32 +784,50 @@ export default function BookingDialog(props) {
             aria-labelledby="alert-dialog-slide-title"
             aria-describedby="alert-dialog-slide-description"
           >
-            <DialogTitle id="alert-dialog-slide-title" style={booking.tr ? {backgroundColor:'#7e0082', color: "#fff"} : {}}>
-
-              {/* <div style={{position:"absolute", top: "25x", left: "25px"}}>
+            <DialogTitle
+              id="alert-dialog-slide-title"
+              style={
+                booking.tr ? { backgroundColor: "#7e0082", color: "#fff" } : {}
+              }
+            >
+              <div style={{ position: "absolute", top: "25x", left: "25px" }}>
                 <Tooltip title="COPY EDIT LINK TO CLIPBOARD">
-                    <IconButton onClick={() => {navigator.clipboard.writeText(`https://travelpcrtest.com/user/edit/${booking.bookingRef}-${booking.birthDate}`); setCopied(true); setTimeout(() => { 
-                      setCopied(false)
-                    }, 1500);}}
-
-                           aria-label="delete" 
-                           className={classes.margin} 
-                           size="small">
-                          <FileCopyOutlinedIcon style={booking.tr ? { color: "#ddd"} : {}} fontSize="14px" />
-                    </IconButton>
+                  <IconButton
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                        `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/gynae/${booking._id}`
+                      );
+                      setCopied(true);
+                      setTimeout(() => {
+                        setCopied(false);
+                      }, 1500);
+                    }}
+                    aria-label="delete"
+                    className={classes.margin}
+                    size="small"
+                  >
+                    <FileCopyOutlinedIcon
+                      style={booking.tr ? { color: "#ddd" } : {}}
+                      fontSize="14px"
+                    />
+                  </IconButton>
                 </Tooltip>
-          
-                  <span hidden={!copied} style={{fontSize:"12px", transition: "all 1s ease-in"}}> Copied </span>
-               
-              </div> */}
-              
+
+                <span
+                  hidden={!copied}
+                  style={{ fontSize: "12px", transition: "all 1s ease-in" }}
+                >
+                  {" "}
+                  Copied{" "}
+                </span>
+              </div>
+
               {/* {booking.tr && (
                 <div style={{position:"absolute",  right: "15px"}}>
                      TR
                 </div>
 
               )} */}
-              
 
               <Grid
                 container
@@ -878,20 +855,21 @@ export default function BookingDialog(props) {
                   <Grid item>
                     <Tooltip title="This record has been deleted.">
                       <DeleteIcon
-                        style={booking.tr ? 
-                          {
-                            padding: 0,
-                            margin: 0,
-                            color: "#fff",
-                            fontSize: 25,
-                          }
-                          
-                          : {
-                          padding: 0,
-                          margin: 0,
-                          color: "#333",
-                          fontSize: 25,
-                        }}
+                        style={
+                          booking.tr
+                            ? {
+                                padding: 0,
+                                margin: 0,
+                                color: "#fff",
+                                fontSize: 25,
+                              }
+                            : {
+                                padding: 0,
+                                margin: 0,
+                                color: "#333",
+                                fontSize: 25,
+                              }
+                        }
                       />
                     </Tooltip>
                   </Grid>
@@ -1099,18 +1077,40 @@ export default function BookingDialog(props) {
                             deleteMode.person._id === booking._id)
                         }
                       >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            handleDeleteModeChanged(true, booking);
-                          }}
-                          className={classes.DeleteButton}
-                        >
-                          Delete This Record
-                        </Button>
+                        {booking.OTCCharges > 0 && (
+                          <Tooltip title={"Paid Records Cannot be Deleted!"}>
+                            <div>
+                            <Button
+                              disabled={booking.OTCCharges > 0}
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              onClick={() => {
+                                handleDeleteModeChanged(true, booking);
+                              }}
+                              className={classes.DeleteButton}
+                            >
+                              Delete This Record
+                            </Button>
+                            </div>
+                          </Tooltip>
+                        )}
+                        {booking.OTCCharges === 0 && (
+                          <Button
+                            disabled={booking.OTCCharges > 0}
+                            type="button"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                              handleDeleteModeChanged(true, booking);
+                            }}
+                            className={classes.DeleteButton}
+                          >
+                            Delete This Record
+                          </Button>
+                        )}
                       </li>
 
                       <li
@@ -1392,88 +1392,173 @@ export default function BookingDialog(props) {
                         </span>
                       </li>
 
-
                       <li className={classes.li}>
                         <span className={classes.infoTitle}>STATUS</span>{" "}
                         {getStatusLabel(booking.status)}
                         {booking.status === "patient_attended" &&
                           !(
                             editMode.edit && editMode.person._id === booking._id
-                          ) && (
-                            <Button 
-                                  variant="outlined"
-                                  color="primary"
-                                  disabled = {saving}
-                                  style={{width: "300px"}}
-                                  onClick = {event => changeBackToBookingMade(event,booking._id)}
-
-                                     >
+                          ) &&
+                          !booking.deleted && (
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              disabled={saving}
+                              style={{ width: "300px" }}
+                              onClick={(event) =>
+                                changeBackToBookingMade(event, booking._id)
+                              }
+                            >
                               Change Back To Booking Made
                             </Button>
                           )}
-
                         {booking.status === "booked" &&
                           !(
                             editMode.edit && editMode.person._id === booking._id
-                          ) && (
-                            <Button 
-                                  variant="outlined"
-                                  color="default"
-                                  disabled = {saving}
-                                  style={{width: "300px"}}
-                                  onClick = {event => changeToPatientAttended(event,booking._id)}
-
-                                     >
+                          ) &&
+                          !booking.deleted && (
+                            <Button
+                              variant="outlined"
+                              color="default"
+                              disabled={saving}
+                              style={{ width: "300px" }}
+                              onClick={(event) =>
+                                changeToPatientAttended(event, booking._id)
+                              }
+                            >
                               Change To Patient Attended
                             </Button>
                           )}
-                      
-                      </li>      
+                      </li>
 
                       <li className={classes.li}>
-                        <span className={classes.infoTitle}>TOTAL CHARGES</span>{" "}
+                        <div
+                          style={{
+                            borderTop: "1px solid #ddd",
+                            paddingTop: "20px",
+                          }}
+                        >
+                          <span className={classes.infoTitle}>
+                            ONLINE DEPOSIT
+                          </span>{" "}
+                          <span
+                            className={
+                              !booking.deposit || booking.deposit === 0
+                                ? classes.infoDataChargesHigher
+                                : classes.infoDataCharges
+                            }
+                          >{`£${booking.deposit.toLocaleString(
+                            "en-GB"
+                          )}`}</span>
+                          {!(
+                            editMode.edit && editMode.person._id === booking._id
+                          ) &&
+                            !booking.paid &&
+                            booking.deleted &&
+                            booking.deposit > 0 && (
+                              <Button
+                                variant="outlined"
+                                color="secondary"
+                                className={classes.PayButton}
+                                onClick={(event) => setOpenRefundDialog(true)}
+                              >
+                                Refund Deposit
+                              </Button>
+                            )}
+                          {!(
+                            editMode.edit && editMode.person._id === booking._id
+                          ) &&
+                            booking.refund && (
+                              <React.Fragment>
+                                <span className={classes.PayLabel}>
+                                  {" "}
+                                  <CheckIcon
+                                    className={classes.checkIconSmall}
+                                  />{" "}
+                                  Refund Done
+                                  {booking.paidBy === "corporate"
+                                    ? ` "${booking.corporate}" `
+                                    : ""}
+                                </span>
+                              </React.Fragment>
+                            )}
+                        </div>
+                      </li>
+
+                      <li className={classes.li}>
+                        <span className={classes.infoTitle}>OTC CHARGES</span>{" "}
                         <span
+                          style={{ paddingLeft: "15px" }}
                           className={
-                            (!booking.price || booking.price === 0)
+                            !booking.OTCCharges || booking.OTCCharges === 0
                               ? classes.infoDataChargesHigher
                               : classes.infoDataCharges
                           }
-                        >{`£${booking.price.toLocaleString('en-GB')}`}</span>
-
-                          {
-                          !(
-                            editMode.edit && editMode.person._id === booking._id
-                          ) && (!booking.paid) && (!booking.deleted) && (
-                            <Button 
-                                  variant="outlined"
-                                  color="secondary"
-                                  className = {classes.PayButton}
-                                  onClick = {event => Pay(event,booking._id)}
-
-                                     >
+                        >{`£${booking.OTCCharges.toLocaleString(
+                          "en-GB"
+                        )}`}</span>
+                        {!(
+                          editMode.edit && editMode.person._id === booking._id
+                        ) &&
+                          !booking.paid &&
+                          !booking.deleted && (
+                            <Button
+                              variant="outlined"
+                              color="secondary"
+                              className={classes.PayButton}
+                              onClick={(event) => Pay(event, booking._id)}
+                            >
                               Pay
                             </Button>
                           )}
+                        {!(
+                          editMode.edit && editMode.person._id === booking._id
+                        ) &&
+                          booking.paid && (
+                            <React.Fragment>
+                              <span className={classes.PayLabel}>
+                                {" "}
+                                <CheckIcon
+                                  className={classes.checkIconSmall}
+                                />{" "}
+                                Paid by {booking.paidBy}
+                                {booking.paidBy === "corporate"
+                                  ? ` "${booking.corporate}" `
+                                  : ""}
+                              </span>
 
-                          {
-                          !(
-                            editMode.edit && editMode.person._id === booking._id
-                          ) && (booking.paid) && (
-                                 <React.Fragment>
-                                      <span className={classes.PayLabel}>  <CheckIcon className={classes.checkIconSmall} /> Paid by {booking.paidBy} 
-                                         {booking.paidBy === 'corporate' ? ` "${booking.corporate}" ` : ''}
-                                      </span>
-
-                                      <Tooltip title='Undo Payment'>
-                                          <IconButton onClick={() => setOpenUndoPayDialog(true)}>
-                                            <UndoIcon style={{color: 'red'}}/>
-                                          </IconButton>
-                                      </Tooltip>
-
-                                </React.Fragment>                    
+                              <Tooltip title="Undo Payment">
+                                <IconButton
+                                  onClick={() => setOpenUndoPayDialog(true)}
+                                >
+                                  <UndoIcon style={{ color: "red" }} />
+                                </IconButton>
+                              </Tooltip>
+                            </React.Fragment>
                           )}
                       </li>
 
+                      <li className={classes.li}>
+                        <div
+                          style={{
+                            borderTop: "1px solid #ddd",
+                            paddingTop: "10px",
+                          }}
+                        >
+                          <span className={classes.infoTitle}>
+                            TOTAL CHARGES
+                          </span>{" "}
+                          <span
+                            className={
+                              !booking.OTCCharges || booking.OTCCharges === 0
+                                ? classes.infoDataChargesHigher
+                                : classes.infoDataCharges
+                            }
+                          >{`£${(
+                            booking.deposit + booking.OTCCharges
+                          ).toLocaleString("en-GB")}`}</span>
+                        </div>
+                      </li>
                     </ul>
                   </div>
                 </Grid>
@@ -1486,39 +1571,70 @@ export default function BookingDialog(props) {
               </Backdrop>
             </DialogContent>
 
-
-            <PayDialog booking={selectedBooking} open={openPayDialog} handleClose={handleClosePayDialog} />
+            <PayDialog
+              booking={selectedBooking}
+              open={openPayDialog}
+              handleClose={handleClosePayDialog}
+            />
 
           </Dialog>
 
+          <Dialog
+            open={openUndoPayDialog}
+            onClose={handleCloseUndoPayDialog}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle style={{ color: "#999" }} id="alert-dialog-title">
+              {"Undo Payment"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText
+                style={{ color: "#333", fontWeight: "400" }}
+                id="alert-dialog-description"
+              >
+                Are you sure you want to undo payment for this booking?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseUndoPayDialog} color="default">
+                Back
+              </Button>
+              <Button onClick={undoPaymentClicked} color="secondary" autoFocus>
+                Yes, Undo Payment
+              </Button>
+            </DialogActions>
+          </Dialog>
 
           <Dialog
-              open={openUndoPayDialog}
-              onClose={handleCloseUndoPayDialog}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle style={{color:"#999"}} id="alert-dialog-title">{"Undo Payment"}</DialogTitle>
-              <DialogContent>
-                <DialogContentText style={{color:"#333", fontWeight:"400"}} id="alert-dialog-description">
-                  Are you sure you want to undo payment for this booking?  
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleCloseUndoPayDialog} color="default">
-                  Back
-                </Button>
-                <Button onClick={undoPaymentClicked} color="secondary" autoFocus>
-                  Yes, Undo Payment
-                </Button>
-              </DialogActions>
-      </Dialog>
-
-        
+            open={openRefundDialog}
+            onClose={handleCloseRefundDialog}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle style={{ color: "#999" }} id="alert-dialog-title">
+              {"Refund Deposit"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText
+                style={{ color: "#333", fontWeight: "400" }}
+                id="alert-dialog-description"
+              >
+                Are you sure you want to refund deposit payment for this booking?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseRefundDialog} color="default">
+                Back
+              </Button>
+              <Button onClick={refundPaymentClicked} color="secondary" autoFocus>
+                Yes, Refund Payment
+              </Button>
+            </DialogActions>
+          </Dialog>
 
         </React.Fragment>
       )}
-
     </React.Fragment>
   );
 }

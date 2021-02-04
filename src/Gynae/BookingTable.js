@@ -181,6 +181,14 @@ td: {
 topSelect: {
   margin: theme.spacing(1),
   minWidth: 80,
+},
+
+notifyIcon:{
+  width: "16px",
+  height: "16px",
+  borderRadius: "50%",
+  backgroundColor : "rgb(220, 0, 78)",
+  marginLeft: "10px"
 }
 
 }));
@@ -409,7 +417,11 @@ export default function BookingTable(props) {
       { field: 'paid', headerName: 'Paid', align: 'center' , width: 90, renderCell: (params) => { 
         if (!params.value)
         {
-           return ( <CloseIcon className={classes.closeIcon}/> );
+           return ( 
+              <React.Fragment>                    
+                    <CloseIcon className={classes.closeIcon}/>                        
+              </React.Fragment>
+           );
         }
         else
         {
@@ -524,7 +536,20 @@ export default function BookingTable(props) {
       { field: 'paid', headerName: 'Paid', align: 'center' , width: 90, renderCell: (params) => { 
                if (!params.value)
                {
-                  return ( <CloseIcon className={classes.closeIcon}/> );
+                  return ( 
+                    <React.Fragment>
+                                <CloseIcon className={classes.closeIcon}/> 
+                                {parseInt(params.getValue('deposit')) > 0 && (
+                                      <span className={classes.notifyIcon}>&nbsp;</span>
+                                )}
+
+                               
+                    </React.Fragment>
+                     
+                        
+                  
+                  
+                  );
                }
                else
                {

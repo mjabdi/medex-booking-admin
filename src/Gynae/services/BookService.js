@@ -14,6 +14,18 @@ export default class BookService {
       return API.post(`/api/gynae/book/unpaybooking?id=${bookingId}`);
    }
 
+   static getShouldRefundsCount = () =>
+   {
+      return API.get(`/api/gynae/book/getshouldrefundscount?`);
+   }
+
+   
+
+   static refundBooking = (bookingId) =>
+   {
+      return API.post(`/api/gynae/payment/refundpayment`, {bookingId: bookingId});
+   }
+
    static getBookingsStatsByDateStr = (dateStr) =>
    {
       return API.get(`/api/gynae/book/getbookingsstatsbydatestr?date=${dateStr}`);
@@ -22,6 +34,11 @@ export default class BookService {
    static getBookingsCountByDateStr = (dateStr) =>
    {
       return API.get(`/api/gynae/book/getbookingscountbydatestr?date=${dateStr}`);
+   }
+
+   static getAllBookingsCountAll = () =>
+   {
+      return API.get(`/api/gynae/book/getallbookingscountall`);
    }
 
    static getBookingsCountByDateStrandTime = (dateStr, time, source) =>

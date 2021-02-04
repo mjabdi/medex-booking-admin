@@ -28,6 +28,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import dateformat from "dateformat";
 import { getRole, setRole, clearRole } from "./Role";
+import { getGlobalPath, getMenuIdFromGlobalPath } from "./GlobalPath";
 
 const drawerWidth = 240;
 
@@ -302,14 +303,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-10px",
   },
 
-  appsInToolbar:{
+  appsInToolbar: {
     position: "fixed",
     left: "60px",
     top: "-5px",
     height: "65px",
     width: "200px",
-    overflow: "hidden"
-  }
+    overflow: "hidden",
+  },
 }));
 
 export default function Dashboard() {
@@ -342,7 +343,10 @@ export default function Dashboard() {
   let location = useLocation();
   React.useEffect(() => {
     if (!state.role) return;
-    const index = getMenuIndex(state.role, location.pathname.substr(1));
+    const index = getMenuIndex(
+      state.role,
+      getMenuIdFromGlobalPath(location.pathname)
+    );
     setState((state) => ({ ...state, currentMenuIndex: index }));
   }, [location]);
 
@@ -377,19 +381,34 @@ export default function Dashboard() {
   const appsClicked = (role) => {
     setRole(role);
     setState((state) => ({ ...state, role: role }));
-    history.push(`/${getMenuId(role, 0)}`);
-    handleAppsClose()
+    history.push(getGlobalPath(`/${getMenuId(role, 0)}`));
+    handleAppsClose();
   };
 
   const getAppsLogo = (role) => {
     switch (role) {
       case "admin":
-        return <img src="/images/admin.png" className={classes.appsLogo} />;
+        return (
+          <img
+            src={getGlobalPath("/images/admin.png")}
+            className={classes.appsLogo}
+          />
+        );
       case "pcr":
-        return <img src="/images/corona.png" className={classes.appsLogo} />;
+        return (
+          <img
+            src={getGlobalPath("/images/corona.png")}
+            className={classes.appsLogo}
+          />
+        );
 
       case "gynae":
-        return <img src="/images/woman.png" className={classes.appsLogo} />;
+        return (
+          <img
+            src={getGlobalPath("/images/woman.png")}
+            className={classes.appsLogo}
+          />
+        );
 
       default:
         return null;
@@ -399,11 +418,11 @@ export default function Dashboard() {
   const getAppsLabel = (role) => {
     switch (role) {
       case "admin":
-        return (<div className={classes.appsAdminLabel}> {"Admin"} </div>);
+        return <div className={classes.appsAdminLabel}> {"Admin"} </div>;
       case "pcr":
-        return (<div className={classes.appsPCRLabel}> {"PCR"} </div>);
+        return <div className={classes.appsPCRLabel}> {"PCR"} </div>;
       case "gynae":
-        return (<div className={classes.appsGynaeLabel}> {"Gynae"} </div>);
+        return <div className={classes.appsGynaeLabel}> {"Gynae"} </div>;
 
       default:
         return null;
@@ -417,7 +436,7 @@ export default function Dashboard() {
           <div className={classes.root}>
             <CssBaseline />
             <AppBar
-              style={{ backgroundColor: "#fff", color: "#555", height: "60px"}}
+              style={{ backgroundColor: "#fff", color: "#555", height: "60px" }}
               position="absolute"
               className={clsx(
                 classes.appBar,
@@ -436,20 +455,15 @@ export default function Dashboard() {
                 </IconButton>
 
                 <div className={classes.appsInToolbar}>
-                    <Grid container direction="row" alignItems="center">
-                      <Grid item>
-                         {getAppsLogo(state.role)}
-                      </Grid>
-                      <Grid item>
-                        <div style={{paddingTop:"8px"}}>
-                            {getAppsLabel(state.role)}
-                        </div>
-                      </Grid>
+                  <Grid container direction="row" alignItems="center">
+                    <Grid item>{getAppsLogo(state.role)}</Grid>
+                    <Grid item>
+                      <div style={{ paddingTop: "8px" }}>
+                        {getAppsLabel(state.role)}
+                      </div>
                     </Grid>
-                
-
+                  </Grid>
                 </div>
-              
 
                 <div className={classes.appbarCenter}>
                   {!isMobile && (
@@ -460,7 +474,7 @@ export default function Dashboard() {
 
                       <img
                         className={classes.logoImage}
-                        src="/images/logo.png"
+                        src={getGlobalPath("/images/logo.png")}
                         alt="logo image"
                       />
                     </React.Fragment>
@@ -642,21 +656,17 @@ export default function Dashboard() {
               open={open}
             >
               <div className={classes.toolbarIcon}>
-                    <React.Fragment>
-                      <img
-                        className={classes.logoImage}
-                        src="/images/logo.png"
-                        alt="logo image"
-                        style={{marginRight: "10px"}}
-                      />
-                      <span className={classes.appbarTitle}>
-                        <span style={{fontSize:"0.9rem"}}>
-                           Medical Express 
-                        </span>
-                      </span>
-
-
-                    </React.Fragment>
+                <React.Fragment>
+                  <img
+                    className={classes.logoImage}
+                    src={getGlobalPath("/images/logo.png")} 
+                    alt="logo image"
+                    style={{ marginRight: "10px" }}
+                  />
+                  <span className={classes.appbarTitle}>
+                    <span style={{ fontSize: "0.9rem" }}>Medical Express</span>
+                  </span>
+                </React.Fragment>
                 <IconButton onClick={handleDrawerClose}>
                   <ChevronLeftIcon />
                 </IconButton>
@@ -673,7 +683,6 @@ export default function Dashboard() {
                 className={classes.container}
               >
                 {getMenuContent(state.role, currentMenuIndex)}
-
               </Container>
             </main>
           </div>

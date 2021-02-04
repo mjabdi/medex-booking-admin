@@ -378,8 +378,9 @@ export default function PayDialog(props) {
                 >
                   <Grid item>
                   <TextField
+                                autoFocus
                                 error={priceError}
-                                label="Total Charges"
+                                label="OTC Charges"
                                 value={price}
                                 fullWidth
                                 required

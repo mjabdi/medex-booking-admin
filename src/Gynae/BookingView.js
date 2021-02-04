@@ -60,9 +60,15 @@ export default function BookingView() {
 
    useEffect( () => {
      loadData();
-     setInterval(() => {
+     const interval = setInterval(() => {
        setRefresh(refresh => !refresh);
      }, 30000);
+
+     return () =>
+     {
+       clearInterval(interval)
+     }
+     
    }, []) ;    
 
    const formatTimeStamp = (timeStamp) =>
