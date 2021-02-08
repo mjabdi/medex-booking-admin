@@ -8,6 +8,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Title from "./Title";
 import PCRBookService from "./PCR/services/BookService";
 import GynaeBookService from "./Gynae/services/BookService";
+import GPBookService from "./GP/services/BookService";
 
 import { LinearProgress } from "@material-ui/core";
 
@@ -30,14 +31,17 @@ export default function TotalBookingView() {
     try{
       const res1 = await PCRBookService.getAllBookingsCountAll()
       const res2 = await GynaeBookService.getAllBookingsCountAll()
+      const res3 = await GPBookService.getAllBookingsCountAll()
       
       const pcr =  parseInt(res1.data.count)
       const gynae = parseInt(res2.data.count)
+      const gp = parseInt(res3.data.count)
 
       const _data = [
         {clinic: "PCR", count: pcr},
         {clinic: "Gynae", count: gynae},
-        {clinic: "Total", count: pcr+gynae}
+        {clinic: "GP", count: gp},
+        {clinic: "Total", count: pcr+gynae+gp}
       ]
 
       setData(_data)

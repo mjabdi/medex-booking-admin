@@ -303,6 +303,15 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-10px",
   },
 
+  appsGPLabel: {
+    color: "#f68529",
+    fontWeight: "600",
+    fontSize: "0.95rem",
+    marginTop: "-10px",
+  },
+
+  
+
   appsInToolbar: {
     position: "fixed",
     left: "60px",
@@ -410,6 +419,14 @@ export default function Dashboard() {
           />
         );
 
+        case "gp":
+        return (
+          <img
+            src={getGlobalPath("/images/doctor.png")}
+            className={classes.appsLogo}
+          />
+        ); 
+
       default:
         return null;
     }
@@ -423,7 +440,9 @@ export default function Dashboard() {
         return <div className={classes.appsPCRLabel}> {"PCR"} </div>;
       case "gynae":
         return <div className={classes.appsGynaeLabel}> {"Gynae"} </div>;
-
+        case "gp":
+          return <div className={classes.appsGPLabel}> {"GP"} </div>;
+  
       default:
         return null;
     }
@@ -642,6 +661,25 @@ export default function Dashboard() {
                     <Grid item>{getAppsLabel("gynae")}</Grid>
                   </Grid>
                 </Grid>
+
+                <Grid item>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                    className={
+                      state.role === "gp"
+                        ? classes.appsBoxSelected
+                        : classes.appsBox
+                    }
+                    onClick={() => appsClicked("gp")}
+                  >
+                    <Grid item>{getAppsLogo("gp")}</Grid>
+                    <Grid item>{getAppsLabel("gp")}</Grid>
+                  </Grid>
+                </Grid>
+
               </Grid>
             </StyledMenuApps>
 

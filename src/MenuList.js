@@ -25,14 +25,20 @@ import AdminCalendarView from "./PCR/calendar-admin/CalendarView";
 
 /// Gynae -------------------
 import GynaeBookingTable from "./Gynae/BookingTable";
-import GynaeDashboardPreview from "./Gynae/DashboardPreview"
-import GynaeFindByRef from "./Gynae/FindByRef"
-import GynaeCalendarView from "./Gynae/calendar-admin/CalendarView"
+import GynaeDashboardPreview from "./Gynae/DashboardPreview";
+import GynaeFindByRef from "./Gynae/FindByRef";
+import GynaeCalendarView from "./Gynae/calendar-admin/CalendarView";
 //----------------------------
 
+/// GP -------------------
+import GPBookingTable from "./GP/BookingTable";
+import GPDashboardPreview from "./GP/DashboardPreview";
+import GPFindByRef from "./GP/FindByRef";
+import GPCalendarView from "./GP/calendar-admin/CalendarView";
+//----------------------------
 
 // Admin ----------------
-import AdminDashBoardPreview from "./DashboardPreview"
+import AdminDashBoardPreview from "./DashboardPreview";
 
 //---------------
 
@@ -41,6 +47,53 @@ export const MenuList_Admin = [
 ];
 
 export const MenuList_Gynae = [
+  { index: 0, id: `dashboard`, title: `Dashboard`, icon: <DashboardIcon /> },
+  {
+    index: 1,
+    id: `recentBookings`,
+    title: `Recent Bookings`,
+    icon: <AutorenewIcon />,
+  },
+  {
+    index: 2,
+    id: `todayBookings`,
+    title: `Today's Bookings`,
+    icon: <NewReleasesIcon />,
+  },
+  {
+    index: 3,
+    id: `oldBookings`,
+    title: `Old Bookings`,
+    icon: <HistoryIcon />,
+  },
+  {
+    index: 4,
+    id: `futureBookings`,
+    title: `Future Bookings`,
+    icon: <TimelineIcon />,
+  },
+  {
+    index: 5,
+    id: `allBookings`,
+    title: `All Bookings`,
+    icon: <DescriptionIcon />,
+  },
+  {
+    index: 6,
+    id: `deletedBookings`,
+    title: `Deleted Records`,
+    icon: <DeleteIcon />,
+  },
+  {
+    index: 7,
+    id: `calendarView`,
+    title: `Calendar View`,
+    icon: <DateRangeIcon />,
+  },
+  { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+];
+
+export const MenuList_GP = [
   { index: 0, id: `dashboard`, title: `Dashboard`, icon: <DashboardIcon /> },
   {
     index: 1,
@@ -205,7 +258,7 @@ export const getMenuContent = (role, index) => {
   } else if (role === "gynae") {
     switch (index) {
       case 0:
-        return <GynaeDashboardPreview/>;
+        return <GynaeDashboardPreview />;
       case 1:
         return <GynaeBookingTable date="recent" />;
       case 2:
@@ -219,16 +272,39 @@ export const getMenuContent = (role, index) => {
       case 6:
         return <GynaeBookingTable date="deleted" />;
       case 7:
-         return <GynaeCalendarView/>
+        return <GynaeCalendarView />;
       case 8:
-          return <GynaeFindByRef/>     
+        return <GynaeFindByRef />;
+      default:
+        return `Page Not Found!`;
+    }
+  } else if (role === "gp") {
+    switch (index) {
+      case 0:
+        return <GPDashboardPreview />;
+      case 1:
+        return <GPBookingTable date="recent" />;
+      case 2:
+        return <GPBookingTable date="today" />;
+      case 3:
+        return <GPBookingTable date="old" />;
+      case 4:
+        return <GPBookingTable date="future" />;
+      case 5:
+        return <GPBookingTable date="all" />;
+      case 6:
+        return <GPBookingTable date="deleted" />;
+      case 7:
+        return <GPCalendarView />;
+      case 8:
+        return <GPFindByRef />;
       default:
         return `Page Not Found!`;
     }
   } else if (role === "admin") {
     switch (index) {
       case 0:
-        return <AdminDashBoardPreview/>;
+        return <AdminDashBoardPreview />;
       default:
         return `Page Not Found!`;
     }
@@ -245,6 +321,8 @@ export const getMenuRole = (role) => {
       return MenuList_PCR;
     case "gynae":
       return MenuList_Gynae;
+    case "gp":
+      return MenuList_GP;
     default:
       return [];
   }

@@ -58,22 +58,18 @@ const isFriday = (date) => {
 };
 
 const getCurrentTimeSlot = (now) => {
-  if (isWeekend(now)) {
-    return null;
-  }
+ 
 
   var min = now.getMinutes();
   var hour = now.getHours();
 
-  if (isThursday(now) && hour < 13) {
+  if (isWeekend(now) && (hour >= 14 || hour < 10)) {
     return null;
   }
 
-  if (isFriday(now) && hour >= 13) {
+  if (hour >= 18 || hour < 10) {
     return null;
   }
-
-  if (hour < 10 || hour >= 18) return null;
 
   const slotMinStr = min < 30 ? "00" : "30";
   const pmStr = hour >= 12 ? "PM" : "AM";

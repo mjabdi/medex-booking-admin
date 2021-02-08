@@ -2,6 +2,19 @@ import API from './api';
 
 export default class PDFService {
 
+
+    static downloadGynaeRegForm = (id) =>
+    {
+       return API.get(`/api/pdf/downloadgynaeregform?id=${id}`, {
+        responseType: 'arraybuffer',
+        id: id,
+        headers: {
+            Accept: 'application/pdf',
+        }
+        });
+    }
+
+
     static downloadCovidForm1 = (id) =>
     {
        return API.get(`/api/pdf/downloadcovidform1?id=${id}`, {

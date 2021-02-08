@@ -100,7 +100,6 @@ export default function BookingView() {
             <TableCell>Fullname</TableCell>
             <TableCell>Email</TableCell>
             <TableCell>Tel</TableCell>
-            <TableCell>Service</TableCell>
             <TableCell>Booked Date</TableCell>
             <TableCell>Booked Time</TableCell> 
           </TableRow>
@@ -112,7 +111,6 @@ export default function BookingView() {
               <TableCell>{row.fullname}</TableCell>
               <TableCell>{row.email}</TableCell>
               <TableCell>{row.phone}</TableCell>
-              <TableCell>{row.service}</TableCell>
               <TableCell>{FormatDateFromString(row.bookingDate)}</TableCell>
               <TableCell>{row.bookingTime}</TableCell>
             </TableRow>

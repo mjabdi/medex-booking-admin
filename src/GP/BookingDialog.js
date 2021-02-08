@@ -425,7 +425,6 @@ export default function BookingDialog(props) {
         fullname !== booking.fullname ||
         email !== booking.email ||
         tel !== booking.phone ||
-        service !== booking.service ||
         notes !== booking.notes;
 
       setRecordChanged(isChanged);
@@ -497,7 +496,6 @@ export default function BookingDialog(props) {
       setBookingTime(person.bookingTime.toUpperCase());
       setEmail(person.email);
       setTel(person.phone);
-      setService(person.service);
       if (person.notes) {
         setNotes(person.notes);
       }
@@ -773,7 +771,7 @@ export default function BookingDialog(props) {
 
   const downloadRegForm = (id) =>
   {
-        PDFService.downloadGynaeRegForm(id).then( (res) => 
+        PDFService.downloadGPRegForm(id).then( (res) => 
         {
            const file = new Blob(
              [res.data], 
@@ -1344,7 +1342,7 @@ export default function BookingDialog(props) {
                           ></TextField>
                         </span>
                       </li>
-                      <li className={classes.li}>
+                      {/* <li className={classes.li}>
                         <span className={classes.infoTitle}>SERVICE</span>
                         <span
                           hidden={
@@ -1375,7 +1373,7 @@ export default function BookingDialog(props) {
                             }}
                           ></TextField>
                         </span>
-                      </li>
+                      </li> */}
 
                       <li className={classes.li}>
                         <span className={classes.infoTitle}>NOTES</span>
@@ -1469,7 +1467,7 @@ export default function BookingDialog(props) {
                       </li>
 
 
-                      <li className={classes.li}>
+                      {/* <li className={classes.li}>
                         <div
                           style={{
                             borderTop: "1px solid #ddd",
@@ -1522,9 +1520,10 @@ export default function BookingDialog(props) {
                             )}
                         </div>
                       </li>
-
-                      <li className={classes.li}>
-                        <span className={classes.infoTitle}>OTC CHARGES</span>{" "}
+ */}
+                      <Divider/>
+                      <li className={classes.li} style={{marginTop:"20px"}}>
+                        <span className={classes.infoTitle}>TOTAL CHARGES</span>{" "}
                         <span
                           style={{ paddingLeft: "15px" }}
                           className={
@@ -1576,7 +1575,7 @@ export default function BookingDialog(props) {
                           )}
                       </li>
 
-                      <li className={classes.li}>
+                      {/* <li className={classes.li}>
                         <div
                           style={{
                             borderTop: "1px solid #ddd",
@@ -1596,7 +1595,7 @@ export default function BookingDialog(props) {
                             booking.deposit + booking.OTCCharges
                           ).toLocaleString("en-GB")}`}</span>
                         </div>
-                      </li>
+                      </li> */}
                     </ul>
                   </div>
                 </Grid>
