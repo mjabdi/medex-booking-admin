@@ -44,6 +44,8 @@ import PayDialog from "./PayDialog";
 import PrintIcon from "@material-ui/icons/Print";
 import UndoIcon from "@material-ui/icons/Undo";
 
+import SendIcon from '@material-ui/icons/Send';
+
 import HistoryIcon from "@material-ui/icons/History";
 
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
@@ -349,6 +351,8 @@ export default function BookingDialog(props) {
 
   const [copied, setCopied] = useState(false);
 
+  const [emailSent, setEmailSent] = React.useState(false)
+
   const [openResendDialog, setOpenResendDialog] = React.useState(false);
   const [openPayDialog, setOpenPayDialog] = React.useState(false);
   const [openRefundDialog, setOpenRefundDialog] = React.useState(false);
@@ -392,20 +396,14 @@ export default function BookingDialog(props) {
 
   const [openTimeStampDialog, setOpenTimeStampDialog] = React.useState(false);
 
-  const handleCloseTimeStampDialog = () => {
-    setOpenTimeStampDialog(false);
-    setSelectedBooking(null);
-  };
+
 
   const handleCloseUndoPayDialog = () => {
     setOpenUndoPayDialog(false);
     setSelectedBooking(null);
   };
 
-  const handleCloseResendDialog = () => {
-    setOpenResendDialog(false);
-    setSelectedBooking(null);
-  };
+
 
   const handleClosePayDialog = () => {
     setOpenPayDialog(false);
@@ -788,6 +786,32 @@ export default function BookingDialog(props) {
         });
   }
 
+  const sendRegForm = (id) =>
+  {
+    setSaving(true)    
+    setEmailSent(false)
+    BookService.sendRegFormEmail(id).then( (res) => 
+        {
+          setSaving(false)
+          if (res.data.status === "OK")
+          {
+            setEmailSent(true)
+          }
+          
+ 
+        }).catch( (err) =>
+        {
+            console.log(err);
+            setSaving(false)
+        });
+  }
+
+  const onClose = () =>
+  {
+    setEmailSent(false)
+    props.onClose()
+  }
+
   return (
     <React.Fragment>
       {booking && (
@@ -797,7 +821,7 @@ export default function BookingDialog(props) {
             open={props.open}
             TransitionComponent={Transition}
             keepMounted
-            onClose={props.onClose}
+            onClose={onClose}
             PaperComponent={PaperComponent}
             aria-labelledby="alert-dialog-slide-title"
             aria-describedby="alert-dialog-slide-description"
@@ -1465,6 +1489,31 @@ export default function BookingDialog(props) {
                           className={classes.DownloadForm}
                         >
                           Download Registration Form
+                        </Button>
+                      </li>
+
+                      
+                      <li hidden={booking.deleted || editMode.edit || booking.formData}>
+                        <Button
+                          startIcon = {<SendIcon/>}
+                          type="button"
+                          fullWidth
+                          variant="outlined"
+                          color="primary"
+                          onClick={() => {
+                            sendRegForm(booking._id);
+                          }}
+                          className={classes.DownloadForm}
+                          style= {{position: "relative"}}
+                        >
+                          Send Registration Form Email
+
+                          {emailSent && (
+                            <div style={{position: "absolute", right: "10px", top : "5px", color: "#05ad19"}}>
+                                Email Sent
+                            </div>
+                          )}
+
                         </Button>
                       </li>
 

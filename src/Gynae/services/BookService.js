@@ -4,6 +4,11 @@ import axiosRetry from 'axios-retry';
 export default class BookService {
 
 
+   static sendRegFormEmail = (bookingId) =>
+   {
+      return API.post(`/api/gynae/book/sendregformemail?id=${bookingId}`);
+   }
+
    static payBooking = (bookingId,price, paymentMethod, corporate) =>
    {
       return API.post(`/api/gynae/book/paybooking?id=${bookingId}&paymentmethod=${paymentMethod}&corporate=${corporate}&price=${price}`);
