@@ -13,7 +13,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import EventNoteIcon from "@material-ui/icons/EventNote";
-
+import AirplanemodeActiveIcon from '@material-ui/icons/AirplanemodeActive';
 /// PCR ------------------
 import FindByRef from "./PCR/FindByRef";
 import BookingTable from "./PCR/BookingTable";
@@ -199,23 +199,29 @@ export const MenuList_PCR = [
   },
   {
     index: 11,
+    id: `trBookings`,
+    title: `TR Bookings`,
+    icon: <AirplanemodeActiveIcon />,
+  },
+  {
+    index: 12,
     id: `unmatchedRecords`,
     title: `Unmatched Records`,
     icon: <WarningIcon />,
   },
   {
-    index: 12,
+    index: 13,
     id: `calendarView`,
     title: `Calendar View`,
     icon: <DateRangeIcon />,
   },
   {
-    index: 13,
+    index: 14,
     id: `adminCalendarView`,
     title: `Admin Calendar`,
     icon: <EventNoteIcon />,
   },
-  { index: 14, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 15, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
 ];
 
 export const getMenuContent = (role, index) => {
@@ -244,12 +250,14 @@ export const getMenuContent = (role, index) => {
       case 10:
         return <BookingTable date="deleted" />;
       case 11:
-        return <UnmatchedRecords />;
+        return <BookingTable date="tr" />;
       case 12:
-        return <CalendarView />;
+        return <UnmatchedRecords />;
       case 13:
-        return <AdminCalendarView />;
+        return <CalendarView />;
       case 14:
+        return <AdminCalendarView />;
+      case 15:
         return <FindByRef />;
 
       default:

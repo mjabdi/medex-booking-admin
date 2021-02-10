@@ -218,6 +218,9 @@ const getTableTitle = (str) =>{
   }else if (str === 'late')
   {
     return `40 Hours Late`;
+  }else if (str === 'tr')
+  {
+    return `Test & Release Bookings`;
   }
   
   else
@@ -806,6 +809,10 @@ export default function BookingTable(props) {
     else if (props.date === 'late')
     {
       api = BookService.getLateBookings;
+    }
+    else if (props.date === 'tr')
+    {
+      api = BookService.getAllTRBookings;
     }
                
     setData({bookings: [], cachedBookings: [], isFetching: true});

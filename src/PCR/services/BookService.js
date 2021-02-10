@@ -156,6 +156,12 @@ export default class BookService {
       return API.get(`/api/book/getallbookings?limit=${limit}`);
     }
 
+    static getAllTRBookings = (limit) =>
+    {
+      if (!limit) limit = 25 
+      return API.get(`/api/book/getalltrbookings?limit=${limit}`);
+    }
+
     static getLateBookings= () =>
     {
        return API.get(`/api/book/getlatebookings`);
