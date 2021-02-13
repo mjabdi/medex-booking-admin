@@ -827,7 +827,7 @@ export default function BookingDialog(props) {
                   <IconButton
                     onClick={() => {
                       navigator.clipboard.writeText(
-                        `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/gynae/${booking._id}`
+                        `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/std/${booking._id}`
                       );
                       setCopied(true);
                       setTimeout(() => {
