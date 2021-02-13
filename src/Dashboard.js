@@ -62,8 +62,8 @@ const StyledMenuApps = withStyles((theme) => ({
   paper: {
     marginTop: "5px",
     // marginRight: "5px",
-    width: "275px",
-    height: "240px",
+    width: "280px",
+    height: "280px",
     border: `1px solid #ddd`,
     borderRadius: "10px",
     padding: "10px",
@@ -310,6 +310,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-10px",
   },
 
+  appsSTDLabel: {
+    color: "#f68529",
+    fontWeight: "600",
+    fontSize: "0.95rem",
+    marginTop: "-10px",
+  },
+
+
   
 
   appsInToolbar: {
@@ -427,6 +435,14 @@ export default function Dashboard() {
           />
         ); 
 
+        case "std":
+          return (
+            <img
+              src={getGlobalPath("/images/std-icon.png")}
+              className={classes.appsLogo}
+            />
+          ); 
+
       default:
         return null;
     }
@@ -442,6 +458,8 @@ export default function Dashboard() {
         return <div className={classes.appsGynaeLabel}> {"Gynae"} </div>;
         case "gp":
           return <div className={classes.appsGPLabel}> {"GP"} </div>;
+          case "std":
+            return <div className={classes.appsSTDLabel}> {"STD"} </div>;
   
       default:
         return null;
@@ -677,6 +695,24 @@ export default function Dashboard() {
                   >
                     <Grid item>{getAppsLogo("gp")}</Grid>
                     <Grid item>{getAppsLabel("gp")}</Grid>
+                  </Grid>
+                </Grid>
+
+                <Grid item>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                    className={
+                      state.role === "std"
+                        ? classes.appsBoxSelected
+                        : classes.appsBox
+                    }
+                    onClick={() => appsClicked("std")}
+                  >
+                    <Grid item>{getAppsLogo("std")}</Grid>
+                    <Grid item>{getAppsLabel("std")}</Grid>
                   </Grid>
                 </Grid>
 

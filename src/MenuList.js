@@ -13,7 +13,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import EventNoteIcon from "@material-ui/icons/EventNote";
-import AirplanemodeActiveIcon from '@material-ui/icons/AirplanemodeActive';
+import AirplanemodeActiveIcon from "@material-ui/icons/AirplanemodeActive";
 /// PCR ------------------
 import FindByRef from "./PCR/FindByRef";
 import BookingTable from "./PCR/BookingTable";
@@ -35,6 +35,13 @@ import GPBookingTable from "./GP/BookingTable";
 import GPDashboardPreview from "./GP/DashboardPreview";
 import GPFindByRef from "./GP/FindByRef";
 import GPCalendarView from "./GP/calendar-admin/CalendarView";
+//----------------------------
+
+/// GP -------------------
+import STDBookingTable from "./STD/BookingTable";
+import STDDashboardPreview from "./STD/DashboardPreview";
+import STDFindByRef from "./STD/FindByRef";
+import STDCalendarView from "./STD/calendar-admin/CalendarView";
 //----------------------------
 
 // Admin ----------------
@@ -94,6 +101,53 @@ export const MenuList_Gynae = [
 ];
 
 export const MenuList_GP = [
+  { index: 0, id: `dashboard`, title: `Dashboard`, icon: <DashboardIcon /> },
+  {
+    index: 1,
+    id: `recentBookings`,
+    title: `Recent Bookings`,
+    icon: <AutorenewIcon />,
+  },
+  {
+    index: 2,
+    id: `todayBookings`,
+    title: `Today's Bookings`,
+    icon: <NewReleasesIcon />,
+  },
+  {
+    index: 3,
+    id: `oldBookings`,
+    title: `Old Bookings`,
+    icon: <HistoryIcon />,
+  },
+  {
+    index: 4,
+    id: `futureBookings`,
+    title: `Future Bookings`,
+    icon: <TimelineIcon />,
+  },
+  {
+    index: 5,
+    id: `allBookings`,
+    title: `All Bookings`,
+    icon: <DescriptionIcon />,
+  },
+  {
+    index: 6,
+    id: `deletedBookings`,
+    title: `Deleted Records`,
+    icon: <DeleteIcon />,
+  },
+  {
+    index: 7,
+    id: `calendarView`,
+    title: `Calendar View`,
+    icon: <DateRangeIcon />,
+  },
+  { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+];
+
+export const MenuList_STD = [
   { index: 0, id: `dashboard`, title: `Dashboard`, icon: <DashboardIcon /> },
   {
     index: 1,
@@ -309,6 +363,29 @@ export const getMenuContent = (role, index) => {
       default:
         return `Page Not Found!`;
     }
+  } else if (role === "std") {
+    switch (index) {
+      case 0:
+        return <STDDashboardPreview />;
+      case 1:
+        return <STDBookingTable date="recent" />;
+      case 2:
+        return <STDBookingTable date="today" />;
+      case 3:
+        return <STDBookingTable date="old" />;
+      case 4:
+        return <STDBookingTable date="future" />;
+      case 5:
+        return <STDBookingTable date="all" />;
+      case 6:
+        return <STDBookingTable date="deleted" />;
+      case 7:
+        return <STDCalendarView />;
+      case 8:
+        return <STDFindByRef />;
+      default:
+        return `Page Not Found!`;
+    }
   } else if (role === "admin") {
     switch (index) {
       case 0:
@@ -331,6 +408,8 @@ export const getMenuRole = (role) => {
       return MenuList_Gynae;
     case "gp":
       return MenuList_GP;
+    case "std":
+      return MenuList_STD;
     default:
       return [];
   }
