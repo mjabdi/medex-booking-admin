@@ -15,14 +15,16 @@ const useStyles = makeStyles((theme) => ({
         width: "100%",
         paddingTop: "40%",
         position: "relative",
-        backgroundColor: "#fff"
+        backgroundColor: "#fff",
+        cursor: "pointer"
     },
 
     ContainerPast: {
         width: "100%",
         paddingTop: "40%",
         position: "relative",
-        backgroundColor: "#fafafa"
+        backgroundColor: "#fafafa",
+        cursor: "pointer"
     },
     
     DayLabel: {
@@ -214,7 +216,7 @@ const WeekViewCell = ({key, date, time, dayClicked}) => {
     return (
         <React.Fragment>
 
-            <div className={isPast ? classes.ContainerPast : classes.Container}>
+            <div className={isPast ? classes.ContainerPast : classes.Container} onClick={(event => dayClicked(event,cellDate))}>
 
               {getBookingsCountLabel(bookingsCount)}
 

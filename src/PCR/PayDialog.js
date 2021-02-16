@@ -164,6 +164,10 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: "90px"   
   },
   
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 5,
+    color: "#fff",
+  },
   
 }));
 

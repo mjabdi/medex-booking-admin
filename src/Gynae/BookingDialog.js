@@ -806,6 +806,21 @@ export default function BookingDialog(props) {
         });
   }
 
+  const manualRefund = async () =>
+  {
+    setSaving(true);
+    try {
+      await BookService.manualRefundBooking(booking._id);
+      setSaving(false);
+      updateShouldRefundsCount()
+      setRefreshData(!refreshData);
+    } catch (err) {
+      console.error(err);
+      setSaving(false);
+      setOpenRefundDialog(false);
+    }
+  }
+
   const onClose = () =>
   {
     setEmailSent(false)
@@ -1542,7 +1557,9 @@ export default function BookingDialog(props) {
                           ) &&
                             !booking.paid &&
                             booking.deleted &&
-                            booking.deposit > 0 && (
+                            booking.deposit > 0 && 
+                            booking.paymentInfo &&
+                            (
                               <Button
                                 variant="outlined"
                                 color="secondary"
@@ -1552,6 +1569,26 @@ export default function BookingDialog(props) {
                                 Refund Deposit
                               </Button>
                             )}
+
+                        {!(
+                            editMode.edit && editMode.person._id === booking._id
+                          ) &&
+                            !booking.paid &&
+                            booking.deleted &&
+                            booking.deposit > 0 && 
+                            !booking.paymentInfo &&
+                            (
+                              <Button
+                                variant="outlined"
+                                color="primary"
+                                className={classes.PayButton}
+                                onClick={(event) => manualRefund()}
+                              >
+                                <span style={{textTransform:"capitalize"}}>I made the refund manually</span>
+                              </Button>
+                            )}
+
+
                           {!(
                             editMode.edit && editMode.person._id === booking._id
                           ) &&

@@ -15,10 +15,11 @@ import {
   makeStyles,
   MenuItem,
   Select,
+  Switch,
   TextField,
   Tooltip,
 } from "@material-ui/core";
-import GlobalState from "./../GlobalState";
+import GlobalState from "../GlobalState";
 import { withStyles } from "@material-ui/core/styles";
 
 import CreditCardIcon from "@material-ui/icons/CreditCard";
@@ -43,6 +44,9 @@ import FormLabel from "@material-ui/core/FormLabel";
 import { corporates } from "./Corporates";
 import NumberFormat from "react-number-format";
 
+import AddIcon from "@material-ui/icons/Add";
+import { validate } from "email-validator";
+import DateRangeIcon from "@material-ui/icons/DateRange";
 
 var interval;
 
@@ -175,11 +179,44 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: "90px",
   },
 
+  CalendarIcon: {
+    color: theme.palette.primary.main,
+  },
+
+  DateTimeLabel: {
+    fontWeight: "500",
+    color: theme.palette.primary.main,
+  },
+
   backdrop: {
     zIndex: theme.zIndex.drawer + 5,
     color: "#fff",
   },
+
+  PriceLabelPaid:{
+    color: theme.palette.primary.main,
+    fontWeight: "600"
+  },
+
+  PriceLabelNotPaid:{
+    color: theme.palette.secondary.main,
+    fontWeight: "600"
+  },
+
+
 }));
+
+const Packages = [
+  { packageName: "Consultation with Consultant Gynaecologist" },
+  { packageName: `Coil Fitting/Coil Removal` },
+  { packageName: `Well Woman Check` },
+  { packageName: `Sexual Health Screening` },
+  { packageName: `Pre-pregnancy/Fertility check` },
+  { packageName: `Gynaecological Ultrasound` },
+  { packageName: `HPV Vaccination` },
+  { packageName: `Cervical / Pap Smear` },
+  { packageName: `HPV Treatment / Wart Cryo-Therapy` },
+];
 
 function NumberFormatCustom(props) {
   const { inputRef, onChange, ...other } = props;
@@ -208,7 +245,6 @@ NumberFormatCustom.propTypes = {
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
-
 
 const BorderLinearProgress = withStyles((theme) => ({
   root: {
@@ -259,66 +295,95 @@ function PaperComponent(props) {
   );
 }
 
-export default function PayDialog(props) {
+export default function NewBookingDialog(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useContext(GlobalState);
-  const [paymentMethod, setPaymentMethod] = useState("credit card");
-  const [corporate, setCorporate] = useState(corporates[0]);
   const [saving, setSaving] = useState(false);
 
-  const [price, setPrice] = useState("");
-  const [priceError, setPriceError] = useState(false);
+  const [fullname, setFullname] = React.useState("");
+  const [fullnameError, setFullnameError] = React.useState(false);
 
+  const [phone, setPhone] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [service, setService] = React.useState("");
+  const [notes, setNotes] = React.useState("");
 
-  const priceChanged = (event) =>
-  {
-    setPrice(event.target.value)
-    setPriceError(false)
-  }
+  const [deposit, setDeposit] = React.useState(false);
 
-  const paymentMethodChanged = (event) => {
-    setPaymentMethod(event.target.value);
+  const depositChanged = (event) => {
+    setDeposit(event.target.checked);
+  };
+
+  const fullnameChanged = (event) => {
+    setFullname(event.target.value);
+    setFullnameError(false);
+  };
+
+  const phoneChanged = (event) => {
+    setPhone(event.target.value);
+  };
+
+  const emailChanged = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const serviceChanged = (event) => {
+    setService(event.target.value);
+  };
+
+  const notesChanged = (event) => {
+    setNotes(event.target.value);
   };
 
   const handleClose = () => {
     if (saving) return;
 
+    setFullname("");
+    setFullnameError(false);
+    setPhone("");
+    setEmail("");
+    setService("");
+    setNotes("");
+    setDeposit(false);
+
     props.handleClose();
-    setPaymentMethod("credit card");
-    setPrice('')
-    setCorporate(corporates[0]);
     setSaving(false);
   };
 
-  const corporateChanged = (event) => {
-    setCorporate(event.target.value);
+  const validateBooking = () => {
+    let error = false;
+    if (!fullname || fullname.trim().length < 1) {
+      setFullnameError(true);
+      error = true;
+    }
+    return !error;
   };
 
-  const payClicked = async () => {
-
-
-    if (!price || price.trim().length === 0 || price === '0')
-    {
-      setPriceError(true)
-      return
+  const saveClicked = async () => {
+    if (!validateBooking()) {
+      return;
     }
 
     setSaving(true);
 
-  
-
     try {
-      await BookService.payBooking(
-        props.booking._id,
-        price,
-        paymentMethod,
-        paymentMethod === "corporate" ? corporate : ""
-      );
+      await BookService.addNewBooking({
+        bookingDate: props.date,
+        bookingTime: props.time,
+        fullname: fullname,
+        phone: phone,
+        email: email,
+        service: service,
+        notes: notes,
+        deposit: deposit ? 100 : 0,
+      });
       setSaving(false);
       setState((state) => ({
         ...state,
-        bookingPayChanged: !state.bookingPayChanged ? true : false,
+        bookingDialogDataChanged: !state.bookingDialogDataChanged
+          ? true
+          : false,
       }));
       handleClose();
     } catch (err) {
@@ -329,7 +394,7 @@ export default function PayDialog(props) {
 
   return (
     <React.Fragment>
-      {props.booking && (
+      {props.date && props.time && (
         <React.Fragment>
           <Dialog
             maxWidth="xs"
@@ -347,9 +412,7 @@ export default function PayDialog(props) {
                 alignItems="center"
               >
                 <Grid item>
-                  <CreditCardIcon
-                    style={{ color: "#f50057", fontSize: "3rem" }}
-                  />
+                  <AddIcon style={{ color: "#f50057", fontSize: "3rem" }} />
                 </Grid>
 
                 <Grid item>
@@ -361,7 +424,7 @@ export default function PayDialog(props) {
                     }}
                   >
                     {" "}
-                    PAY the CHARGE{" "}
+                    ADD New Booking{" "}
                   </div>
                 </Grid>
               </Grid>
@@ -371,95 +434,119 @@ export default function PayDialog(props) {
             <DialogContent>
               <div
                 style={{
-                  height: "300px",
+                  height: "480px",
                 }}
               >
                 <Grid
                   container
-                  direction="column"
-                  justify="space-between"
+                  direction="row"
+                  justify="stretch"
                   spacing={2}
-                  alignItems="flex-start"
+                  alignItems="center"
                 >
-                  <Grid item>
-                  <TextField
-                                autoFocus
-                                error={priceError}
-                                label="OTC Charges"
-                                value={price}
-                                fullWidth
-                                required
-                                onChange={priceChanged}
-                                name="product-price"
-                                id="product-price-id"
-                                InputProps={{
-                                  inputComponent: NumberFormatCustom,
-                                  startAdornment: (
-                                    <InputAdornment position="start">
-                                      £
-                                    </InputAdornment>
-                                  ),
-                                }}
-                              />
-
+                  <Grid item xs={12}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                      spacing={1}
+                    >
+                      <Grid item>
+                        <DateRangeIcon className={classes.CalendarIcon} />
+                      </Grid>
+                      <Grid item>
+                        <span className={classes.DateTimeLabel}>
+                          {props.date} , {props.time}
+                        </span>
+                      </Grid>
+                    </Grid>
                   </Grid>
 
-                  <Grid item>
-                    <div style={{ fontSize: "17px" }}>
-                      {" "}
-                      How do you want to pay?{" "}
-                    </div>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      autoFocus
+                      error={fullnameError}
+                      label="Full Name"
+                      value={fullname}
+                      required
+                      onChange={fullnameChanged}
+                      name="fullname"
+                      id="fullname-id"
+                      autoComplete="none"
+                    />
                   </Grid>
 
-                  <Grid item>
-                    <FormControl component="fieldset">
-                      <RadioGroup
-                        aria-label="paymentMethod"
-                        name="paymentMethod"
-                        value={paymentMethod}
-                        onChange={paymentMethodChanged}
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Telephone"
+                      value={phone}
+                      onChange={phoneChanged}
+                      name="phone"
+                      id="phone-id"
+                      autoComplete="none"
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Email"
+                      value={email}
+                      onChange={emailChanged}
+                      name="email"
+                      id="email-id"
+                      autoComplete="none"
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} md={12}>
+                    <FormControl className={classes.formControl} fullWidth>
+                      <InputLabel id="service-label-id">Service</InputLabel>
+                      <Select
+                        fullWidth
+                        labelId="service-label-id"
+                        id="service-id"
+                        value={service}
+                        onChange={serviceChanged}
                       >
-                        <FormControlLabel
-                          value="credit card"
-                          control={<Radio />}
-                          label="Credit Card"
-                        />
-                        <FormControlLabel
-                          value="cash"
-                          control={<Radio />}
-                          label="Cash"
-                        />
-                        <FormControlLabel
-                          value="corporate"
-                          control={<Radio />}
-                          label="Corporate"
-                        />
-                      </RadioGroup>
-
-                      {paymentMethod === "corporate" && (
-                        <FormControl
-                          style={{ marginTop: "10px" }}
-                          className={classes.formControl}
-                        >
-                          <Select
-                            labelId="select-corporate"
-                            id="select-corporate-id"
-                            value={corporate}
-                            onChange={corporateChanged}
-                          >
-                            {corporates.map((element) => (
-                              <MenuItem
-                                value={element}
-                              >{`${element}`}</MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      )}
+                        {Packages.map((item) => (
+                          <MenuItem value={item.packageName}>
+                            {item.packageName}
+                          </MenuItem>
+                        ))}
+                      </Select>
                     </FormControl>
                   </Grid>
-                </Grid>
 
-                <Grid item></Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Notes"
+                      value={notes}
+                      onChange={notesChanged}
+                      name="notes"
+                      id="notes-id"
+                      autoComplete="none"
+                    />
+                  </Grid>
+
+                  <Grid otem xs={12} style={{marginTop:"15px"}}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          color="primary"
+                          checked={deposit}
+                          onChange={depositChanged}
+                          name="deposit"
+                        />
+                      }
+                      label={deposit ? <span className={classes.PriceLabelPaid}>£100 Deposit Paid</span> : <span className={classes.PriceLabelNotPaid}>£100 Deposit Not Paid</span>}
+                    />
+                  </Grid>
+                </Grid>
 
                 <div
                   style={{
@@ -486,13 +573,13 @@ export default function PayDialog(props) {
                     </Grid>
                     <Grid item>
                       <Button
-                        onClick={payClicked}
+                        onClick={saveClicked}
                         variant="contained"
                         color="secondary"
                         style={{ width: "100px" }}
                         disabled={saving}
                       >
-                        Pay
+                        Save
                       </Button>
                     </Grid>
                   </Grid>

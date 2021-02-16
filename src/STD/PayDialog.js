@@ -174,6 +174,10 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: "90px",
     paddingRight: "90px",
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 5,
+    color: "#fff",
+  },
 }));
 
 function NumberFormatCustom(props) {

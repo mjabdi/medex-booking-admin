@@ -4,6 +4,11 @@ import axiosRetry from 'axios-retry';
 export default class BookService {
 
 
+   static addNewBooking = (payload) =>
+   {
+      return API.post(`/api/gynae/book/addnewbooking`, payload);
+   }
+
    static sendRegFormEmail = (bookingId) =>
    {
       return API.post(`/api/gynae/book/sendregformemail?id=${bookingId}`);
@@ -24,7 +29,10 @@ export default class BookService {
       return API.get(`/api/gynae/book/getshouldrefundscount?`);
    }
 
-   
+   static manualRefundBooking = (bookingId) =>
+   {
+      return API.post(`/api/gynae/payment/manualrefundpayment`, {bookingId: bookingId});
+   }
 
    static refundBooking = (bookingId) =>
    {
