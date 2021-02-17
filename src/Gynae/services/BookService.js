@@ -3,6 +3,9 @@ import axiosRetry from 'axios-retry';
 
 export default class BookService {
 
+   static changeDepositBooking = (bookingId, deposit) => {
+      return API.post(`/api/gynae/book/changedepositbooking?id=${bookingId}&deposit=${deposit}`);
+   }
 
    static addNewBooking = (payload) =>
    {

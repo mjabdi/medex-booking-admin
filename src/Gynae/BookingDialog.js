@@ -10,6 +10,7 @@ import {
   Divider,
   FormControlLabel,
   IconButton,
+  Switch,
   TextField,
   Tooltip,
 } from "@material-ui/core";
@@ -40,11 +41,10 @@ import {
 } from "./DateFormatter";
 import PayDialog from "./PayDialog";
 
-
 import PrintIcon from "@material-ui/icons/Print";
 import UndoIcon from "@material-ui/icons/Undo";
 
-import SendIcon from '@material-ui/icons/Send';
+import SendIcon from "@material-ui/icons/Send";
 
 import HistoryIcon from "@material-ui/icons/History";
 
@@ -327,6 +327,16 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 5,
     color: "#fff",
   },
+
+  PriceLabelPaid:{
+    color: theme.palette.primary.main,
+    fontWeight: "600"
+  },
+
+  PriceLabelNotPaid:{
+    color: theme.palette.secondary.main,
+    fontWeight: "600"
+  },
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -351,7 +361,7 @@ export default function BookingDialog(props) {
 
   const [copied, setCopied] = useState(false);
 
-  const [emailSent, setEmailSent] = React.useState(false)
+  const [emailSent, setEmailSent] = React.useState(false);
 
   const [openResendDialog, setOpenResendDialog] = React.useState(false);
   const [openPayDialog, setOpenPayDialog] = React.useState(false);
@@ -396,14 +406,10 @@ export default function BookingDialog(props) {
 
   const [openTimeStampDialog, setOpenTimeStampDialog] = React.useState(false);
 
-
-
   const handleCloseUndoPayDialog = () => {
     setOpenUndoPayDialog(false);
     setSelectedBooking(null);
   };
-
-
 
   const handleClosePayDialog = () => {
     setOpenPayDialog(false);
@@ -744,7 +750,7 @@ export default function BookingDialog(props) {
     try {
       await BookService.refundBooking(booking._id);
       setSaving(false);
-      updateShouldRefundsCount()
+      updateShouldRefundsCount();
       setOpenRefundDialog(false);
       setRefreshData(!refreshData);
     } catch (err) {
@@ -754,78 +760,79 @@ export default function BookingDialog(props) {
     }
   };
 
-  const updateShouldRefundsCount = async () =>
-  {
-    try{
-      const res = await BookService.getShouldRefundsCount()
-      if (res && res.data && res.data.status === "OK")
-      {
-        setState(state => ({...state, shouldRefunsCount: res.data.count}))
+  const updateShouldRefundsCount = async () => {
+    try {
+      const res = await BookService.getShouldRefundsCount();
+      if (res && res.data && res.data.status === "OK") {
+        setState((state) => ({ ...state, shouldRefunsCount: res.data.count }));
       }
+    } catch (ex) {
+      console.error(ex);
     }
-    catch(ex)
-    {
-      console.error(ex)
-    }
-  }
+  };
 
-  const downloadRegForm = (id) =>
-  {
-        PDFService.downloadGynaeRegForm(id).then( (res) => 
-        {
-           const file = new Blob(
-             [res.data], 
-             {type: 'application/pdf'});
- 
-           const fileURL = URL.createObjectURL(file);   
-           window.open(fileURL, "_blank");
- 
-        }).catch( (err) =>
-        {
-            console.log(err);
-        });
-  }
+  const downloadRegForm = (id) => {
+    PDFService.downloadGynaeRegForm(id)
+      .then((res) => {
+        const file = new Blob([res.data], { type: "application/pdf" });
 
-  const sendRegForm = (id) =>
-  {
-    setSaving(true)    
-    setEmailSent(false)
-    BookService.sendRegFormEmail(id).then( (res) => 
-        {
-          setSaving(false)
-          if (res.data.status === "OK")
-          {
-            setEmailSent(true)
-          }
-          
- 
-        }).catch( (err) =>
-        {
-            console.log(err);
-            setSaving(false)
-        });
-  }
+        const fileURL = URL.createObjectURL(file);
+        window.open(fileURL, "_blank");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-  const manualRefund = async () =>
-  {
+  const sendRegForm = (id) => {
+    setSaving(true);
+    setEmailSent(false);
+    BookService.sendRegFormEmail(id)
+      .then((res) => {
+        setSaving(false);
+        if (res.data.status === "OK") {
+          setEmailSent(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setSaving(false);
+      });
+  };
+
+  const manualRefund = async () => {
     setSaving(true);
     try {
       await BookService.manualRefundBooking(booking._id);
       setSaving(false);
-      updateShouldRefundsCount()
+      updateShouldRefundsCount();
       setRefreshData(!refreshData);
     } catch (err) {
       console.error(err);
       setSaving(false);
       setOpenRefundDialog(false);
     }
+  };
+
+  const depositChanged = async (event) =>
+  {
+    const checked = event.target.checked
+    const deposit = checked ? 100 : 0
+    setSaving(true);
+    try {
+      await BookService.changeDepositBooking(booking._id, deposit);
+      setSaving(false);
+      setRefreshData(!refreshData);
+    } catch (err) {
+      console.error(err);
+      setSaving(false);
+    }
   }
 
-  const onClose = () =>
-  {
-    setEmailSent(false)
-    props.onClose()
-  }
+  const onClose = () => {
+    setEmailSent(false);
+    props.onClose();
+  };
 
   return (
     <React.Fragment>
@@ -1137,19 +1144,19 @@ export default function BookingDialog(props) {
                         {booking.OTCCharges > 0 && (
                           <Tooltip title={"Paid Records Cannot be Deleted!"}>
                             <div>
-                            <Button
-                              disabled={booking.OTCCharges > 0}
-                              type="button"
-                              fullWidth
-                              variant="contained"
-                              color="primary"
-                              onClick={() => {
-                                handleDeleteModeChanged(true, booking);
-                              }}
-                              className={classes.DeleteButton}
-                            >
-                              Delete This Record
-                            </Button>
+                              <Button
+                                disabled={booking.OTCCharges > 0}
+                                type="button"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                onClick={() => {
+                                  handleDeleteModeChanged(true, booking);
+                                }}
+                                className={classes.DeleteButton}
+                              >
+                                Delete This Record
+                              </Button>
                             </div>
                           </Tooltip>
                         )}
@@ -1488,12 +1495,10 @@ export default function BookingDialog(props) {
                           )}
                       </li>
 
-                     
-
                       <li hidden={booking.deleted || editMode.edit}>
                         <Button
-                          disabled = {!booking.formData}
-                          startIcon = {<PrintIcon/>}
+                          disabled={!booking.formData}
+                          startIcon={<PrintIcon />}
                           type="button"
                           fullWidth
                           variant="outlined"
@@ -1507,10 +1512,13 @@ export default function BookingDialog(props) {
                         </Button>
                       </li>
 
-                      
-                      <li hidden={booking.deleted || editMode.edit || booking.formData}>
+                      <li
+                        hidden={
+                          booking.deleted || editMode.edit || booking.formData
+                        }
+                      >
                         <Button
-                          startIcon = {<SendIcon/>}
+                          startIcon={<SendIcon />}
                           type="button"
                           fullWidth
                           variant="outlined"
@@ -1519,19 +1527,23 @@ export default function BookingDialog(props) {
                             sendRegForm(booking._id);
                           }}
                           className={classes.DownloadForm}
-                          style= {{position: "relative"}}
+                          style={{ position: "relative" }}
                         >
                           Send Registration Form Email
-
                           {emailSent && (
-                            <div style={{position: "absolute", right: "10px", top : "5px", color: "#05ad19"}}>
-                                Email Sent
+                            <div
+                              style={{
+                                position: "absolute",
+                                right: "10px",
+                                top: "5px",
+                                color: "#05ad19",
+                              }}
+                            >
+                              Email Sent
                             </div>
                           )}
-
                         </Button>
                       </li>
-
 
                       <li className={classes.li}>
                         <div
@@ -1541,7 +1553,7 @@ export default function BookingDialog(props) {
                           }}
                         >
                           <span className={classes.infoTitle}>
-                            ONLINE DEPOSIT
+                            {booking.paymentInfo ? "ONLINE" : "PHONE"} DEPOSIT
                           </span>{" "}
                           <span
                             className={
@@ -1557,9 +1569,8 @@ export default function BookingDialog(props) {
                           ) &&
                             !booking.paid &&
                             booking.deleted &&
-                            booking.deposit > 0 && 
-                            booking.paymentInfo &&
-                            (
+                            booking.deposit > 0 &&
+                            booking.paymentInfo && (
                               <Button
                                 variant="outlined"
                                 color="secondary"
@@ -1569,26 +1580,54 @@ export default function BookingDialog(props) {
                                 Refund Deposit
                               </Button>
                             )}
-
-                        {!(
+                          {!(
                             editMode.edit && editMode.person._id === booking._id
                           ) &&
                             !booking.paid &&
                             booking.deleted &&
-                            booking.deposit > 0 && 
-                            !booking.paymentInfo &&
-                            (
+                            booking.deposit > 0 &&
+                            !booking.paymentInfo && (
                               <Button
                                 variant="outlined"
                                 color="primary"
                                 className={classes.PayButton}
                                 onClick={(event) => manualRefund()}
                               >
-                                <span style={{textTransform:"capitalize"}}>I made the refund manually</span>
+                                <span style={{ textTransform: "capitalize" }}>
+                                  I made the refund manually
+                                </span>
                               </Button>
                             )}
-
-
+                          {!(
+                            editMode.edit && editMode.person._id === booking._id
+                          ) &&
+                            // !booking.paid &&
+                            !booking.deleted &&
+                            // booking.deposit > 0 &&
+                            !booking.paymentInfo && (
+                              <FormControlLabel
+                                style={{marginLeft:"90px"}}
+                                control={
+                                  <Switch
+                                    color="primary"
+                                    checked={booking.deposit > 0}
+                                    onChange={depositChanged}
+                                    name="deposit"
+                                  />
+                                }
+                                label={
+                                  booking.deposit > 0 ? (
+                                    <span className={classes.PriceLabelPaid}>
+                                      £100 Deposit Paid
+                                    </span>
+                                  ) : (
+                                    <span className={classes.PriceLabelNotPaid}>
+                                      £100 Deposit Not Paid
+                                    </span>
+                                  )
+                                }
+                              />
+                            )}
                           {!(
                             editMode.edit && editMode.person._id === booking._id
                           ) &&
@@ -1700,7 +1739,6 @@ export default function BookingDialog(props) {
               open={openPayDialog}
               handleClose={handleClosePayDialog}
             />
-
           </Dialog>
 
           <Dialog
@@ -1744,19 +1782,23 @@ export default function BookingDialog(props) {
                 style={{ color: "#333", fontWeight: "400" }}
                 id="alert-dialog-description"
               >
-                Are you sure you want to refund deposit payment for this booking?
+                Are you sure you want to refund deposit payment for this
+                booking?
               </DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseRefundDialog} color="default">
                 Back
               </Button>
-              <Button onClick={refundPaymentClicked} color="secondary" autoFocus>
+              <Button
+                onClick={refundPaymentClicked}
+                color="secondary"
+                autoFocus
+              >
                 Yes, Refund Payment
               </Button>
             </DialogActions>
           </Dialog>
-
         </React.Fragment>
       )}
     </React.Fragment>
