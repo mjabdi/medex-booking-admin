@@ -1518,6 +1518,7 @@ export default function BookingDialog(props) {
                         }
                       >
                         <Button
+                          disabled={!booking.email || booking.email.length < 3 }
                           startIcon={<SendIcon />}
                           type="button"
                           fullWidth

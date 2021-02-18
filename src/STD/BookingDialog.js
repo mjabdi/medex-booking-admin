@@ -1519,7 +1519,7 @@ export default function BookingDialog(props) {
                           }
                           className={classes.infoData}
                         >
-                          {booking.estimatedPrice.toLocaleString('en-GB', {style: 'currency', currency: 'GBP'})}
+                          {booking.estimatedPrice}
                         </span>
                       </li>
 
