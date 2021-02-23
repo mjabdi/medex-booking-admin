@@ -9,6 +9,7 @@ import Title from "./Title";
 import PCRBookService from "./PCR/services/BookService";
 import GynaeBookService from "./Gynae/services/BookService";
 import GPBookService from "./GP/services/BookService";
+import STDBookService from "./STD/services/BookService";
 
 import * as dateformat from "dateformat";
 import { LinearProgress } from "@material-ui/core";
@@ -34,18 +35,20 @@ export default function TodayBookingView() {
       const res1 = await PCRBookService.getAllBookingsCountByDateStr(today)
       const res2 = await GynaeBookService.getAllBookingsCountByDateStr(today)
       const res3 = await GPBookService.getAllBookingsCountByDateStr(today)
+      const res4 = await STDBookService.getAllBookingsCountByDateStr(today)
       
       const pcr =  parseInt(res1.data.count)
       const gynae = parseInt(res2.data.count)
       const gp = parseInt(res3.data.count)
+      const std = parseInt(res4.data.count)
 
       const _data = [
         {clinic: "PCR", count: pcr},
         {clinic: "Gynae", count: gynae},
         {clinic: "GP", count: gp},
-        {clinic: "Total", count: pcr+gynae+gp}
+        {clinic: "STD", count: std},
+        {clinic: "Total", count: pcr+gynae+gp+std}
       ]
-
       setData(_data)
 
       setLoading(false);

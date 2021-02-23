@@ -216,7 +216,7 @@ const WeekViewCell = ({key, date, time, dayClicked}) => {
     return (
         <React.Fragment>
 
-            <div className={isPast ? classes.ContainerPast : classes.Container}  onClick={(event => dayClicked(event,cellDate))} >
+            <div className={isPast ? classes.ContainerPast : classes.Container} onClick={(event => dayClicked(event,cellDate))} >
 
               {getBookingsCountLabel(bookingsCount)}
 

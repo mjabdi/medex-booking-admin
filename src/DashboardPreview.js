@@ -12,6 +12,11 @@ import TotalBookingView from "./TotalBookingView";
 import LateBookingView from "./LateBookingView";
 import UnmatchedBookingView from "./UnmatchedBookingView";
 import ShouldRefundBookingView from "./ShouldRefundBookingView";
+import { setRole } from "./Role";
+import { useLocation, useHistory } from "react-router-dom";
+import { getGlobalPath } from "./GlobalPath";
+import { getMenuId, getMenuIndex } from "./MenuList";
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -21,7 +26,11 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   fixedHeight: {
-    height: 250,
+    height: 300,
+  },
+  fixedHeightSmall: {
+    height: 200,
+    cursor:"pointer"
   },
 }));
 
@@ -30,6 +39,35 @@ export default function DashboardPreview() {
   const [state, setState] = React.useContext(GlobalState);
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const fixedHeightPaperSmall = clsx(classes.paper, classes.fixedHeightSmall);
+
+  const history = useHistory();
+
+  const gotoLateBookings = () =>
+  {
+    const role = 'pcr'
+    setRole(role);
+    setState((state) => ({ ...state, role: role }));
+    history.push(getGlobalPath(`/${getMenuId(role, getMenuIndex(role,'latebookings'))}`));
+  }
+
+  const gotoUnmatchedPCR = () =>
+  {
+    const role = 'pcr'
+    setRole(role);
+    setState((state) => ({ ...state, role: role }));
+    history.push(getGlobalPath(`/${getMenuId(role, getMenuIndex(role,'unmatchedRecords'))}`));
+  }
+  
+  const gotoRefundGynae = () =>
+  {
+    const role = 'gynae'
+    setRole(role);
+    setState((state) => ({ ...state, role: role }));
+    history.push(getGlobalPath(`/${getMenuId(role, getMenuIndex(role,'deletedBookings'))}`));
+  }
+
+  
 
   return (
     <React.Fragment>
@@ -54,19 +92,19 @@ export default function DashboardPreview() {
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <Paper className={fixedHeightPaper}>
+          <Paper className={fixedHeightPaperSmall} onClick={gotoLateBookings}>
              <LateBookingView />
           </Paper>
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <Paper className={fixedHeightPaper}>
+          <Paper className={fixedHeightPaperSmall} onClick={gotoUnmatchedPCR}>
              <UnmatchedBookingView />
           </Paper>
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <Paper className={fixedHeightPaper}>
+          <Paper className={fixedHeightPaperSmall} onClick={gotoRefundGynae}>
              <ShouldRefundBookingView />
           </Paper>
         </Grid>

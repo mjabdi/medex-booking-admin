@@ -46,11 +46,51 @@ import STDCalendarView from "./STD/calendar-admin/CalendarView";
 
 // Admin ----------------
 import AdminDashBoardPreview from "./DashboardPreview";
+import AdminFindByRef from "./Admin/FindByRef";
+import AdminBookingTable from "./Admin/BookingTable";
 
 //---------------
 
 export const MenuList_Admin = [
   { index: 0, id: `dashboard`, title: `Dashboard`, icon: <DashboardIcon /> },
+  {
+    index: 1,
+    id: `recentBookings`,
+    title: `Recent Bookings`,
+    icon: <AutorenewIcon />,
+  },
+  {
+    index: 2,
+    id: `todayBookings`,
+    title: `Today's Bookings`,
+    icon: <NewReleasesIcon />,
+  },
+  {
+    index: 3,
+    id: `oldBookings`,
+    title: `Old Bookings`,
+    icon: <HistoryIcon />,
+  },
+  {
+    index: 4,
+    id: `futureBookings`,
+    title: `Future Bookings`,
+    icon: <TimelineIcon />,
+  },
+  {
+    index: 5,
+    id: `allBookings`,
+    title: `All Bookings`,
+    icon: <DescriptionIcon />,
+  },
+  {
+    index: 6,
+    id: `deletedBookings`,
+    title: `Deleted Records`,
+    icon: <DeleteIcon />,
+  },
+
+  { index: 7, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
 ];
 
 export const MenuList_Gynae = [
@@ -390,6 +430,20 @@ export const getMenuContent = (role, index) => {
     switch (index) {
       case 0:
         return <AdminDashBoardPreview />;
+      case 1:
+        return <AdminBookingTable date="recent" />;
+      case 2:
+        return <AdminBookingTable date="today" />;
+      case 3:
+        return <AdminBookingTable date="old" />;
+      case 4:
+        return <AdminBookingTable date="future" />;
+      case 5:
+        return <AdminBookingTable date="all" />;
+      case 6:
+        return <AdminBookingTable date="deleted" />;
+      case 7:
+        return <AdminFindByRef />;
       default:
         return `Page Not Found!`;
     }

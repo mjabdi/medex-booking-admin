@@ -4,6 +4,11 @@ import axiosRetry from 'axios-retry';
 export default class BookService {
 
 
+   static addNewBooking = (payload) =>
+   {
+      return API.post(`/api/std/book/addnewbooking`, payload);
+   }
+   
    static sendRegFormEmail = (bookingId) =>
    {
       return API.post(`/api/std/book/sendregformemail?id=${bookingId}`);

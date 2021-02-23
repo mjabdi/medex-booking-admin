@@ -7,6 +7,7 @@ import BookService from '../services/BookService';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import GlobalState from '../../GlobalState';
 import BookingDialog from '../BookingDialog';
+import NewBookingDialog from '../NewBookingDialog';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -58,6 +59,31 @@ const useStyles = makeStyles((theme) => ({
         width : "85%",
         height: "8%"
     },
+
+    bookingBoxNew: {
+        display: "flex",
+        marginRight: "10px",
+        marginTop: "5px",
+        padding: "10px",
+        maxWidth: "150px",
+        overflowX: "hidden",
+        border: "1px solid #ddd",
+        color: "#ccc",
+        fontSize: "12px",
+        fontWeight: "500",
+        cursor: "pointer",
+        backgroundColor: "#fff",
+    
+        boxShadow: "2px 4px #fafafa",
+        transition: "all 0.5s ease",
+        borderRadius: "4px",
+    
+        "&:hover": {
+          background: "#fff",
+          color: theme.palette.secondary.main,
+          borderColor:  theme.palette.secondary.main,
+        },
+      },
 
     bookingBox: {
         display: "flex",
@@ -163,6 +189,9 @@ const DayViewCell = ({key, date, time}) => {
 
     const [openDialog, setOpenDialog] = React.useState(false);
 
+    const [openDialogAddNew, setOpenDialogAddNew] = React.useState(false);
+
+
 
     useEffect( () => {
         const todayStr = dateformat(new Date(), 'yyyy-mm-dd');
@@ -211,7 +240,7 @@ const DayViewCell = ({key, date, time}) => {
             setBookings(null);
     
             var res = state.AdminCalendarCache?.find(record => record.method === 'getBookingsByDateStrandTime' && record.query === `${date}${time}`)?.res;
-            if (!res || openDialog)
+            if (!res || openDialog || openDialogAddNew)
             {
                 res = await BookService.getAllBookingsByDateStrandTime(date, time);
                 setState(state => ({...state, AdminCalendarCache : [...state.AdminCalendarCache, {method: 'getBookingsByDateStrandTime' , query : `${date}${time}`, res: res}]}));
@@ -224,7 +253,7 @@ const DayViewCell = ({key, date, time}) => {
             }   
         }
 
-        if (openDialog)
+        if (openDialog || openDialogAddNew)
         {
             setState(state => ({...state, AdminCalendarCache : state.AdminCalendarCache.filter(record => !(record.method === 'getBookingsByDateStrandTime' && record.query ===  `${date}${time}`))}));
             setState(state => ({...state, AdminCalendarCache : state.AdminCalendarCache.filter(record => !(record.method === 'getBookingsCountByDateStrandTime' && record.query ===  `${date}${time}`))}));
@@ -254,6 +283,11 @@ const DayViewCell = ({key, date, time}) => {
         }
     }
 
+    const addNewBookingClicked = () =>
+    {
+        setOpenDialogAddNew(true)
+    }
+
     const getBookingsBox = (_bookings) =>
     {
         if (_bookings === null) 
@@ -264,18 +298,22 @@ const DayViewCell = ({key, date, time}) => {
                 </div>
             );  
         }
-        else if (_bookings.length > 0)
+        else if (_bookings.length >= 0)
         {
            return (
-                _bookings.map(booking => (
-
-                    <div style={booking.tr ? {borderTop: "5px solid #d00fd6"} : {} } className={getBookingClass(booking.status)} onClick={event => bookingCliked(event,booking)}>
-
-                        {`${booking.fullname}`.substring(0,15)}
-
-                    </div>
-
-                ))
+            <React.Fragment>
+            {_bookings.map((booking) => (
+              <div
+                style={booking.tr ? { borderTop: "5px solid #d00fd6" } : {}}
+                className={getBookingClass(booking.status)}
+                onClick={(event) => bookingCliked(event, booking)}
+              >
+                {`${booking.fullname}`.substring(0, 15)}
+              </div>
+            ))}
+  
+            <div className={classes.bookingBoxNew} onClick={addNewBookingClicked}> + Add New Booking</div>
+          </React.Fragment>
            );
         }
     }
@@ -285,6 +323,10 @@ const DayViewCell = ({key, date, time}) => {
     {
         setOpenDialog(false);
     }
+
+    const handleCloseDialogAddNew = () => {
+        setOpenDialogAddNew(false);
+      };
 
     return (
         <React.Fragment>
@@ -300,6 +342,13 @@ const DayViewCell = ({key, date, time}) => {
                 open={openDialog}
                 onClose={handleCloseDialog}
             />
+
+        <NewBookingDialog
+        date={date}
+        time={time}
+        open={openDialogAddNew}
+        handleClose={handleCloseDialogAddNew}
+        />
 
         </React.Fragment>
 

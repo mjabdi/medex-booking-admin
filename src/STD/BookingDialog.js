@@ -428,7 +428,8 @@ export default function BookingDialog(props) {
         fullname !== booking.fullname ||
         email !== booking.email ||
         tel !== booking.phone ||
-        notes !== booking.notes;
+        notes !== booking.notes ||
+        service !== booking.packageName
 
       setRecordChanged(isChanged);
     }
@@ -499,6 +500,7 @@ export default function BookingDialog(props) {
       setBookingTime(person.bookingTime.toUpperCase());
       setEmail(person.email);
       setTel(person.phone);
+      setService(person.packageName)
       if (person.notes) {
         setNotes(person.notes);
       }
@@ -514,7 +516,7 @@ export default function BookingDialog(props) {
       booking.phone = tel;
       booking.fullname = fullname;
       booking.notes = notes;
-      booking.service = service;
+      booking.packageName = service;
       booking.bookingDate = RevertFormatDateFromString(bookingDate);
       booking.bookingTime = bookingTime;
       booking.bookingRef = person.bookingRef;
@@ -769,7 +771,7 @@ export default function BookingDialog(props) {
   };
 
   const downloadRegForm = (id) => {
-    PDFService.downloadGPRegForm(id)
+    PDFService.downloadSTDRegForm(id)
       .then((res) => {
         const file = new Blob([res.data], { type: "application/pdf" });
 
@@ -1361,9 +1363,7 @@ export default function BookingDialog(props) {
 
                       <li className={classes.li}>
                         <span
-                          hidden={
-                            editMode.edit && editMode.person._id === booking._id
-                          }
+                         
                           className={classes.infoTitle}
                         >
                           Package
@@ -1376,7 +1376,7 @@ export default function BookingDialog(props) {
                         >
                           {booking.packageName}
                         </span>
-                        {/* <span
+                        <span
                           hidden={
                             !(
                               editMode.edit &&
@@ -1388,15 +1388,15 @@ export default function BookingDialog(props) {
                           <TextField
                             fullWidth
                             className={classes.TextBox}
-                            value={booking.packageName}
-                            onChange={telChanged}
+                            value={service}
+                            onChange={serviceChanged}
                             inputProps={{
                               style: {
                                 padding: 0,
                               },
                             }}
                           ></TextField>
-                        </span> */}
+                        </span>
                       </li>
 
                       {/* <li className={classes.li}>
@@ -1524,7 +1524,7 @@ export default function BookingDialog(props) {
                       </li>
 
 
-                      {/* <li hidden={booking.deleted || editMode.edit}>
+                       <li hidden={booking.deleted || editMode.edit}>
                         <Button
                           disabled = {!booking.formData}
                           startIcon = {<PrintIcon/>}
@@ -1543,6 +1543,7 @@ export default function BookingDialog(props) {
 
                       <li hidden={booking.deleted || editMode.edit || booking.formData}>
                         <Button
+                          disabled={!booking.email || booking.email.length < 3 }
                           startIcon = {<SendIcon/>}
                           type="button"
                           fullWidth
@@ -1563,7 +1564,7 @@ export default function BookingDialog(props) {
                           )}
 
                         </Button>
-                      </li> */}
+                      </li> 
 
                       {/* <li className={classes.li}>
                         <div
