@@ -222,28 +222,24 @@ const useStyles = makeStyles((theme) => ({
     color: "#4faef7",
     fontWeight: "600",
     fontSize: "0.95rem",
-  
   },
 
   GynaeLabel: {
     color: "#e83caf",
     fontWeight: "600",
     fontSize: "0.95rem",
-  
   },
 
   GPLabel: {
     color: "#ff4f14",
     fontWeight: "600",
     fontSize: "0.95rem",
-   
   },
 
   STDLabel: {
     color: "#d6733a",
     fontWeight: "600",
     fontSize: "0.95rem",
-  
   },
 }));
 
@@ -456,7 +452,7 @@ export default function BookingTable(props) {
         renderCell: (params) => {
           return (
             <span className={getClassforClinic(params.value)}>
-               {params.value ? params.value.toUpperCase() : 'N/A'}
+              {params.value ? params.value.toUpperCase() : "N/A"}
             </span>
           );
         },
@@ -522,6 +518,14 @@ export default function BookingTable(props) {
             return <span className={classes.BookedLabel}> BM </span>;
           } else if (params.value === "patient_attended") {
             return <span className={classes.PatientAttendedLabel}> PA </span>;
+          } else if (params.value === "sample_taken") {
+            return <span className={classes.SampleTakenLabel}> ST </span>;
+          } else if (params.value === "report_sent") {
+            return <span className={classes.ReportSentLabel}> RS </span>;
+          } else if (params.value === "report_cert_sent") {
+            return <span className={classes.ReportCertSentLabel}> RCS </span>;
+          } else if (params.value === "positive") {
+            return <span className={classes.PositiveLabel}> POS </span>;
           } else {
             return "Unknown";
           }
@@ -589,7 +593,7 @@ export default function BookingTable(props) {
         renderCell: (params) => {
           return (
             <span className={getClassforClinic(params.value)}>
-              {params.value ? params.value.toUpperCase() : 'N/A'}
+              {params.value ? params.value.toUpperCase() : "N/A"}
             </span>
           );
         },
@@ -649,6 +653,14 @@ export default function BookingTable(props) {
             return <span className={classes.BookedLabel}> BM </span>;
           } else if (params.value === "patient_attended") {
             return <span className={classes.PatientAttendedLabel}> PA </span>;
+          } else if (params.value === "sample_taken") {
+            return <span className={classes.SampleTakenLabel}> ST </span>;
+          } else if (params.value === "report_sent") {
+            return <span className={classes.ReportSentLabel}> RS </span>;
+          } else if (params.value === "report_cert_sent") {
+            return <span className={classes.ReportCertSentLabel}> RCS </span>;
+          } else if (params.value === "positive") {
+            return <span className={classes.PositiveLabel}> POS </span>;
           } else {
             return "Unknown";
           }
@@ -972,7 +984,7 @@ export default function BookingTable(props) {
 
       <BookingDialog
         booking={selectedBooking}
-        open={seeDetailsDialogOpen}        
+        open={seeDetailsDialogOpen}
         onClose={handleCloseSeeDetaisDialog}
       />
 
