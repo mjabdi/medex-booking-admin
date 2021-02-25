@@ -19,8 +19,8 @@ import FindByRef from "./PCR/FindByRef";
 import BookingTable from "./PCR/BookingTable";
 import DashboardPreview from "./PCR/DashboardPreview";
 import UnmatchedRecords from "./PCR/UnmatchedRecords";
-import CalendarView from "./PCR/calendar/CalendarView";
-import AdminCalendarView from "./PCR/calendar-admin/CalendarView";
+// import CalendarView from "./PCR/calendar/CalendarView";
+import PCRCalendarView from "./PCR/calendar-admin/CalendarView";
 //-----------------------
 
 /// Gynae -------------------
@@ -48,6 +48,7 @@ import STDCalendarView from "./STD/calendar-admin/CalendarView";
 import AdminDashBoardPreview from "./DashboardPreview";
 import AdminFindByRef from "./Admin/FindByRef";
 import AdminBookingTable from "./Admin/BookingTable";
+import AdminCalendarView from "./Admin/calendar-admin/CalendarView";
 
 //---------------
 
@@ -90,7 +91,14 @@ export const MenuList_Admin = [
     icon: <DeleteIcon />,
   },
 
-  { index: 7, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  {
+    index: 7,
+    id: `calendarView`,
+    title: `Calendar View`,
+    icon: <DateRangeIcon />,
+  },
+
+  { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
 ];
 
 export const MenuList_Gynae = [
@@ -309,12 +317,12 @@ export const MenuList_PCR = [
     title: `Calendar View`,
     icon: <DateRangeIcon />,
   },
-  {
-    index: 14,
-    id: `adminCalendarView`,
-    title: `Admin Calendar`,
-    icon: <EventNoteIcon />,
-  },
+  // {
+  //   index: 14,
+  //   id: `adminCalendarView`,
+  //   title: `Admin Calendar`,
+  //   icon: <EventNoteIcon />,
+  // },
   { index: 15, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
 ];
 
@@ -348,9 +356,9 @@ export const getMenuContent = (role, index) => {
       case 12:
         return <UnmatchedRecords />;
       case 13:
-        return <CalendarView />;
-      case 14:
-        return <AdminCalendarView />;
+        //   return <CalendarView />;
+        // case 14:
+        return <PCRCalendarView />;
       case 15:
         return <FindByRef />;
 
@@ -443,6 +451,8 @@ export const getMenuContent = (role, index) => {
       case 6:
         return <AdminBookingTable date="deleted" />;
       case 7:
+        return <AdminCalendarView />;
+      case 8:
         return <AdminFindByRef />;
       default:
         return `Page Not Found!`;

@@ -558,7 +558,17 @@ export default function BookingTable(props) {
           );
         },
       },
-      { field: "fullname", headerName: "Fullname", width: 250 },
+      { field: "fullname", headerName: "Fullname", width: 250,   valueGetter: (params) => {
+        if (!params.value || params.value.length === 0)
+        {
+          return `${params.getValue('forename')} ${params.getValue('surname')}`
+
+        }else
+        {
+          return params.value
+        }
+       
+      } },
       { field: "email", headerName: "Email", width: 200 },
       { field: "phone", headerName: "Tel", width: 150 },
       { field: "notes", headerName: "Notes", width: 500 },
@@ -693,7 +703,17 @@ export default function BookingTable(props) {
           );
         },
       },
-      { field: "fullname", headerName: "Fullname", width: 250 },
+      { field: "fullname", headerName: "Fullname", width: 250,   valueGetter: (params) => {
+        if (!params.value || params.value.length === 0)
+        {
+          return `${params.getValue('forename')} ${params.getValue('surname')}`
+
+        }else
+        {
+          return params.value
+        }
+       
+      } },
       { field: "email", headerName: "Email", width: 200 },
       { field: "phone", headerName: "Tel", width: 150 },
       { field: "notes", headerName: "Notes", width: 500 },
@@ -794,6 +814,8 @@ export default function BookingTable(props) {
       var filteredData = data.cachedBookings.filter(
         (element) =>
           element.fullname.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ||
+          element.forename.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ||
+          element.surname.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ||
           element.service.toLowerCase().indexOf(filter.toLowerCase()) >= 0
       );
 

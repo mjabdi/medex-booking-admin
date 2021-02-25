@@ -8,6 +8,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import GlobalState from "../../GlobalState";
 import BookingDialog from "../BookingDialog";
 import NewBookingDialog from "../NewBookingDialog";
+import clsx from "clsx";
+import { CalendarColors } from "../../Admin/calendar-admin/colors";
 
 const useStyles = makeStyles((theme) => ({
   Container: {
@@ -100,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       background: "#fff",
       color: theme.palette.secondary.main,
-      borderColor:  theme.palette.secondary.main,
+      borderColor: theme.palette.secondary.main,
     },
   },
 
@@ -166,6 +168,9 @@ const useStyles = makeStyles((theme) => ({
       color: "#fafafa",
     },
   },
+
+
+
 }));
 
 const DayViewCell = ({ key, date, time }) => {
@@ -182,7 +187,6 @@ const DayViewCell = ({ key, date, time }) => {
 
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openDialogAddNew, setOpenDialogAddNew] = React.useState(false);
-
 
   useEffect(() => {
     const todayStr = dateformat(new Date(), "yyyy-mm-dd");
@@ -294,10 +298,10 @@ const DayViewCell = ({ key, date, time }) => {
     }
   };
 
-  const addNewBookingClicked = () =>
-  {
-      setOpenDialogAddNew(true)
-  }
+  const addNewBookingClicked = () => {
+    setOpenDialogAddNew(true);
+  };
+
 
   const getBookingsBox = (_bookings) => {
     if (_bookings === null) {
@@ -312,14 +316,19 @@ const DayViewCell = ({ key, date, time }) => {
           {_bookings.map((booking) => (
             <div
               style={booking.tr ? { borderTop: "5px solid #d00fd6" } : {}}
-              className={getBookingClass(booking.status)}
+              className={
+                getBookingClass(booking.status)
+                }
               onClick={(event) => bookingCliked(event, booking)}
             >
               {`${booking.fullname}`.substring(0, 15)}
             </div>
           ))}
 
-          <div className={classes.bookingBoxNew} onClick={addNewBookingClicked}> + Add New Booking</div>
+          <div className={classes.bookingBoxNew} onClick={addNewBookingClicked}>
+            {" "}
+            + Add New Booking
+          </div>
         </React.Fragment>
       );
     }
@@ -350,7 +359,7 @@ const DayViewCell = ({ key, date, time }) => {
         time={time}
         open={openDialogAddNew}
         handleClose={handleCloseDialogAddNew}
-        />
+      />
     </React.Fragment>
   );
 };

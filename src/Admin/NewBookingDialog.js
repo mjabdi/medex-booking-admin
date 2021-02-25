@@ -47,6 +47,7 @@ import NumberFormat from "react-number-format";
 import AddIcon from "@material-ui/icons/Add";
 import { validate } from "email-validator";
 import DateRangeIcon from "@material-ui/icons/DateRange";
+import { CalendarColors } from "./calendar-admin/colors";
 
 var interval;
 
@@ -203,6 +204,76 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "600"
   },
 
+  BoxDisabled: {
+    width : "100%",
+    padding: "10px",
+    borderRadius: "8px",
+    border: "1px solid",
+    fontSize: "1.2rem",
+    fontWeight: "500",
+    textAlign: "center",
+    borderColor: "#ddd",
+    cursor: "not-allowed",
+    color: "#ddd",
+    transition: "all 0.2s ease",
+  },
+
+  BoxGynae: {
+    width : "100%",
+    padding: "10px",
+    borderRadius: "8px",
+    border: "1px solid",
+    fontSize: "1.2rem",
+    fontWeight: "500",
+    textAlign: "center",
+    cursor: "pointer",
+    borderColor: CalendarColors.GYNAE_COLOR,
+    color: CalendarColors.GYNAE_COLOR,
+    transition: "all 0.2s ease",
+    "&:hover": {
+      backgroundColor: CalendarColors.GYNAE_COLOR,
+      color: "#fff"
+    }
+  
+  },
+
+  BoxGP: {
+    width : "100%",
+    padding: "10px",
+    borderRadius: "8px",
+    border: "1px solid",
+    fontSize: "1.2rem",
+    fontWeight: "500",
+    textAlign: "center",
+    cursor: "pointer",
+    borderColor: CalendarColors.GP_COLOR,
+    color: CalendarColors.GP_COLOR,
+    transition: "all 0.2s ease",
+    "&:hover": {
+      backgroundColor: CalendarColors.GP_COLOR,
+      color: "#fff"
+    }
+  },
+
+  BoxSTD: {
+    width : "100%",
+    padding: "10px",
+    borderRadius: "8px",
+    border: "1px solid",
+    fontSize: "1.2rem",
+    fontWeight: "500",
+    textAlign: "center",
+    cursor: "pointer",
+    borderColor: CalendarColors.STD_COLOR,
+    color: CalendarColors.STD_COLOR,
+    transition: "all 0.2s ease",
+    "&:hover": {
+      backgroundColor: CalendarColors.STD_COLOR,
+      color: "#fff"
+    }
+  },
+
+
 
 }));
 
@@ -299,85 +370,21 @@ export default function NewBookingDialog(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useContext(GlobalState);
-  const [saving, setSaving] = useState(false);
 
-  const [fullname, setFullname] = React.useState("");
-  const [fullnameError, setFullnameError] = React.useState(false);
-
-  const [phone, setPhone] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [notes, setNotes] = React.useState("");
-
-  
-  const fullnameChanged = (event) => {
-    setFullname(event.target.value);
-    setFullnameError(false);
-  };
-
-  const phoneChanged = (event) => {
-    setPhone(event.target.value);
-  };
-
-  const emailChanged = (event) => {
-    setEmail(event.target.value);
-  };
-
-
-  const notesChanged = (event) => {
-    setNotes(event.target.value);
-  };
-
-  const handleClose = () => {
-    if (saving) return;
-
-    setFullname("");
-    setFullnameError(false);
-    setPhone("");
-    setEmail("");
-    setNotes("");
-    
+  const handleClose = () => {    
     props.handleClose();
-    setSaving(false);
   };
 
-  const validateBooking = () => {
-    let error = false;
-    if (!fullname || fullname.trim().length < 1) {
-      setFullnameError(true);
-      error = true;
-    }
-    return !error;
-  };
 
-  const saveClicked = async () => {
-    if (!validateBooking()) {
-      return;
-    }
+  const timeDisabled = () =>
+  {
+    return props.time.indexOf(':15') > 0 || props.time.indexOf(':45') > 0 || props.time.indexOf('09') >= 0 
+  }
 
-    setSaving(true);
-
-    try {
-      await BookService.addNewBooking({
-        bookingDate: props.date,
-        bookingTime: props.time,
-        fullname: fullname,
-        phone: phone,
-        email: email,
-        notes: notes,
-      });
-      setSaving(false);
-      setState((state) => ({
-        ...state,
-        bookingDialogDataChanged: !state.bookingDialogDataChanged
-          ? true
-          : false,
-      }));
-      handleClose();
-    } catch (err) {
-      console.error(err);
-      setSaving(false);
-    }
-  };
+  const clinicClicked = (clinic) =>
+  {
+    props.clinicClicked(clinic)
+  }
 
   return (
     <React.Fragment>
@@ -421,7 +428,7 @@ export default function NewBookingDialog(props) {
             <DialogContent>
               <div
                 style={{
-                  height: "400px",
+                  height: "310px",
                 }}
               >
                 <Grid
@@ -450,56 +457,21 @@ export default function NewBookingDialog(props) {
                     </Grid>
                   </Grid>
 
+
                   <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      autoFocus
-                      error={fullnameError}
-                      label="Full Name"
-                      value={fullname}
-                      required
-                      onChange={fullnameChanged}
-                      name="fullname"
-                      id="fullname-id"
-                      autoComplete="none"
-                    />
+                    <div className={timeDisabled() ? classes.BoxDisabled : classes.BoxGynae} onClick={() => !timeDisabled() ? clinicClicked("gynae") : null}>
+                      GYNAE
+                    </div>
                   </Grid>
-
                   <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Telephone"
-                      value={phone}
-                      onChange={phoneChanged}
-                      name="phone"
-                      id="phone-id"
-                      autoComplete="none"
-                    />
+                    <div className={timeDisabled() ? classes.BoxDisabled : classes.BoxGP}  onClick={() => !timeDisabled() ? clinicClicked("gp") : null}>
+                      GP
+                    </div>
                   </Grid>
-
                   <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Email"
-                      value={email}
-                      onChange={emailChanged}
-                      name="email"
-                      id="email-id"
-                      autoComplete="none"
-                    />
-                  </Grid>
-
-
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Notes"
-                      value={notes}
-                      onChange={notesChanged}
-                      name="notes"
-                      id="notes-id"
-                      autoComplete="none"
-                    />
+                    <div className={classes.BoxSTD} onClick={() => clinicClicked("std")}>
+                      STD
+                    </div>
                   </Grid>
 
                 </Grid>
@@ -522,29 +494,15 @@ export default function NewBookingDialog(props) {
                       <Button
                         onClick={handleClose}
                         style={{ width: "100px" }}
-                        disabled={saving}
                       >
-                        back
+                        close
                       </Button>
                     </Grid>
-                    <Grid item>
-                      <Button
-                        onClick={saveClicked}
-                        variant="contained"
-                        color="secondary"
-                        style={{ width: "100px" }}
-                        disabled={saving}
-                      >
-                        Save
-                      </Button>
-                    </Grid>
+                   
                   </Grid>
                 </div>
               </div>
 
-              <Backdrop className={classes.backdrop} open={saving}>
-                <CircularProgress color="inherit" />
-              </Backdrop>
             </DialogContent>
           </Dialog>
         </React.Fragment>

@@ -48,6 +48,7 @@ import SendIcon from "@material-ui/icons/Send";
 import HistoryIcon from "@material-ui/icons/History";
 
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
+import { CalendarColors } from "../Admin/calendar-admin/colors";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -854,6 +855,10 @@ export default function BookingDialog(props) {
                   {" "}
                   Copied{" "}
                 </span>
+              </div>
+
+              <div style={{position:"absolute", top: "25x", right: "60px", backgroundColor:CalendarColors.STD_COLOR, color:"#fff", padding: "0px 5px", borderRadius:"10px"}}>
+                    STD
               </div>
 
               {/* {booking.tr && (

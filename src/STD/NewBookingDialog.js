@@ -47,6 +47,7 @@ import NumberFormat from "react-number-format";
 import AddIcon from "@material-ui/icons/Add";
 import { validate } from "email-validator";
 import DateRangeIcon from "@material-ui/icons/DateRange";
+import { CalendarColors } from "../Admin/calendar-admin/colors";
 
 var interval;
 
@@ -510,6 +511,11 @@ export default function NewBookingDialog(props) {
                   </div>
                 </Grid>
               </Grid>
+
+              <div style={{position:"absolute", top: "5px", right: "5px", backgroundColor:CalendarColors.STD_COLOR, color:"#fff", padding: "0px 5px", borderRadius:"10px", fontSize:"1rem"}}>
+                    STD
+              </div>
+
 
               <Divider />
             </DialogTitle>

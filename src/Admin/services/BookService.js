@@ -64,17 +64,17 @@ export default class BookService {
 
    static getAllBookingsCountByDateStr = (dateStr) =>
    {
-      return API.get(`/api/gp/book/getallbookingscountbydatestr?date=${dateStr}`);
+      return API.get(`/api/admin/book/getallbookingscountbydatestr?date=${dateStr}`);
    }
 
    static getAllBookingsCountByDateStrandTime = (dateStr, time, source) =>
    {
-      return API.get(`/api/gp/book/getallbookingscountbydatestrandtime?date=${dateStr}&time=${time}`, {cancelToken: source.token});
+      return API.get(`/api/admin/book/getallbookingscountbydatestrandtime?date=${dateStr}&time=${time}`, {cancelToken: source.token});
    }
 
    static getAllBookingsByDateStrandTime = (dateStr, time) =>
    {
-      return API.get(`/api/gp/book/getallbookingsbydatestrandtime?date=${dateStr}&time=${time}`);
+      return API.get(`/api/admin/book/getallbookingsbydatestrandtime?date=${dateStr}&time=${time}`);
    }
 
    static changeBackToBookingMade = (id) =>

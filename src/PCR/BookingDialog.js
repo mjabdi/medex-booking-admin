@@ -36,6 +36,7 @@ import HistoryIcon from '@material-ui/icons/History';
 
 import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 import TimeStampDialog from './TimeStampDialog';
+import { CalendarColors } from '../Admin/calendar-admin/colors';
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -1038,6 +1039,10 @@ export default function BookingDialog(props) {
           
                   <span hidden={!copied} style={{fontSize:"12px", transition: "all 1s ease-in"}}> Copied </span>
                
+              </div>
+
+              <div style={{position:"absolute", top: "25x", right: "60px", backgroundColor:CalendarColors.PCR_COLOR, color:"#fff", padding: "0px 5px", borderRadius:"10px"}}>
+                    PCR
               </div>
               
               {booking.tr && (

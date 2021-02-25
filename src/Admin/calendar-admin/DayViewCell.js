@@ -8,6 +8,12 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import GlobalState from "../../GlobalState";
 import BookingDialog from "../BookingDialog";
 import NewBookingDialog from "../NewBookingDialog";
+import { CalendarColors } from "./colors";
+import clsx from "clsx";
+
+import NewGPDialog from "../../GP/NewBookingDialog";
+import NewGynaeDialog from "../../Gynae/NewBookingDialog";
+import NewSTDDialog from "../../STD/NewBookingDialog";
 
 const useStyles = makeStyles((theme) => ({
   Container: {
@@ -62,10 +68,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     marginRight: "10px",
     marginTop: "5px",
-    padding: "10px",
+    padding: "7px",
     maxWidth: "150px",
     overflowX: "hidden",
-    border: "1px solid #eee",
+    // border: "1px solid #eee",
     fontSize: "12px",
     fontWeight: "500",
     cursor: "pointer",
@@ -100,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       background: "#fff",
       color: theme.palette.secondary.main,
-      borderColor:  theme.palette.secondary.main,
+      borderColor: theme.palette.secondary.main,
     },
   },
 
@@ -108,10 +114,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     marginRight: "10px",
     marginTop: "5px",
-    padding: "10px",
+    padding: "7px",
     maxWidth: "150px",
     overflowX: "hidden",
-    border: "1px solid #eee",
     fontSize: "12px",
     fontWeight: "500",
     cursor: "pointer",
@@ -129,10 +134,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     marginRight: "10px",
     marginTop: "5px",
-    padding: "10px",
+    padding: "7px",
     maxWidth: "150px",
     overflowX: "hidden",
-    border: "1px solid #eee",
     fontSize: "12px",
     fontWeight: "500",
     cursor: "pointer",
@@ -150,10 +154,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     marginRight: "10px",
     marginTop: "5px",
-    padding: "10px",
+    padding: "7px",
     maxWidth: "150px",
     overflowX: "hidden",
-    border: "1px solid #eee",
     fontSize: "12px",
     fontWeight: "500",
     cursor: "pointer",
@@ -165,6 +168,26 @@ const useStyles = makeStyles((theme) => ({
       background: "#006e00",
       color: "#fafafa",
     },
+  },
+
+  BookingBorderPCR: {
+    border: "4px solid",
+    borderColor: CalendarColors.PCR_COLOR,
+  },
+
+  BookingBorderGynae: {
+    border: "4px solid",
+    borderColor: CalendarColors.GYNAE_COLOR,
+  },
+
+  BookingBorderGP: {
+    border: "4px solid",
+    borderColor: CalendarColors.GP_COLOR,
+  },
+
+  BookingBorderSTD: {
+    border: "4px solid",
+    borderColor: CalendarColors.STD_COLOR,
   },
 }));
 
@@ -183,6 +206,24 @@ const DayViewCell = ({ key, date, time }) => {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openDialogAddNew, setOpenDialogAddNew] = React.useState(false);
 
+  const [openDialogGP, setOpenDialogGP] = React.useState(false);
+  const [openDialogGynae, setOpenDialogGynae] = React.useState(false);
+  const [openDialogSTD, setOpenDialogSTD] = React.useState(false);
+
+  const handleCloseDialogGP = () => {
+    setOpenDialogGP(false);
+    setOpenDialogAddNew(false)
+  };
+
+  const handleCloseDialogGynae = () => {
+    setOpenDialogGynae(false);
+    setOpenDialogAddNew(false)
+  };
+
+  const handleCloseDialogSTD = () => {
+    setOpenDialogSTD(false);
+    setOpenDialogAddNew(false)
+  };
 
   useEffect(() => {
     const todayStr = dateformat(new Date(), "yyyy-mm-dd");
@@ -196,7 +237,11 @@ const DayViewCell = ({ key, date, time }) => {
         setFilteredBookings(
           bookings.filter(
             (booking) =>
-              booking.fullname.toLowerCase().indexOf(search.toLowerCase()) >= 0
+              booking.fullname?.toLowerCase().indexOf(search.toLowerCase()) >=
+                0 ||
+              booking.forename?.toLowerCase().indexOf(search.toLowerCase()) >=
+                0 ||
+              booking.surname?.toLowerCase().indexOf(search.toLowerCase()) >= 0
           )
         );
       } else {
@@ -287,17 +332,38 @@ const DayViewCell = ({ key, date, time }) => {
 
   const getBookingClass = (status) => {
     switch (status) {
+      case "sample_taken":
       case "patient_attended":
         return classes.bookingBoxSampleTaken;
+      case "positive":
+        return classes.bookingBoxPositive;
+      case "report_sent":
+      case "report_cert_sent":
+        return classes.bookingBoxReportSent;
+
       default:
         return classes.bookingBox;
     }
   };
 
-  const addNewBookingClicked = () =>
-  {
-      setOpenDialogAddNew(true)
-  }
+  const addNewBookingClicked = () => {
+    setOpenDialogAddNew(true);
+  };
+
+  const getBookingBorderClass = (clinic) => {
+    switch (clinic) {
+      case "pcr":
+        return classes.BookingBorderPCR;
+      case "gynae":
+        return classes.BookingBorderGynae;
+      case "gp":
+        return classes.BookingBorderGP;
+      case "std":
+        return classes.BookingBorderSTD;
+      default:
+        return null;
+    }
+  };
 
   const getBookingsBox = (_bookings) => {
     if (_bookings === null) {
@@ -309,17 +375,32 @@ const DayViewCell = ({ key, date, time }) => {
     } else if (_bookings.length >= 0) {
       return (
         <React.Fragment>
-          {_bookings.map((booking) => (
-            <div
-              style={booking.tr ? { borderTop: "5px solid #d00fd6" } : {}}
-              className={getBookingClass(booking.status)}
-              onClick={(event) => bookingCliked(event, booking)}
-            >
-              {`${booking.fullname}`.substring(0, 15)}
-            </div>
-          ))}
+          {_bookings.map(
+            (booking) =>
+              state.selectedClinics.findIndex(
+                (e) => e === booking.clinic.toUpperCase()
+              ) >= 0 && (
+                <div
+                  style={booking.tr ? { borderTop: "5px solid #d00fd6" } : {}}
+                  className={clsx(
+                    getBookingClass(booking.status),
+                    getBookingBorderClass(booking.clinic)
+                  )}
+                  onClick={(event) => bookingCliked(event, booking)}
+                >
+                  {`${
+                    booking.fullname
+                      ? booking.fullname
+                      : `${booking.forename} ${booking.surname}`
+                  }`.substring(0, 15)}
+                </div>
+              )
+          )}
 
-          <div className={classes.bookingBoxNew} onClick={addNewBookingClicked}> + Add New Booking</div>
+          <div className={classes.bookingBoxNew} onClick={addNewBookingClicked}>
+            {" "}
+            + Add New Booking
+          </div>
         </React.Fragment>
       );
     }
@@ -331,6 +412,22 @@ const DayViewCell = ({ key, date, time }) => {
 
   const handleCloseDialogAddNew = () => {
     setOpenDialogAddNew(false);
+  };
+
+  const handleClinicClicked = (clinic) => {
+    switch (clinic) {
+      case "gynae":
+        setOpenDialogGynae(true);
+        break;
+      case "gp":
+        setOpenDialogGP(true);
+        break;
+      case "std":
+        setOpenDialogSTD(true);
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -350,7 +447,29 @@ const DayViewCell = ({ key, date, time }) => {
         time={time}
         open={openDialogAddNew}
         handleClose={handleCloseDialogAddNew}
-        />
+        clinicClicked={handleClinicClicked}
+      />
+
+      <NewGPDialog
+        date={date}
+        time={time}
+        open={openDialogGP}
+        handleClose={handleCloseDialogGP}
+      />
+
+      <NewSTDDialog
+        date={date}
+        time={time}
+        open={openDialogSTD}
+        handleClose={handleCloseDialogSTD}
+      />
+
+      <NewGynaeDialog
+        date={date}
+        time={time}
+        open={openDialogGynae}
+        handleClose={handleCloseDialogGynae}
+      />
     </React.Fragment>
   );
 };
