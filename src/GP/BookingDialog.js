@@ -50,6 +50,7 @@ import HistoryIcon from "@material-ui/icons/History";
 
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import { CalendarColors } from "../Admin/calendar-admin/colors";
+import InvoiceDialog from "../InvoiceDialog";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -359,6 +360,8 @@ export default function BookingDialog(props) {
   const [openPayDialog, setOpenPayDialog] = React.useState(false);
   const [openRefundDialog, setOpenRefundDialog] = React.useState(false);
 
+  const [openInvoiceDialog, setOpenInvoiceDialog] = React.useState(false);
+
   const [selectedBooking, setSelectedBooking] = React.useState(null);
 
   const [editMode, setEditMode] = React.useState({ edit: false, person: null });
@@ -422,6 +425,12 @@ export default function BookingDialog(props) {
     setOpenRefundDialog(false);
     setSelectedBooking(null);
   };
+
+  const handleCloseInvoiceDialog = () => {
+    setOpenInvoiceDialog(false);
+    setSelectedBooking(null);
+  };
+
 
   useEffect(() => {
     if (booking) {
@@ -701,9 +710,14 @@ export default function BookingDialog(props) {
       });
   };
 
-  const Pay = (event, id) => {
+  const Pay = () => {
     setSelectedBooking(booking);
     setOpenPayDialog(true);
+  };
+
+  const OpenInvoiceDialog = () => {
+    setSelectedBooking(booking);
+    setOpenInvoiceDialog(true);
   };
 
   useEffect(() => {
@@ -1585,6 +1599,57 @@ export default function BookingDialog(props) {
                       </li>
  */}
                       <Divider/>
+
+                      <li className={classes.li} style={{marginTop:"20px"}}>
+                        <span className={classes.infoTitle}>INVOICE # : </span>{" "}
+                        <span
+                          style={{ paddingLeft: "0px" }}
+                        >
+                          ########
+                        </span>
+                        {!(
+                          editMode.edit && editMode.person._id === booking._id
+                        ) &&
+                          !booking.paid &&
+                          !booking.deleted && (
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              className={classes.PayButton}
+                              onClick={() => OpenInvoiceDialog()}
+                            >
+                              Issue Invoice
+                            </Button>
+                          )}
+                        {!(
+                          editMode.edit && editMode.person._id === booking._id
+                        ) &&
+                          booking.paid && (
+                            <React.Fragment>
+                              <span className={classes.PayLabel}>
+                                {" "}
+                                <CheckIcon
+                                  className={classes.checkIconSmall}
+                                />{" "}
+                                Paid by {booking.paidBy}
+                                {booking.paidBy === "corporate"
+                                  ? ` "${booking.corporate}" `
+                                  : ""}
+                              </span>
+
+                              <Tooltip title="Undo Payment">
+                                <IconButton
+                                  onClick={() => setOpenUndoPayDialog(true)}
+                                >
+                                  <UndoIcon style={{ color: "red" }} />
+                                </IconButton>
+                              </Tooltip>
+                            </React.Fragment>
+                          )}
+                      </li>
+
+
+
                       <li className={classes.li} style={{marginTop:"20px"}}>
                         <span className={classes.infoTitle}>TOTAL CHARGES</span>{" "}
                         <span
@@ -1606,7 +1671,7 @@ export default function BookingDialog(props) {
                               variant="outlined"
                               color="secondary"
                               className={classes.PayButton}
-                              onClick={(event) => Pay(event, booking._id)}
+                              onClick={(event) => Pay()}
                             >
                               Pay
                             </Button>
@@ -1675,6 +1740,12 @@ export default function BookingDialog(props) {
               booking={selectedBooking}
               open={openPayDialog}
               handleClose={handleClosePayDialog}
+            />
+
+          <InvoiceDialog
+              booking={selectedBooking}
+              open={openInvoiceDialog}
+              handleClose={handleCloseInvoiceDialog}
             />
 
           </Dialog>

@@ -813,10 +813,9 @@ export default function BookingTable(props) {
     if (filter && filter.trim().length > 0) {
       var filteredData = data.cachedBookings.filter(
         (element) =>
-          element.fullname.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ||
-          element.forename.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ||
-          element.surname.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ||
-          element.service.toLowerCase().indexOf(filter.toLowerCase()) >= 0
+          element.fullname?.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ||
+          element.forename?.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ||
+          element.surname?.toLowerCase().indexOf(filter.toLowerCase()) >= 0 
       );
 
       setData({
