@@ -32,4 +32,9 @@ export default class InvoiceService{
         return  API.post(`/api/medex/invoice/getcodedetails`, {code: code})
     }
 
+    static getAllCodes = () =>
+    {
+        return API.get(`/api/medex/invoice/getallcodes`)
+    }
+
 }

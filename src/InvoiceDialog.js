@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import InvoiceService from "./services/InvoiceService";
 import Typography from "@material-ui/core/Typography";
+
+import Autocomplete from "@material-ui/lab/Autocomplete";
+
 import {
   Backdrop,
   Button,
@@ -45,8 +48,7 @@ import NumberFormat from "react-number-format";
 
 import ReceiptIcon from "@material-ui/icons/Receipt";
 
-import DeleteIcon from '@material-ui/icons/Delete';
-
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -266,32 +268,52 @@ export default function InvoiceDialog(props) {
   const [state, setState] = React.useContext(GlobalState);
   const [saving, setSaving] = useState(false);
 
-  const [code, setCode] = useState("");
+  const defaultCode = null; //{code:"",description:"",price:"0"}
+
+  const [code, setCode] = useState(defaultCode);
   const [codeError, setCodeError] = useState(false);
 
   const [description, setDescription] = useState("");
   const [descriptionError, setDescriptionError] = useState(false);
+
+  const [notes, setNotes] = useState("");
+  const notesChanged = (event) => {
+    setNotes(event.target.value);
+  };
 
   const [items, setItems] = React.useState([]);
 
   const [price, setPrice] = useState("");
   const [priceError, setPriceError] = useState(false);
 
-  const [title, setTitle] = React.useState('INVOICE ISSUANCE')
+  const [title, setTitle] = React.useState("INVOICE ISSUANCE");
 
+  const [allCodes, setAllCodes] = React.useState([]);
 
-  useEffect( () => {
-
-    if (props.invoice)
-    {
-     setItems(props.invoice.items)
-     setTitle('EDIT INVOICE')
-    }else
-    {
-      setTitle('INVOICE ISSUANCE')
+  useEffect(() => {
+    if (props.invoice) {
+      setItems(props.invoice.items);
+      setNotes(props.invoice.notes || "");
+      setTitle("EDIT INVOICE");
+    } else {
+      setTitle("INVOICE ISSUANCE");
     }
 
-  }, [props.invoice])
+    fetchAllCodes();
+
+    return () => {
+      setItems([]);
+    };
+  }, [props.invoice]);
+
+  const fetchAllCodes = async () => {
+    try {
+      const res = await InvoiceService.getAllCodes();
+      setAllCodes(res.data.result);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const priceChanged = (event) => {
     setPrice(event.target.value);
@@ -312,17 +334,16 @@ export default function InvoiceDialog(props) {
     if (saving) return;
 
     setPrice("");
-    setCode("");
+    setCode(defaultCode);
     setDescription("");
     setPriceError(false);
     setCodeError(false);
     setDescriptionError(false);
     setItems([]);
+    setNotes("");
     setSaving(false);
 
-
     props.handleClose(refresh);
-
   };
 
   const codeLeft = () => {
@@ -342,9 +363,8 @@ export default function InvoiceDialog(props) {
         } else if (result.length >= 1) {
           setDescription(result[0].description);
           setPrice(result[0].price);
-          setDescriptionError(false)
-          setPriceError(false)
-
+          setDescriptionError(false);
+          setPriceError(false);
         }
       }
     } catch (err) {
@@ -354,17 +374,41 @@ export default function InvoiceDialog(props) {
 
   const addItemClicked = () => {
     if (!validateItem()) {
-      return
+      return;
     }
-      
 
-    setItems([...items, { code, description, price }]);
-    setCode('')
-    setDescription('')
-    setPrice('')
+    setItems([
+      ...items,
+      { code: code.code, description: code.description, price: code.price },
+    ]);
+    setCode(defaultCode);
+  };
+
+  const addItemClicked2 = () => {
+    if (!validateItem2()) {
+      return;
+    }
+
+    setItems([...items, { code: "", description: description, price: price }]);
+    setDescription("");
+    setPrice("");
   };
 
   const validateItem = () => {
+    let error = false;
+    if (!code) return false;
+
+    if (!code.description || code.description.length === 0) {
+      error = true;
+    }
+    if (!code.price || code.price.length === 0) {
+      error = true;
+    }
+
+    return !error;
+  };
+
+  const validateItem2 = () => {
     let error = false;
     if (!description || description.length === 0) {
       setDescriptionError(true);
@@ -379,81 +423,72 @@ export default function InvoiceDialog(props) {
   };
 
   const removeItem = (index) => {
-    let temp = [...items]
-    temp.splice(index,1)
-    setItems(temp) 
-   }
+    let temp = [...items];
+    temp.splice(index, 1);
+    setItems(temp);
+  };
 
-   const getGrandTotal = (_items) =>
-   {
-     let total = 0
-     _items.forEach(element => {
-       total += parseFloat(element.price)
-     });
+  const getGrandTotal = (_items) => {
+    let total = 0;
+    _items.forEach((element) => {
+      total += parseFloat(element.price);
+    });
 
-     return total
-   }
+    return total;
+  };
 
-   const saveClikced = async () => {
-     if (items.length === 0 && !props.invoice)
-     {
-       return
-     }
+  const saveClikced = async () => {
+    if (items.length === 0 && !props.invoice) {
+      return;
+    }
 
-     try{
-       setSaving(true)
-       let name = ''
-       let postCode = ''
-       let address = ''
+    try {
+      setSaving(true);
+      let name = "";
+      let postCode = "";
+      let address = "";
 
-       if (props.booking.formData)
-       {
-         name = `${props.booking.formData.title} ${props.booking.forename} ${props.booking.formData.surname}`
-         postCode = props.booking.formData.postCode
-         address = props.booking.formData.address
-       }
-       else if (props.booking.forename && props.booking.surname)
-       {
-         name = `${props.booking.forename} ${props.booking.surname}`
-         postCode = props.booking.postCode
-         address = props.booking.address
-       }
-       else if (props.booking.fullname)
-       {
-         name = `${props.booking.fullname}`
-       }
+      if (props.booking.formData) {
+        name = `${props.booking.formData.title} ${props.booking.forename} ${props.booking.formData.surname}`;
+        postCode = props.booking.formData.postCode;
+        address = props.booking.formData.address;
+      } else if (props.booking.forename && props.booking.surname) {
+        name = `${props.booking.forename} ${props.booking.surname}`;
+        postCode = props.booking.postCode;
+        address = props.booking.address;
+      } else if (props.booking.fullname) {
+        name = `${props.booking.fullname}`;
+      }
 
+      const invoice = {
+        name: name,
+        date: new Date(),
+        dateAttended: new Date(props.booking.bookingDate),
+        items: items,
+        grandTotal: getGrandTotal(items),
+        bookingId: props.booking._id,
+        postCode: postCode,
+        address: address,
+        notes: notes,
+      };
+      if (!props.invoice) {
+        await InvoiceService.createInvoice(invoice);
+      } else if (items.length > 0) {
+        await InvoiceService.updateInvoice(
+          props.invoice.invoiceNumber,
+          invoice
+        );
+      } else {
+        await InvoiceService.deleteinvoice(props.invoice.invoiceNumber);
+      }
 
-
-       const invoice = {
-         name: name,
-         date: new Date(),
-         dateAttended: new Date(props.booking.bookingDate),
-         items: items,
-         grandTotal: getGrandTotal(items),
-         bookingId: props.booking._id,
-         postCode: postCode,
-         address: address,
-       }
-       if (!props.invoice)
-       {
-          await InvoiceService.createInvoice(invoice)
-       }else if (items.length > 0)
-       {
-          await InvoiceService.updateInvoice(props.invoice.invoiceNumber ,invoice)
-       }else {
-        await InvoiceService.deleteinvoice(props.invoice.invoiceNumber)
-       }
-    
-       setSaving(false)
-       handleClose(true);
-     }
-     catch(err)
-     {
-        console.error(err)
-        setSaving(false)
-     }
-   }
+      setSaving(false);
+      handleClose(true);
+    } catch (err) {
+      console.error(err);
+      setSaving(false);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -486,7 +521,7 @@ export default function InvoiceDialog(props) {
                       fontWeight: "800",
                     }}
                   >
-                  {`${title}`}
+                    {`${title}`}
                   </div>
                 </Grid>
               </Grid>
@@ -496,7 +531,7 @@ export default function InvoiceDialog(props) {
             <DialogContent>
               <div
                 style={{
-                  height: "500px",
+                  height: "700px",
                   width: "100%",
                 }}
               >
@@ -507,51 +542,63 @@ export default function InvoiceDialog(props) {
                   spacing={1}
                   alignItems="flex-start"
                 >
-                  {/* <Grid item>
-                    <TextField
-                      autoFocus
-                      error={priceError}
-                      label="TOTAL Charges"
-                      value={price}
-                      fullWidth
-                      required
-                      onChange={priceChanged}
-                      name="product-price"
-                      id="product-price-id"
-                      InputProps={{
-                        inputComponent: NumberFormatCustom,
-                        startAdornment: (
-                          <InputAdornment position="start">£</InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Grid> */}
-
-                  <Grid item>
+                  <Grid item style={{ width: "100%" }}>
                     <Grid container direction="row" spacing={5}>
-                      <Grid item xs={2}>
-                        <TextField
-                          error={codeError}
+                      <Grid item xs={10}>
+                        <Autocomplete
+                          id="code-auto-complete"
                           value={code}
-                          onChange={codeChanged}
-                          onBlur={codeLeft}
-                          fullWidth
-                          autoFocus
-                          label="Code"
-                          name="code"
-                          id="code-id"
+                          onChange={(event, newValue) => {
+                            setCode(newValue);
+                          }}
+                          options={allCodes}
+                          getOptionLabel={(option) =>
+                            `${option.code} -- ${
+                              option.description
+                            } -- ${parseFloat(
+                              option.price
+                            ).toLocaleString("en-GB", {
+                              style: "currency",
+                              currency: "GBP",
+                            })}`
+                          }
+                          style={{ width: "750px" }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="System Codes"
+                              helperText="Standard codes already defined in the system"
+                            />
+                          )}
                         />
                       </Grid>
 
-                      <Grid item xs={6}>
+                      <Grid item xs={2}>
+                        <Button
+                          onClick={addItemClicked}
+                          variant="outlined"
+                          color="primary"
+                          style={{ marginTop: "15px" }}
+                          disabled={saving}
+                        >
+                          + Add
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+
+                  <Grid item style={{ width: "100%", marginTop: "20px" }}>
+                    <Grid container direction="row" spacing={5}>
+                      <Grid item xs={8}>
                         <TextField
                           error={descriptionError}
                           value={description}
                           onChange={descriptionChanged}
                           fullWidth
-                          label="Description"
-                          name="code"
-                          id="code-id"
+                          label="Description (Custom)"
+                          name="desc"
+                          helperText="You can enter any description you want to be placed on the invoice"
+                          id="desc-id"
                         />
                       </Grid>
 
@@ -574,9 +621,10 @@ export default function InvoiceDialog(props) {
                           }}
                         />
                       </Grid>
+
                       <Grid item xs={2}>
                         <Button
-                          onClick={addItemClicked}
+                          onClick={addItemClicked2}
                           variant="outlined"
                           color="primary"
                           style={{ marginTop: "12px" }}
@@ -589,26 +637,25 @@ export default function InvoiceDialog(props) {
                   </Grid>
 
                   <div
-                      style={{
-                        backgroundColor: "#fff",
-                        color: "#1cb2c9",
-                        fontWeight: "500",
-                        fontSize: "0.95rem",
-                        padding: "5px 8px",                        
-                        marginBottom: "-15px",
-                        marginLeft: "10px",
-                        zIndex:"99",
-                        marginTop: "30px",
-                        
-                      }}
-                    >
-                      Invoice Items 
-                    </div>
+                    style={{
+                      backgroundColor: "#fff",
+                      color: "#1cb2c9",
+                      fontWeight: "500",
+                      fontSize: "0.95rem",
+                      padding: "5px 8px",
+                      marginBottom: "-15px",
+                      marginLeft: "10px",
+                      zIndex: "99",
+                      marginTop: "30px",
+                    }}
+                  >
+                    Invoice Items
+                  </div>
 
                   <div
                     style={{
                       width: "100%",
-                      height: "350px",
+                      height: "300px",
                       overflowY: "scroll",
                       border: "1px solid #ddd",
                       borderRadius: "4px",
@@ -616,8 +663,6 @@ export default function InvoiceDialog(props) {
                       position: "relative",
                     }}
                   >
-
-
                     <Grid item>
                       <Grid
                         container
@@ -626,7 +671,7 @@ export default function InvoiceDialog(props) {
                         spacing={2}
                         alignItems="flex-start"
                       >
-                        <Grid item style={{ width: "100%", fontWeight:"500" }}>
+                        <Grid item style={{ width: "100%", fontWeight: "500" }}>
                           <Grid container direction="row" spacing={4}>
                             <Grid item xs={2}>
                               Code
@@ -640,7 +685,7 @@ export default function InvoiceDialog(props) {
                             <Grid item xs={3}></Grid>
                           </Grid>
                         </Grid>
-                        {items.map((item,index) => (
+                        {items.map((item, index) => (
                           <Grid item style={{ width: "100%" }}>
                             <Grid container direction="row" spacing={4}>
                               <Grid item xs={2}>
@@ -650,13 +695,19 @@ export default function InvoiceDialog(props) {
                                 {item.description}
                               </Grid>
                               <Grid item xs={2}>
-                                {parseFloat(item.price).toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })}
+                                {parseFloat(item.price).toLocaleString(
+                                  "en-GB",
+                                  { style: "currency", currency: "GBP" }
+                                )}
                               </Grid>
                               <Grid item xs={3}>
                                 <Tooltip title="Remove Item">
-                                <IconButton style={{marginTop:"-15px"}} onClick={() => removeItem(index)}>
-                                  <DeleteIcon color="primary"/>
-                                </IconButton>
+                                  <IconButton
+                                    style={{ marginTop: "-15px" }}
+                                    onClick={() => removeItem(index)}
+                                  >
+                                    <DeleteIcon color="primary" />
+                                  </IconButton>
                                 </Tooltip>
                               </Grid>
                             </Grid>
@@ -665,11 +716,40 @@ export default function InvoiceDialog(props) {
                       </Grid>
                     </Grid>
                   </div>
-                  
-                  <Grid item style={{marginTop:"10px"}}>
-                    <span style={{fontWeight:"500", color:"#777"}}>Grand Total : </span> <span style={{fontWeight:"500", color:"#1cb2c9", marginLeft:"10px", fontSize:"1rem"}}> {getGrandTotal(items).toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })} </span>
+
+                  <Grid item style={{ marginTop: "10px", width:"100%", display:"flex", justifyContent:"flex-end", paddingRight:"30px" }}>
+                    <span style={{ fontWeight: "500", color: "#777" }}>
+                      Grand Total :{" "}
+                    </span>{" "}
+                    <span
+                      style={{
+                        fontWeight: "500",
+                        color: "#1cb2c9",
+                        marginLeft: "10px",
+                        fontSize: "1rem",
+                      }}
+                    >
+                      {" "}
+                      {getGrandTotal(items).toLocaleString("en-GB", {
+                        style: "currency",
+                        currency: "GBP",
+                      })}{" "}
+                    </span>
                   </Grid>
 
+                  <Grid item style={{ marginTop: "10px", width: "100%" }}>
+                    <TextField
+                      value={notes}
+                      onChange={notesChanged}
+                      multiline
+                      rows={2}
+                      helperText="* notes will be printed on the invoice (optional)"
+                      label="Notes"
+                      fullWidth
+                      variant="outlined"
+                      placeholder="enter any addional notes you want to be printed on the invoice..."
+                    ></TextField>
+                  </Grid>
                 </Grid>
               </div>
 

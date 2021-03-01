@@ -481,10 +481,7 @@ export default function BookingDialog(props) {
   const handleCloseInvoiceDialog = (refresh) => {
     setOpenInvoiceDialog(false);
     setSelectedBooking(null);
-    if (refresh)
-    {
-      fetchInvoice()
-    }
+    fetchInvoice()
   };
 
 
@@ -773,6 +770,7 @@ export default function BookingDialog(props) {
 
   const OpenInvoiceDialog = () => {
     setSelectedBooking(booking);
+    setInvoice(invoice)
     setOpenInvoiceDialog(true);
   };
 
