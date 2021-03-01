@@ -51,6 +51,7 @@ import HistoryIcon from "@material-ui/icons/History";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import { CalendarColors } from "../Admin/calendar-admin/colors";
 import InvoiceDialog from "../InvoiceDialog";
+import InvoiceService from "../services/InvoiceService";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -256,6 +257,17 @@ const useStyles = makeStyles((theme) => ({
     width: "300px",
   },
 
+  printInvoiceButton: {
+    marginLeft: "70px",
+    fontSize:"0.8rem",
+    // width: "300px",
+  },
+
+  editInvoiceButton:{
+    marginLeft: "10px",
+    fontSize:"0.8rem",
+  },
+
   PayLabel: {
     marginLeft: "20px",
 
@@ -329,6 +341,16 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 5,
     color: "#fff",
   },
+
+  invoiceNumber :
+  {
+    display: "inline-block",
+    fontWeight: "500",
+    width:"72px",
+    fontSize:"1rem",
+    color: theme.palette.primary.main
+  },
+
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -401,6 +423,36 @@ export default function BookingDialog(props) {
 
   const [openTimeStampDialog, setOpenTimeStampDialog] = React.useState(false);
 
+  const [invoice, setInvoice] = React.useState(null)
+  const [invoiceLoaded, setInvoiceLoaded] = React.useState(false)
+
+
+  const fetchInvoice = async () =>
+  {
+    try{
+      setInvoiceLoaded(false)
+      const res = await InvoiceService.getInvoiceByBookingId(props.booking._id)
+      setInvoice(res.data.invoice)
+      setInvoiceLoaded(true)
+    }
+    catch(err)
+    {
+      setInvoiceLoaded(true)
+      console.error(err)
+    }
+  }
+
+  React.useEffect( () => {
+
+    if (props.booking)
+    {
+      fetchInvoice()
+    }
+
+
+  }, [props.booking])
+
+
   const handleCloseTimeStampDialog = () => {
     setOpenTimeStampDialog(false);
     setSelectedBooking(null);
@@ -426,9 +478,13 @@ export default function BookingDialog(props) {
     setSelectedBooking(null);
   };
 
-  const handleCloseInvoiceDialog = () => {
+  const handleCloseInvoiceDialog = (refresh) => {
     setOpenInvoiceDialog(false);
     setSelectedBooking(null);
+    if (refresh)
+    {
+      fetchInvoice()
+    }
   };
 
 
@@ -806,6 +862,23 @@ export default function BookingDialog(props) {
         });
   }
 
+  const downloadInvoice = (id) =>
+  {
+        PDFService.downloadInvoice(id).then( (res) => 
+        {
+           const file = new Blob(
+             [res.data], 
+             {type: 'application/pdf'});
+ 
+           const fileURL = URL.createObjectURL(file);   
+           window.open(fileURL, "_blank");
+ 
+        }).catch( (err) =>
+        {
+            console.log(err);
+        });
+  }
+
   const sendRegForm = (id) =>
   {
     setSaving(true)    
@@ -830,6 +903,7 @@ export default function BookingDialog(props) {
   const onClose = () =>
   {
     setEmailSent(false)
+    setInvoice(null)
     props.onClose()
   }
 
@@ -1605,47 +1679,60 @@ export default function BookingDialog(props) {
                         <span
                           style={{ paddingLeft: "0px" }}
                         >
-                          ########
+                          {!invoiceLoaded && <span className={classes.invoiceNumber}> ... </span>}
+                          {invoiceLoaded && invoice && <span className={classes.invoiceNumber}> {invoice.invoiceNumber} </span>}
+                          {invoiceLoaded && !invoice && <span className={classes.invoiceNumber} style={{color:"red", fontSize:"0.9rem"}}> N/A </span>}
                         </span>
                         {!(
                           editMode.edit && editMode.person._id === booking._id
                         ) &&
-                          !booking.paid &&
                           !booking.deleted && (
-                            <Button
-                              variant="outlined"
-                              color="primary"
-                              className={classes.PayButton}
-                              onClick={() => OpenInvoiceDialog()}
-                            >
-                              Issue Invoice
-                            </Button>
-                          )}
-                        {!(
-                          editMode.edit && editMode.person._id === booking._id
-                        ) &&
-                          booking.paid && (
                             <React.Fragment>
-                              <span className={classes.PayLabel}>
-                                {" "}
-                                <CheckIcon
-                                  className={classes.checkIconSmall}
-                                />{" "}
-                                Paid by {booking.paidBy}
-                                {booking.paidBy === "corporate"
-                                  ? ` "${booking.corporate}" `
-                                  : ""}
-                              </span>
 
-                              <Tooltip title="Undo Payment">
-                                <IconButton
-                                  onClick={() => setOpenUndoPayDialog(true)}
-                                >
-                                  <UndoIcon style={{ color: "red" }} />
-                                </IconButton>
-                              </Tooltip>
+                            {invoiceLoaded && !invoice && (
+                                <Button
+                                variant="outlined"
+                                color="primary"
+                                className={classes.PayButton}
+                                onClick={() => OpenInvoiceDialog()}
+                              >
+                                Issue Invoice
+                              </Button>
+                            )}
+
+                            {invoiceLoaded && invoice && (
+                              <React.Fragment>
+
+                              <Button
+                                variant="outlined"
+                                startIcon = {<PrintIcon/>}
+                                color="primary"
+                                className={classes.printInvoiceButton}
+                                onClick={() => downloadInvoice(invoice._id)}
+                              >
+                                Download Invoice
+                              </Button>
+
+                                <Button
+                                variant="outlined"
+                                color="secondary"
+                                className={classes.editInvoiceButton}
+                                onClick={() => OpenInvoiceDialog()}
+                              >
+                                Edit Invoice
+                              </Button>
+
+
+
+                                </React.Fragment>
+
+                            )}
+
+
+
                             </React.Fragment>
-                          )}
+                          )
+                          }
                       </li>
 
 
@@ -1744,6 +1831,7 @@ export default function BookingDialog(props) {
 
           <InvoiceDialog
               booking={selectedBooking}
+              invoice={invoice}
               open={openInvoiceDialog}
               handleClose={handleCloseInvoiceDialog}
             />

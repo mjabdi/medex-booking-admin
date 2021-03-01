@@ -47,6 +47,7 @@ import ReceiptIcon from "@material-ui/icons/Receipt";
 
 import DeleteIcon from '@material-ui/icons/Delete';
 
+
 const useStyles = makeStyles((theme) => ({
   title: {
     marginTop: theme.spacing(0),
@@ -276,6 +277,22 @@ export default function InvoiceDialog(props) {
   const [price, setPrice] = useState("");
   const [priceError, setPriceError] = useState(false);
 
+  const [title, setTitle] = React.useState('INVOICE ISSUANCE')
+
+
+  useEffect( () => {
+
+    if (props.invoice)
+    {
+     setItems(props.invoice.items)
+     setTitle('EDIT INVOICE')
+    }else
+    {
+      setTitle('INVOICE ISSUANCE')
+    }
+
+  }, [props.invoice])
+
   const priceChanged = (event) => {
     setPrice(event.target.value);
     setPriceError(false);
@@ -291,10 +308,9 @@ export default function InvoiceDialog(props) {
     setDescriptionError(false);
   };
 
-  const handleClose = () => {
+  const handleClose = (refresh) => {
     if (saving) return;
 
-    props.handleClose();
     setPrice("");
     setCode("");
     setDescription("");
@@ -303,6 +319,10 @@ export default function InvoiceDialog(props) {
     setDescriptionError(false);
     setItems([]);
     setSaving(false);
+
+
+    props.handleClose(refresh);
+
   };
 
   const codeLeft = () => {
@@ -311,6 +331,7 @@ export default function InvoiceDialog(props) {
 
   const fetchCodeDetails = async () => {
     try {
+      setDescription("...");
       const res = await InvoiceService.getCodeDetails(code);
       if (res.data.status === "OK") {
         const result = res.data.result;
@@ -321,6 +342,9 @@ export default function InvoiceDialog(props) {
         } else if (result.length >= 1) {
           setDescription(result[0].description);
           setPrice(result[0].price);
+          setDescriptionError(false)
+          setPriceError(false)
+
         }
       }
     } catch (err) {
@@ -335,6 +359,9 @@ export default function InvoiceDialog(props) {
       
 
     setItems([...items, { code, description, price }]);
+    setCode('')
+    setDescription('')
+    setPrice('')
   };
 
   const validateItem = () => {
@@ -367,6 +394,67 @@ export default function InvoiceDialog(props) {
      return total
    }
 
+   const saveClikced = async () => {
+     if (items.length === 0 && !props.invoice)
+     {
+       return
+     }
+
+     try{
+       setSaving(true)
+       let name = ''
+       let postCode = ''
+       let address = ''
+
+       if (props.booking.formData)
+       {
+         name = `${props.booking.formData.title} ${props.booking.forename} ${props.booking.formData.surname}`
+         postCode = props.booking.formData.postCode
+         address = props.booking.formData.address
+       }
+       else if (props.booking.forename && props.booking.surname)
+       {
+         name = `${props.booking.forename} ${props.booking.surname}`
+         postCode = props.booking.postCode
+         address = props.booking.address
+       }
+       else if (props.booking.fullname)
+       {
+         name = `${props.booking.fullname}`
+       }
+
+
+
+       const invoice = {
+         name: name,
+         date: new Date(),
+         dateAttended: new Date(props.booking.bookingDate),
+         items: items,
+         grandTotal: getGrandTotal(items),
+         bookingId: props.booking._id,
+         postCode: postCode,
+         address: address,
+       }
+       if (!props.invoice)
+       {
+          await InvoiceService.createInvoice(invoice)
+       }else if (items.length > 0)
+       {
+          await InvoiceService.updateInvoice(props.invoice.invoiceNumber ,invoice)
+       }else {
+        await InvoiceService.deleteinvoice(props.invoice.invoiceNumber)
+       }
+    
+       setSaving(false)
+       handleClose(true);
+     }
+     catch(err)
+     {
+        console.error(err)
+        setSaving(false)
+     }
+   }
+
   return (
     <React.Fragment>
       {props.booking && (
@@ -374,7 +462,7 @@ export default function InvoiceDialog(props) {
           <Dialog
             maxWidth="md"
             open={props.open}
-            onClose={handleClose}
+            onClose={() => handleClose(false)}
             PaperComponent={PaperComponent}
             aria-labelledby="form-dialog-title"
           >
@@ -398,8 +486,7 @@ export default function InvoiceDialog(props) {
                       fontWeight: "800",
                     }}
                   >
-                    {" "}
-                    INVOICE ISSUANCE{" "}
+                  {`${title}`}
                   </div>
                 </Grid>
               </Grid>
@@ -600,7 +687,7 @@ export default function InvoiceDialog(props) {
               >
                 <Grid item>
                   <Button
-                    onClick={handleClose}
+                    onClick={() => handleClose(false)}
                     style={{ width: "100px" }}
                     disabled={saving}
                   >
@@ -609,7 +696,7 @@ export default function InvoiceDialog(props) {
                 </Grid>
                 <Grid item>
                   <Button
-                    // onClick={payClicked}
+                    onClick={saveClikced}
                     variant="contained"
                     color="primary"
                     style={{ width: "100px" }}

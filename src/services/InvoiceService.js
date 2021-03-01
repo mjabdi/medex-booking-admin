@@ -29,7 +29,7 @@ export default class InvoiceService{
 
     static getCodeDetails = (code) =>
     {
-        return  API.get(`/api/medex/invoice/getcodedetails?code=${code}`)
+        return  API.post(`/api/medex/invoice/getcodedetails`, {code: code})
     }
 
 }

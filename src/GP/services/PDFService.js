@@ -14,4 +14,15 @@ export default class PDFService {
         });
     }
 
+    static downloadInvoice = (id) =>
+    {
+       return API.get(`/api/pdf/downloadinvoice?id=${id}`, {
+        responseType: 'arraybuffer',
+        id: id,
+        headers: {
+            Accept: 'application/pdf',
+        }
+        });
+    }
+
 }
