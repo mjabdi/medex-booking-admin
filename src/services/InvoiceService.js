@@ -37,4 +37,20 @@ export default class InvoiceService{
         return API.get(`/api/medex/invoice/getallcodes`)
     }
 
+    static downloadInvoice = (id) =>
+    {
+       return API.get(`/api/pdf/downloadinvoice?id=${id}`, {
+        responseType: 'arraybuffer',
+        id: id,
+        headers: {
+            Accept: 'application/pdf',
+        }
+        });
+    }
+
+    static emailInvoice = (id, email) =>
+    {
+       return API.post(`/api/pdf/emailinvoice?id=${id}&email=${email}`);
+    }
+
 }

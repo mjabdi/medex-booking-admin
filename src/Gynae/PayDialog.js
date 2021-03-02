@@ -270,6 +270,15 @@ export default function PayDialog(props) {
   const [price, setPrice] = useState("");
   const [priceError, setPriceError] = useState(false);
 
+  useEffect( () => {
+    if (props.price)
+    {
+      setPrice(`${props.price}`)
+    }else
+    {
+      setPrice('')
+    }
+  }, [props.price, props.open])
 
   const priceChanged = (event) =>
   {

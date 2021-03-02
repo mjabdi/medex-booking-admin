@@ -49,6 +49,8 @@ import HistoryIcon from "@material-ui/icons/History";
 
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import { CalendarColors } from "../Admin/calendar-admin/colors";
+import InvoiceService from "../services/InvoiceService";
+import InvoiceDialog from "../InvoiceDialog";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -327,6 +329,25 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 5,
     color: "#fff",
   },
+
+  invoiceNumber: {
+    display: "inline-block",
+    fontWeight: "500",
+    width: "72px",
+    fontSize: "1rem",
+    color: theme.palette.primary.main,
+  },
+
+  printInvoiceButton: {
+    marginLeft: "70px",
+    fontSize: "0.8rem",
+    // width: "300px",
+  },
+
+  editInvoiceButton: {
+    marginLeft: "10px",
+    fontSize: "0.8rem",
+  },
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -430,7 +451,7 @@ export default function BookingDialog(props) {
         email !== booking.email ||
         tel !== booking.phone ||
         notes !== booking.notes ||
-        service !== booking.packageName
+        service !== booking.packageName;
 
       setRecordChanged(isChanged);
     }
@@ -501,7 +522,7 @@ export default function BookingDialog(props) {
       setBookingTime(person.bookingTime.toUpperCase());
       setEmail(person.email);
       setTel(person.phone);
-      setService(person.packageName)
+      setService(person.packageName);
       if (person.notes) {
         setNotes(person.notes);
       }
@@ -802,15 +823,86 @@ export default function BookingDialog(props) {
 
   const onClose = () => {
     setEmailSent(false);
+    setEmailSentInvoice(false);
+    setInvoice(null);
+
     props.onClose();
   };
+
+  ///*** Invoice  ******************/
+
+  const [invoice, setInvoice] = React.useState(null);
+  const [invoiceLoaded, setInvoiceLoaded] = React.useState(false);
+  const [openInvoiceDialog, setOpenInvoiceDialog] = React.useState(false);
+  const [emailSentInvoice, setEmailSentInvoice] = React.useState(false);
+
+  const fetchInvoice = async () => {
+    try {
+      setInvoiceLoaded(false);
+      const res = await InvoiceService.getInvoiceByBookingId(props.booking._id);
+      setInvoice(res.data.invoice);
+      setInvoiceLoaded(true);
+    } catch (err) {
+      setInvoiceLoaded(true);
+      console.error(err);
+    }
+  };
+
+  React.useEffect(() => {
+    if (props.booking) {
+      fetchInvoice();
+    }
+  }, [props.booking]);
+
+  const handleCloseInvoiceDialog = (refresh) => {
+    setOpenInvoiceDialog(false);
+    setSelectedBooking(null);
+    fetchInvoice();
+  };
+
+  const OpenInvoiceDialog = () => {
+    setSelectedBooking(booking);
+    setInvoice(invoice);
+    setOpenInvoiceDialog(true);
+  };
+
+  const downloadInvoice = (id) => {
+    InvoiceService.downloadInvoice(id)
+      .then((res) => {
+        const file = new Blob([res.data], { type: "application/pdf" });
+
+        const fileURL = URL.createObjectURL(file);
+        window.open(fileURL, "_blank");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const sendInvoiceEmail = (id, _email) => {
+    setSaving(true);
+    setEmailSentInvoice(false);
+    InvoiceService.emailInvoice(id, _email)
+      .then((res) => {
+        setSaving(false);
+        if (res.data.status === "OK") {
+          setEmailSentInvoice(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setSaving(false);
+      });
+  };
+
+  //***************************** */
 
   return (
     <React.Fragment>
       {booking && (
         <React.Fragment>
           <Dialog
-            maxWidth="sm"
+            maxWidth="md"
             open={props.open}
             TransitionComponent={Transition}
             keepMounted
@@ -857,16 +949,19 @@ export default function BookingDialog(props) {
                 </span>
               </div>
 
-              <div style={{position:"absolute", top: "25x", right: "60px", backgroundColor:CalendarColors.STD_COLOR, color:"#fff", padding: "0px 5px", borderRadius:"10px"}}>
-                    STD
+              <div
+                style={{
+                  position: "absolute",
+                  top: "25x",
+                  right: "60px",
+                  backgroundColor: CalendarColors.STD_COLOR,
+                  color: "#fff",
+                  padding: "0px 5px",
+                  borderRadius: "10px",
+                }}
+              >
+                STD
               </div>
-
-              {/* {booking.tr && (
-                <div style={{position:"absolute",  right: "15px"}}>
-                     TR
-                </div>
-
-              )} */}
 
               <Grid
                 container
@@ -1201,178 +1296,226 @@ export default function BookingDialog(props) {
                       {/* ****************************************************************************************** */}
 
                       <li className={classes.li}>
-                        <span className={classes.infoTitle}>BOOKED DATE</span>
+                        <Grid container spacing={2}>
+                          <Grid item xs={6}>
+                            <span className={classes.infoTitle}>
+                              BOOKED DATE
+                            </span>
 
-                        <span
-                          hidden={
-                            editMode.edit && editMode.person._id === booking._id
-                          }
-                          className={classes.infoData}
-                        >
-                          {FormatDateFromString(booking.bookingDate)}
-                        </span>
-                        <span
-                          hidden={
-                            !(
-                              editMode.edit &&
-                              editMode.person._id === booking._id
-                            )
-                          }
-                          className={classes.infoData}
-                        >
-                          <TextField
-                            fullWidth
-                            error={validationError.bookingDateError}
-                            className={classes.TextBox}
-                            value={bookingDate}
-                            onChange={bookingDateChanged}
-                            inputProps={{
-                              style: {
-                                padding: 0,
-                              },
-                            }}
-                          ></TextField>
-                        </span>
-                      </li>
-
-                      <li className={classes.li}>
-                        <span className={classes.infoTitle}>BOOKED TIME</span>
-                        <span
-                          hidden={
-                            editMode.edit && editMode.person._id === booking._id
-                          }
-                          className={classes.infoData}
-                        >
-                          {booking.bookingTime.toUpperCase()}
-                        </span>
-                        <span
-                          hidden={
-                            !(
-                              editMode.edit &&
-                              editMode.person._id === booking._id
-                            )
-                          }
-                          className={classes.infoData}
-                        >
-                          <TextField
-                            fullWidth
-                            error={validationError.bookingTimeError}
-                            className={classes.TextBox}
-                            value={bookingTime}
-                            onChange={bookingTimeChanged}
-                            inputProps={{
-                              style: {
-                                padding: 0,
-                              },
-                            }}
-                          ></TextField>
-                        </span>
-                      </li>
-
-                      <li className={classes.li}>
-                        <span className={classes.infoTitle}>FULLNAME</span>
-                        <span
-                          hidden={
-                            editMode.edit && editMode.person._id === booking._id
-                          }
-                          className={classes.infoData}
-                        >
-                          {booking.fullname}
-                        </span>
-                        <span
-                          hidden={
-                            !(
-                              editMode.edit &&
-                              editMode.person._id === booking._id
-                            )
-                          }
-                          className={classes.infoData}
-                        >
-                          <TextField
-                            fullWidth
-                            className={classes.TextBox}
-                            value={fullname}
-                            onChange={fullnameChanged}
-                            inputProps={{
-                              style: {
-                                padding: 0,
-                              },
-                            }}
-                          ></TextField>
-                        </span>
-                      </li>
-                      <li className={classes.li}>
-                        <span className={classes.infoTitle}>EMAIL</span>
-                        <span
-                          hidden={
-                            editMode.edit && editMode.person._id === booking._id
-                          }
-                          className={classes.infoData}
-                        >
-                          {booking.email}
-                        </span>
-                        <span
-                          hidden={
-                            !(
-                              editMode.edit &&
-                              editMode.person._id === booking._id
-                            )
-                          }
-                          className={classes.infoData}
-                        >
-                          <TextField
-                            fullWidth
-                            className={classes.TextBox}
-                            value={email}
-                            onChange={emailChanged}
-                            inputProps={{
-                              style: {
-                                padding: 0,
-                              },
-                            }}
-                          ></TextField>
-                        </span>
-                      </li>
-                      <li className={classes.li}>
-                        <span className={classes.infoTitle}>TEL</span>
-                        <span
-                          hidden={
-                            editMode.edit && editMode.person._id === booking._id
-                          }
-                          className={classes.infoData}
-                        >
-                          {booking.phone?.toUpperCase()}
-                        </span>
-                        <span
-                          hidden={
-                            !(
-                              editMode.edit &&
-                              editMode.person._id === booking._id
-                            )
-                          }
-                          className={classes.infoData}
-                        >
-                          <TextField
-                            fullWidth
-                            className={classes.TextBox}
-                            value={tel}
-                            onChange={telChanged}
-                            inputProps={{
-                              style: {
-                                padding: 0,
-                              },
-                            }}
-                          ></TextField>
-                        </span>
+                            <span
+                              hidden={
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              }
+                              className={classes.infoData}
+                            >
+                              {FormatDateFromString(booking.bookingDate)}
+                            </span>
+                            <span
+                              hidden={
+                                !(
+                                  editMode.edit &&
+                                  editMode.person._id === booking._id
+                                )
+                              }
+                              className={classes.infoData}
+                            >
+                              <TextField
+                                fullWidth
+                                error={validationError.bookingDateError}
+                                className={classes.TextBox}
+                                value={bookingDate}
+                                onChange={bookingDateChanged}
+                                inputProps={{
+                                  style: {
+                                    padding: 0,
+                                  },
+                                }}
+                              ></TextField>
+                            </span>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <span className={classes.infoTitle}>
+                              BOOKED TIME
+                            </span>
+                            <span
+                              hidden={
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              }
+                              className={classes.infoData}
+                            >
+                              {booking.bookingTime.toUpperCase()}
+                            </span>
+                            <span
+                              hidden={
+                                !(
+                                  editMode.edit &&
+                                  editMode.person._id === booking._id
+                                )
+                              }
+                              className={classes.infoData}
+                            >
+                              <TextField
+                                fullWidth
+                                error={validationError.bookingTimeError}
+                                className={classes.TextBox}
+                                value={bookingTime}
+                                onChange={bookingTimeChanged}
+                                inputProps={{
+                                  style: {
+                                    padding: 0,
+                                  },
+                                }}
+                              ></TextField>
+                            </span>
+                          </Grid>
+                        </Grid>
                       </li>
 
                       <li className={classes.li}>
-                        <span
-                         
-                          className={classes.infoTitle}
-                        >
-                          Package
-                        </span>
+                        <Grid container spacing={2}>
+                          <Grid item xs={6}>
+                            <span className={classes.infoTitle}>FULLNAME</span>
+                            <span
+                              hidden={
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              }
+                              className={classes.infoData}
+                            >
+                              {booking.fullname}
+                            </span>
+                            <span
+                              hidden={
+                                !(
+                                  editMode.edit &&
+                                  editMode.person._id === booking._id
+                                )
+                              }
+                              className={classes.infoData}
+                            >
+                              <TextField
+                                fullWidth
+                                className={classes.TextBox}
+                                value={fullname}
+                                onChange={fullnameChanged}
+                                inputProps={{
+                                  style: {
+                                    padding: 0,
+                                  },
+                                }}
+                              ></TextField>
+                            </span>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <span className={classes.infoTitle}>EMAIL</span>
+                            <span
+                              hidden={
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              }
+                              className={classes.infoData}
+                            >
+                              {booking.email}
+                            </span>
+                            <span
+                              hidden={
+                                !(
+                                  editMode.edit &&
+                                  editMode.person._id === booking._id
+                                )
+                              }
+                              className={classes.infoData}
+                            >
+                              <TextField
+                                fullWidth
+                                className={classes.TextBox}
+                                value={email}
+                                onChange={emailChanged}
+                                inputProps={{
+                                  style: {
+                                    padding: 0,
+                                  },
+                                }}
+                              ></TextField>
+                            </span>
+                          </Grid>
+                        </Grid>
+                      </li>
+                      <li className={classes.li}>
+                        <Grid container spacing={2}>
+                          <Grid item xs={6}>
+                            <span className={classes.infoTitle}>TEL</span>
+                            <span
+                              hidden={
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              }
+                              className={classes.infoData}
+                            >
+                              {booking.phone?.toUpperCase()}
+                            </span>
+                            <span
+                              hidden={
+                                !(
+                                  editMode.edit &&
+                                  editMode.person._id === booking._id
+                                )
+                              }
+                              className={classes.infoData}
+                            >
+                              <TextField
+                                fullWidth
+                                className={classes.TextBox}
+                                value={tel}
+                                onChange={telChanged}
+                                inputProps={{
+                                  style: {
+                                    padding: 0,
+                                  },
+                                }}
+                              ></TextField>
+                            </span>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <span className={classes.infoTitle}>NOTES</span>
+                            <span
+                              hidden={
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              }
+                              className={classes.infoData}
+                            >
+                              {booking.notes}
+                            </span>
+                            <span
+                              hidden={
+                                !(
+                                  editMode.edit &&
+                                  editMode.person._id === booking._id
+                                )
+                              }
+                              className={classes.infoData}
+                            >
+                              <TextField
+                                fullWidth
+                                className={classes.TextBox}
+                                value={notes}
+                                onChange={notesChanged}
+                                inputProps={{
+                                  style: {
+                                    padding: 0,
+                                  },
+                                }}
+                              ></TextField>
+                            </span>
+                          </Grid>
+                        </Grid>
+                      </li>
+
+                      <li className={classes.li} style={{ paddingTop: "10px" }}>
+                        <span className={classes.infoTitle}>Package</span>
                         <span
                           hidden={
                             editMode.edit && editMode.person._id === booking._id
@@ -1404,73 +1547,7 @@ export default function BookingDialog(props) {
                         </span>
                       </li>
 
-                      {/* <li className={classes.li}>
-                        <span className={classes.infoTitle}>SERVICE</span>
-                        <span
-                          hidden={
-                            editMode.edit && editMode.person._id === booking._id
-                          }
-                          className={classes.infoData}
-                        >
-                          {booking.service}
-                        </span>
-                        <span
-                          hidden={
-                            !(
-                              editMode.edit &&
-                              editMode.person._id === booking._id
-                            )
-                          }
-                          className={classes.infoData}
-                        >
-                          <TextField
-                            fullWidth
-                            className={classes.TextBox}
-                            value={service}
-                            onChange={serviceChanged}
-                            inputProps={{
-                              style: {
-                                padding: 0,
-                              },
-                            }}
-                          ></TextField>
-                        </span>
-                      </li> */}
-
-                      <li className={classes.li}>
-                        <span className={classes.infoTitle}>NOTES</span>
-                        <span
-                          hidden={
-                            editMode.edit && editMode.person._id === booking._id
-                          }
-                          className={classes.infoData}
-                        >
-                          {booking.notes}
-                        </span>
-                        <span
-                          hidden={
-                            !(
-                              editMode.edit &&
-                              editMode.person._id === booking._id
-                            )
-                          }
-                          className={classes.infoData}
-                        >
-                          <TextField
-                            fullWidth
-                            className={classes.TextBox}
-                            value={notes}
-                            onChange={notesChanged}
-                            inputProps={{
-                              style: {
-                                padding: 0,
-                              },
-                            }}
-                          ></TextField>
-                        </span>
-                      </li>
-
-                      <li className={classes.li}>
+                      <li className={classes.li} style={{ paddingTop: "10px" }}>
                         <span className={classes.infoTitle}>STATUS</span>{" "}
                         {getStatusLabel(booking.status)}
                         {booking.status === "patient_attended" &&
@@ -1509,7 +1586,7 @@ export default function BookingDialog(props) {
                           )}
                       </li>
 
-                      <li className={classes.li}>
+                      <li className={classes.li} style={{ paddingTop: "10px" }}>
                         <span
                           hidden={
                             editMode.edit && editMode.person._id === booking._id
@@ -1528,11 +1605,10 @@ export default function BookingDialog(props) {
                         </span>
                       </li>
 
-
-                       <li hidden={booking.deleted || editMode.edit}>
+                      <li hidden={booking.deleted || editMode.edit}>
                         <Button
-                          disabled = {!booking.formData}
-                          startIcon = {<PrintIcon/>}
+                          disabled={!booking.formData}
+                          startIcon={<PrintIcon />}
                           type="button"
                           fullWidth
                           variant="outlined"
@@ -1546,10 +1622,14 @@ export default function BookingDialog(props) {
                         </Button>
                       </li>
 
-                      <li hidden={booking.deleted || editMode.edit || booking.formData}>
+                      <li
+                        hidden={
+                          booking.deleted || editMode.edit || booking.formData
+                        }
+                      >
                         <Button
-                          disabled={!booking.email || booking.email.length < 3 }
-                          startIcon = {<SendIcon/>}
+                          disabled={!booking.email || booking.email.length < 3}
+                          startIcon={<SendIcon />}
                           type="button"
                           fullWidth
                           variant="outlined"
@@ -1558,74 +1638,126 @@ export default function BookingDialog(props) {
                             sendRegForm(booking._id);
                           }}
                           className={classes.DownloadForm}
-                          style= {{position: "relative"}}
+                          style={{ position: "relative" }}
                         >
                           Send Registration Form Email
-
                           {emailSent && (
-                            <div style={{position: "absolute", right: "10px", top : "5px", color: "#05ad19"}}>
-                                Email Sent
+                            <div
+                              style={{
+                                position: "absolute",
+                                right: "10px",
+                                top: "5px",
+                                color: "#05ad19",
+                              }}
+                            >
+                              Email Sent
                             </div>
                           )}
-
                         </Button>
-                      </li> 
-
-                      {/* <li className={classes.li}>
-                        <div
-                          style={{
-                            borderTop: "1px solid #ddd",
-                            paddingTop: "20px",
-                          }}
-                        >
-                          <span className={classes.infoTitle}>
-                            ONLINE DEPOSIT
-                          </span>{" "}
-                          <span
-                            className={
-                              !booking.deposit || booking.deposit === 0
-                                ? classes.infoDataChargesHigher
-                                : classes.infoDataCharges
-                            }
-                          >{`£${booking.deposit.toLocaleString(
-                            "en-GB"
-                          )}`}</span>
-                          {!(
-                            editMode.edit && editMode.person._id === booking._id
-                          ) &&
-                            !booking.paid &&
-                            booking.deleted &&
-                            booking.deposit > 0 && (
-                              <Button
-                                variant="outlined"
-                                color="secondary"
-                                className={classes.PayButton}
-                                onClick={(event) => setOpenRefundDialog(true)}
-                              >
-                                Refund Deposit
-                              </Button>
-                            )}
-                          {!(
-                            editMode.edit && editMode.person._id === booking._id
-                          ) &&
-                            booking.refund && (
-                              <React.Fragment>
-                                <span className={classes.PayLabel}>
-                                  {" "}
-                                  <CheckIcon
-                                    className={classes.checkIconSmall}
-                                  />{" "}
-                                  Refund Done
-                                  {booking.paidBy === "corporate"
-                                    ? ` "${booking.corporate}" `
-                                    : ""}
-                                </span>
-                              </React.Fragment>
-                            )}
-                        </div>
                       </li>
- */}
+
                       <Divider />
+
+                      <li className={classes.li} style={{ marginTop: "20px" }}>
+                        <span className={classes.infoTitle}>INVOICE # : </span>{" "}
+                        <span style={{ paddingLeft: "0px" }}>
+                          {!invoiceLoaded && (
+                            <span className={classes.invoiceNumber}> ... </span>
+                          )}
+                          {invoiceLoaded && invoice && (
+                            <span className={classes.invoiceNumber}>
+                              {" "}
+                              {invoice.invoiceNumber}{" "}
+                            </span>
+                          )}
+                          {invoiceLoaded && !invoice && (
+                            <span
+                              className={classes.invoiceNumber}
+                              style={{ color: "red", fontSize: "0.9rem" }}
+                            >
+                              {" "}
+                              N/A{" "}
+                            </span>
+                          )}
+                        </span>
+                        {!(
+                          editMode.edit && editMode.person._id === booking._id
+                        ) &&
+                          !booking.deleted && (
+                            <React.Fragment>
+                              {invoiceLoaded && !invoice && (
+                                <Button
+                                  variant="outlined"
+                                  color="primary"
+                                  className={classes.PayButton}
+                                  onClick={() => OpenInvoiceDialog()}
+                                >
+                                  Issue Invoice
+                                </Button>
+                              )}
+
+                              {invoiceLoaded && invoice && (
+                                <React.Fragment>
+                                  <Button
+                                    variant="outlined"
+                                    startIcon={<PrintIcon />}
+                                    color="primary"
+                                    className={classes.printInvoiceButton}
+                                    onClick={() => downloadInvoice(invoice._id)}
+                                  >
+                                    Download Invoice
+                                  </Button>
+
+                                  <Button
+                                    variant="outlined"
+                                    color="secondary"
+                                    className={classes.editInvoiceButton}
+                                    onClick={() => OpenInvoiceDialog()}
+                                  >
+                                    Edit Invoice
+                                  </Button>
+
+                                  <Button
+                                    disabled={
+                                      !booking.email || booking.email.length < 3
+                                    }
+                                    startIcon={<SendIcon />}
+                                    type="button"
+                                    variant="outlined"
+                                    color="primary"
+                                    onClick={() => {
+                                      sendInvoiceEmail(
+                                        invoice._id,
+                                        booking.email
+                                      );
+                                    }}
+                                    style={{
+                                      position: "relative",
+                                      marginLeft: "10px",
+                                      paddingRight: "130px",
+                                      fontSize: "0.8rem",
+                                    }}
+                                  >
+                                    Send Invoice By Email
+                                    {emailSentInvoice && (
+                                      <div
+                                        style={{
+                                          position: "absolute",
+                                          right: "10px",
+                                          top: "5px",
+                                          color: "#05ad19",
+                                        }}
+                                      >
+                                        Email Sent
+                                      </div>
+                                    )}
+                                  </Button>
+                                </React.Fragment>
+                              )}
+                            </React.Fragment>
+                          )}
+                      </li>
+
                       <li className={classes.li} style={{ marginTop: "20px" }}>
                         <span className={classes.infoTitle}>TOTAL CHARGES</span>{" "}
                         <span
@@ -1678,28 +1810,6 @@ export default function BookingDialog(props) {
                             </React.Fragment>
                           )}
                       </li>
-
-                      {/* <li className={classes.li}>
-                        <div
-                          style={{
-                            borderTop: "1px solid #ddd",
-                            paddingTop: "10px",
-                          }}
-                        >
-                          <span className={classes.infoTitle}>
-                            TOTAL CHARGES
-                          </span>{" "}
-                          <span
-                            className={
-                              !booking.OTCCharges || booking.OTCCharges === 0
-                                ? classes.infoDataChargesHigher
-                                : classes.infoDataCharges
-                            }
-                          >{`£${(
-                            booking.deposit + booking.OTCCharges
-                          ).toLocaleString("en-GB")}`}</span>
-                        </div>
-                      </li> */}
                     </ul>
                   </div>
                 </Grid>
@@ -1715,7 +1825,15 @@ export default function BookingDialog(props) {
             <PayDialog
               booking={selectedBooking}
               open={openPayDialog}
+              price={invoice ? invoice.grandTotal : null}
               handleClose={handleClosePayDialog}
+            />
+
+            <InvoiceDialog
+              booking={selectedBooking}
+              invoice={invoice}
+              open={openInvoiceDialog}
+              handleClose={handleCloseInvoiceDialog}
             />
           </Dialog>
 
