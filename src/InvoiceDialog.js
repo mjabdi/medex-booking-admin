@@ -306,6 +306,18 @@ export default function InvoiceDialog(props) {
     };
   }, [props.invoice]);
 
+  useEffect(() => {
+    if (!props.invoice && props.defaultCodes) {
+      setItems(props.defaultCodes)
+    }
+
+    return () => {
+      setItems([]);
+    };
+  }, [props.defaultCodes]);
+
+
+
   const fetchAllCodes = async () => {
     try {
       const res = await InvoiceService.getAllCodes();
@@ -553,7 +565,7 @@ export default function InvoiceDialog(props) {
                           }}
                           options={allCodes}
                           getOptionLabel={(option) =>
-                            `${option.code} -- ${
+                            `.${option.code} -- ${
                               option.description
                             } -- ${parseFloat(
                               option.price

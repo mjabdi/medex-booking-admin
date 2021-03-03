@@ -54,6 +54,8 @@ import InvoiceService from "../services/InvoiceService";
 import SendIcon from "@material-ui/icons/Send";
 import InvoiceDialog from "../InvoiceDialog";
 
+
+
 const useStyles = makeStyles((theme) => ({
   box: {
     backgroundColor: "#373737",
@@ -335,7 +337,7 @@ const useStyles = makeStyles((theme) => ({
   invoiceNumber: {
     display: "inline-block",
     fontWeight: "500",
-    width: "72px",
+    width: "80px",
     fontSize: "1rem",
     color: theme.palette.primary.main,
   },
@@ -369,6 +371,30 @@ function PaperComponent(props) {
 
 export default function BookingDialog(props) {
   const classes = useStyles();
+
+  const getDefaultCodes = (_booking) =>
+  {
+    const defaultCodes = []
+    if (!_booking)
+      return
+
+    if (_booking.tr)
+    {
+      defaultCodes.push({code: "PCRTR", description: "PCR TEST TO RELEASE", price: 250 })
+    }else{
+      defaultCodes.push({code: "PCR", description: "PCR SWAB TEST", price: 199 })
+      if (_booking.antiBodyTest)
+      {
+        defaultCodes.push({code: "PCRA", description: "PCR ANTIBODY TEST", price: 99 })
+        defaultCodes.push({code: "PHLE", description: "PHLEBOTOMY", price: 50 })
+      }
+      if (_booking.certificate)
+      {
+        defaultCodes.push({code: "PCRCERT", description: "PCR FIT TO FLY CERTIFICATE", price: 50 })
+      }
+    }
+    return defaultCodes
+  }
 
   const [state, setState] = React.useContext(GlobalState);
 
@@ -2317,6 +2343,7 @@ export default function BookingDialog(props) {
               booking={selectedBooking}
               invoice={invoice}
               open={openInvoiceDialog}
+              defaultCodes={getDefaultCodes(props.booking)}
               handleClose={handleCloseInvoiceDialog}
             />
 
