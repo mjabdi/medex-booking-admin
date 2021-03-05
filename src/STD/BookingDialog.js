@@ -852,7 +852,7 @@ export default function BookingDialog(props) {
     if (props.booking) {
       fetchInvoice();
     }
-  }, [props.booking]);
+  }, [props.booking, props.open]);
 
   const handleCloseInvoiceDialog = (refresh) => {
     setOpenInvoiceDialog(false);

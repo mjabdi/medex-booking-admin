@@ -461,9 +461,10 @@ export default function InvoiceDialog(props) {
       let address = "";
 
       if (props.booking.formData) {
-        name = `${props.booking.formData.title} ${props.booking.forename} ${props.booking.formData.surname}`;
-        postCode = props.booking.formData.postCode;
-        address = props.booking.formData.address;
+        const formData = JSON.parse(props.booking.formData)
+        name = `${formData.title} ${formData.forename} ${formData.surname}`;
+        postCode = formData.postCode;
+        address = formData.address;
       } else if (props.booking.forename && props.booking.surname) {
         name = `${props.booking.forename} ${props.booking.surname}`;
         postCode = props.booking.postCode;
@@ -790,11 +791,11 @@ export default function InvoiceDialog(props) {
                   <Button
                     onClick={saveClikced}
                     variant="contained"
-                    color="primary"
-                    style={{ width: "100px" }}
+                    color=   {props.invoice ? 'secondary' : 'primary'}
+                    // style={{ width: "100px" }}
                     disabled={saving}
                   >
-                    Save
+                    {props.invoice ? 'Save Changes' : 'Issue Invoice'}
                   </Button>
                 </Grid>
               </Grid>
