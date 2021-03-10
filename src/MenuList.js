@@ -326,6 +326,39 @@ export const MenuList_PCR = [
   { index: 15, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
 ];
 
+export const MenuList_PCRLAB = [
+  {
+    index: 0,
+    id: `todayBookings`,
+    title: `Today's Bookings`,
+    icon: <NewReleasesIcon />,
+  },
+  {
+    index: 1,
+    id: `liveBookings`,
+    title: `Live Bookings`,
+    icon: <LiveTvIcon />,
+  },
+  {
+    index: 2,
+    id: `futureBookings`,
+    title: `Future Bookings`,
+    icon: <TimelineIcon />,
+  },
+  {
+    index: 3,
+    id: `latebookings`,
+    title: `40 Hours Late`,
+    icon: <HourglassEmptyIcon />,
+  },
+  {
+    index: 4,
+    id: `calendarView`,
+    title: `Calendar View`,
+    icon: <DateRangeIcon />,
+  },
+];
+
 export const getMenuContent = (role, index) => {
   if (role === "pcr") {
     switch (index) {
@@ -361,6 +394,22 @@ export const getMenuContent = (role, index) => {
         return <PCRCalendarView />;
       case 15:
         return <FindByRef />;
+
+      default:
+        return `Page Not Found!`;
+    }
+  } else if (role === "pcrlab") {
+    switch (index) {
+      case 0:
+        return <BookingTable date="today" />;
+      case 1:
+        return <BookingTable date="live" />;
+      case 2:
+        return <BookingTable date="future" />;
+      case 3:
+        return <BookingTable date="late" />;
+      case 4:
+        return <PCRCalendarView />;
 
       default:
         return `Page Not Found!`;
@@ -468,6 +517,9 @@ export const getMenuRole = (role) => {
       return MenuList_Admin;
     case "pcr":
       return MenuList_PCR;
+    case "pcrlab":
+      return MenuList_PCRLAB;
+
     case "gynae":
       return MenuList_Gynae;
     case "gp":

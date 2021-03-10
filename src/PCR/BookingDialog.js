@@ -54,8 +54,6 @@ import InvoiceService from "../services/InvoiceService";
 import SendIcon from "@material-ui/icons/Send";
 import InvoiceDialog from "../InvoiceDialog";
 
-
-
 const useStyles = makeStyles((theme) => ({
   box: {
     backgroundColor: "#373737",
@@ -311,7 +309,7 @@ const useStyles = makeStyles((theme) => ({
 
   checkIcon: {
     color: "green",
-    marginBottom:"-8px"
+    marginBottom: "-8px",
   },
 
   checkIconSmall: {
@@ -321,7 +319,7 @@ const useStyles = makeStyles((theme) => ({
 
   closeIcon: {
     color: "red",
-    marginBottom:"-8px"
+    marginBottom: "-8px",
   },
 
   centeredLabel: {
@@ -372,29 +370,44 @@ function PaperComponent(props) {
 export default function BookingDialog(props) {
   const classes = useStyles();
 
-  const getDefaultCodes = (_booking) =>
-  {
-    const defaultCodes = []
-    if (!_booking)
-      return
+  const getDefaultCodes = (_booking) => {
+    const defaultCodes = [];
+    if (!_booking) return;
 
-    if (_booking.tr)
-    {
-      defaultCodes.push({code: "PCRTR", description: "PCR TEST TO RELEASE", price: 250 })
-    }else{
-      defaultCodes.push({code: "PCR", description: "PCR SWAB TEST", price: 199 })
-      if (_booking.antiBodyTest)
-      {
-        defaultCodes.push({code: "PCRA", description: "PCR ANTIBODY TEST", price: 99 })
-        defaultCodes.push({code: "PHLE", description: "PHLEBOTOMY", price: 50 })
+    if (_booking.tr) {
+      defaultCodes.push({
+        code: "PCRTR",
+        description: "PCR TEST TO RELEASE",
+        price: 250,
+      });
+    } else {
+      defaultCodes.push({
+        code: "PCR",
+        description: "PCR SWAB TEST",
+        price: 199,
+      });
+      if (_booking.antiBodyTest) {
+        defaultCodes.push({
+          code: "PCRA",
+          description: "PCR ANTIBODY TEST",
+          price: 99,
+        });
+        defaultCodes.push({
+          code: "PHLE",
+          description: "PHLEBOTOMY",
+          price: 50,
+        });
       }
-      if (_booking.certificate)
-      {
-        defaultCodes.push({code: "PCRCERT", description: "PCR FIT TO FLY CERTIFICATE", price: 50 })
+      if (_booking.certificate) {
+        defaultCodes.push({
+          code: "PCRCERT",
+          description: "PCR FIT TO FLY CERTIFICATE",
+          price: 50,
+        });
       }
     }
-    return defaultCodes
-  }
+    return defaultCodes;
+  };
 
   const [state, setState] = React.useContext(GlobalState);
 
@@ -673,23 +686,20 @@ export default function BookingDialog(props) {
       setAddress(person.address.toUpperCase());
       if (person.notes) {
         setNotes(person.notes.toUpperCase());
-      }else
-      {
-        setNotes('')
+      } else {
+        setNotes("");
       }
 
       if (person.passportNumber) {
         setPassport(person.passportNumber.toUpperCase());
-      }else
-      {
-        setPassport('')
+      } else {
+        setPassport("");
       }
 
       if (person.passportNumber2) {
         setPassport2(person.passportNumber2.toUpperCase());
-      }else
-      {
-        setPassport2('')
+      } else {
+        setPassport2("");
       }
 
       setCertificate(person.certificate);
@@ -1029,7 +1039,10 @@ export default function BookingDialog(props) {
                 booking.tr ? { backgroundColor: "#7e0082", color: "#fff" } : {}
               }
             >
-              <div style={{ position: "absolute", top: "25x", left: "25px" }}>
+              <div
+                style={{ position: "absolute", top: "25x", left: "25px" }}
+                hidden={state.role === "pcrlab"}
+              >
                 <Tooltip title="COPY EDIT LINK TO CLIPBOARD">
                   <IconButton
                     onClick={() => {
@@ -1232,7 +1245,9 @@ export default function BookingDialog(props) {
                         hidden={
                           booking.deleted ||
                           deleteMode.delete ||
-                          (editMode.edit && editMode.person._id === booking._id)
+                          (editMode.edit &&
+                            editMode.person._id === booking._id) ||
+                          state.role === "pcrlab"
                         }
                       >
                         <Button
@@ -1323,7 +1338,8 @@ export default function BookingDialog(props) {
                           booking.deleted ||
                           editMode.edit ||
                           (deleteMode.delete &&
-                            deleteMode.person._id === booking._id)
+                            deleteMode.person._id === booking._id) ||
+                          state.role === "pcrlab"
                         }
                       >
                         <Button
@@ -2029,10 +2045,11 @@ export default function BookingDialog(props) {
                           </Grid>
                         </Grid>
                       </li>
-                      <li className={classes.li} style={{paddingTop:"10px"}}>
+                      <li className={classes.li} style={{ paddingTop: "10px" }}>
                         <span className={classes.infoTitle}>STATUS</span>{" "}
                         {getStatusLabel(booking.status)}
-                        {booking.status === "sample_taken" &&
+                        {state.role !== "pcrlab" &&
+                          booking.status === "sample_taken" &&
                           !(
                             editMode.edit && editMode.person._id === booking._id
                           ) && (
@@ -2052,7 +2069,8 @@ export default function BookingDialog(props) {
                           booking.status === "positive") &&
                           !(
                             editMode.edit && editMode.person._id === booking._id
-                          ) && (
+                          ) &&
+                          state.role !== "pcrlab" && (
                             <Button
                               variant="outlined"
                               color="primary"
@@ -2066,7 +2084,7 @@ export default function BookingDialog(props) {
                           )}
                       </li>
 
-                      <li hidden={booking.deleted}>
+                      <li hidden={booking.deleted || state.role === "pcrlab"}>
                         <Button
                           startIcon={<PrintIcon />}
                           type="button"
@@ -2083,7 +2101,7 @@ export default function BookingDialog(props) {
                         </Button>
                       </li>
 
-                      <li hidden={booking.deleted}>
+                      <li hidden={booking.deleted || state.role === "pcrlab"}>
                         <Button
                           startIcon={<PrintIcon />}
                           type="button"
@@ -2102,6 +2120,7 @@ export default function BookingDialog(props) {
 
                       <li
                         hidden={
+                          state.role === "pcrlab" ||
                           booking.deleted ||
                           (booking.status !== "report_sent" &&
                             booking.status !== "report_cert_sent" &&
@@ -2126,6 +2145,7 @@ export default function BookingDialog(props) {
 
                       <li
                         hidden={
+                          state.role === "pcrlab" ||
                           booking.deleted ||
                           (booking.status !== "report_cert_sent" &&
                             booking.status !== "positive")
@@ -2147,7 +2167,7 @@ export default function BookingDialog(props) {
                         </Button>
                       </li>
 
-                      <li>
+                      <li hidden={state.role === "pcrlab"}>
                         <Button
                           startIcon={<HistoryIcon />}
                           type="button"
@@ -2165,157 +2185,178 @@ export default function BookingDialog(props) {
                         </Button>
                       </li>
 
-                      <Divider />
+                     
 
-                      <li className={classes.li} style={{ marginTop: "20px" }}>
-                        <span className={classes.infoTitle}>INVOICE # : </span>{" "}
-                        <span style={{ paddingLeft: "0px" }}>
-                          {!invoiceLoaded && (
-                            <span className={classes.invoiceNumber}> ... </span>
-                          )}
-                          {invoiceLoaded && invoice && (
-                            <span className={classes.invoiceNumber}>
-                              {" "}
-                              {invoice.invoiceNumber}{" "}
-                            </span>
-                          )}
-                          {invoiceLoaded && !invoice && (
-                            <span
-                              className={classes.invoiceNumber}
-                              style={{ color: "red", fontSize: "0.9rem" }}
-                            >
-                              {" "}
-                              N/A{" "}
-                            </span>
-                          )}
-                        </span>
-                        {!(
-                          editMode.edit && editMode.person._id === booking._id
-                        ) &&
-                          !booking.deleted && (
-                            <React.Fragment>
-                              {invoiceLoaded && !invoice && (
-                                <Button
-                                  variant="outlined"
-                                  color="primary"
-                                  className={classes.PayButton}
-                                  onClick={() => OpenInvoiceDialog()}
-                                >
-                                  Issue Invoice
-                                </Button>
+                      {state.role !== "pcrlab" && (
+                        <div>
+                           <Divider />
+                          <li
+                            className={classes.li}
+                            style={{ marginTop: "20px" }}
+                          >
+                            <span className={classes.infoTitle}>
+                              INVOICE # :{" "}
+                            </span>{" "}
+                            <span style={{ paddingLeft: "0px" }}>
+                              {!invoiceLoaded && (
+                                <span className={classes.invoiceNumber}>
+                                  {" "}
+                                  ...{" "}
+                                </span>
                               )}
-
                               {invoiceLoaded && invoice && (
+                                <span className={classes.invoiceNumber}>
+                                  {" "}
+                                  {invoice.invoiceNumber}{" "}
+                                </span>
+                              )}
+                              {invoiceLoaded && !invoice && (
+                                <span
+                                  className={classes.invoiceNumber}
+                                  style={{ color: "red", fontSize: "0.9rem" }}
+                                >
+                                  {" "}
+                                  N/A{" "}
+                                </span>
+                              )}
+                            </span>
+                            {!(
+                              editMode.edit &&
+                              editMode.person._id === booking._id
+                            ) &&
+                              !booking.deleted && (
                                 <React.Fragment>
-                                  <Button
-                                    variant="outlined"
-                                    startIcon={<PrintIcon />}
-                                    color="primary"
-                                    className={classes.printInvoiceButton}
-                                    onClick={() => downloadInvoice(invoice._id)}
-                                  >
-                                    Download Invoice
-                                  </Button>
+                                  {invoiceLoaded && !invoice && (
+                                    <Button
+                                      variant="outlined"
+                                      color="primary"
+                                      className={classes.PayButton}
+                                      onClick={() => OpenInvoiceDialog()}
+                                    >
+                                      Issue Invoice
+                                    </Button>
+                                  )}
 
-                                  <Button
-                                    variant="outlined"
-                                    color="secondary"
-                                    className={classes.editInvoiceButton}
-                                    onClick={() => OpenInvoiceDialog()}
-                                  >
-                                    Edit Invoice
-                                  </Button>
+                                  {invoiceLoaded && invoice && (
+                                    <React.Fragment>
+                                      <Button
+                                        variant="outlined"
+                                        startIcon={<PrintIcon />}
+                                        color="primary"
+                                        className={classes.printInvoiceButton}
+                                        onClick={() =>
+                                          downloadInvoice(invoice._id)
+                                        }
+                                      >
+                                        Download Invoice
+                                      </Button>
 
-                                  <Button
-                                    disabled={
-                                      !booking.email || booking.email.length < 3
-                                    }
-                                    startIcon={<SendIcon />}
-                                    type="button"
-                                    variant="outlined"
-                                    color="primary"
-                                    onClick={() => {
-                                      sendInvoiceEmail(
-                                        invoice._id,
-                                        booking.email
-                                      );
-                                    }}
-                                    style={{
-                                      position: "relative",
-                                      marginLeft: "10px",
-                                      paddingRight: "130px",
-                                      fontSize: "0.8rem",
-                                    }}
-                                  >
-                                    Send Invoice By Email
-                                    {emailSentInvoice && (
-                                      <div
+                                      <Button
+                                        variant="outlined"
+                                        color="secondary"
+                                        className={classes.editInvoiceButton}
+                                        onClick={() => OpenInvoiceDialog()}
+                                      >
+                                        Edit Invoice
+                                      </Button>
+
+                                      <Button
+                                        disabled={
+                                          !booking.email ||
+                                          booking.email.length < 3
+                                        }
+                                        startIcon={<SendIcon />}
+                                        type="button"
+                                        variant="outlined"
+                                        color="primary"
+                                        onClick={() => {
+                                          sendInvoiceEmail(
+                                            invoice._id,
+                                            booking.email
+                                          );
+                                        }}
                                         style={{
-                                          position: "absolute",
-                                          right: "10px",
-                                          top: "5px",
-                                          color: "#05ad19",
+                                          position: "relative",
+                                          marginLeft: "10px",
+                                          paddingRight: "130px",
+                                          fontSize: "0.8rem",
                                         }}
                                       >
-                                        Email Sent
-                                      </div>
-                                    )}
-                                  </Button>
+                                        Send Invoice By Email
+                                        {emailSentInvoice && (
+                                          <div
+                                            style={{
+                                              position: "absolute",
+                                              right: "10px",
+                                              top: "5px",
+                                              color: "#05ad19",
+                                            }}
+                                          >
+                                            Email Sent
+                                          </div>
+                                        )}
+                                      </Button>
+                                    </React.Fragment>
+                                  )}
                                 </React.Fragment>
                               )}
-                            </React.Fragment>
-                          )}
-                      </li>
+                          </li>
 
-                      <li className={classes.li}>
-                        <span className={classes.infoTitle}>TOTAL CHARGES</span>{" "}
-                        <span
-                          className={
-                            calculatePrice(booking) <= 199
-                              ? classes.infoDataCharges
-                              : classes.infoDataChargesHigher
-                          }
-                        >{`£${calculatePrice(booking)}`}</span>
-                        {!(
-                          editMode.edit && editMode.person._id === booking._id
-                        ) &&
-                          !booking.paid &&
-                          !booking.deleted && (
-                            <Button
-                              variant="outlined"
-                              color="secondary"
-                              className={classes.PayButton}
-                              onClick={(event) => Pay(event, booking._id)}
-                            >
-                              Pay
-                            </Button>
-                          )}
-                        {!(
-                          editMode.edit && editMode.person._id === booking._id
-                        ) &&
-                          booking.paid && (
-                            <React.Fragment>
-                              <span className={classes.PayLabel}>
-                                {" "}
-                                <CheckIcon
-                                  className={classes.checkIconSmall}
-                                />{" "}
-                                Paid by {booking.paidBy}
-                                {booking.paidBy === "corporate"
-                                  ? ` "${booking.corporate}" `
-                                  : ""}
-                              </span>
-
-                              <Tooltip title="Undo Payment">
-                                <IconButton
-                                  onClick={() => setOpenUndoPayDialog(true)}
+                          <li className={classes.li}>
+                            <span className={classes.infoTitle}>
+                              TOTAL CHARGES
+                            </span>{" "}
+                            <span
+                              className={
+                                calculatePrice(booking) <= 199
+                                  ? classes.infoDataCharges
+                                  : classes.infoDataChargesHigher
+                              }
+                            >{`£${calculatePrice(booking)}`}</span>
+                            {!(
+                              editMode.edit &&
+                              editMode.person._id === booking._id
+                            ) &&
+                              !booking.paid &&
+                              !booking.deleted && (
+                                <Button
+                                  variant="outlined"
+                                  color="secondary"
+                                  className={classes.PayButton}
+                                  onClick={(event) => Pay(event, booking._id)}
                                 >
-                                  <UndoIcon style={{ color: "red" }} />
-                                </IconButton>
-                              </Tooltip>
-                            </React.Fragment>
-                          )}
-                      </li>
+                                  Pay
+                                </Button>
+                              )}
+                            {!(
+                              editMode.edit &&
+                              editMode.person._id === booking._id
+                            ) &&
+                              booking.paid && (
+                                <React.Fragment>
+                                  <span className={classes.PayLabel}>
+                                    {" "}
+                                    <CheckIcon
+                                      className={classes.checkIconSmall}
+                                    />{" "}
+                                    Paid by {booking.paidBy}
+                                    {booking.paidBy === "corporate"
+                                      ? ` "${booking.corporate}" `
+                                      : ""}
+                                  </span>
+
+                                  <Tooltip title="Undo Payment">
+                                    <IconButton
+                                      onClick={() => setOpenUndoPayDialog(true)}
+                                    >
+                                      <UndoIcon style={{ color: "red" }} />
+                                    </IconButton>
+                                  </Tooltip>
+                                </React.Fragment>
+                              )}
+                          </li>
+                        </div>
+                      )}
                     </ul>
                   </div>
                 </Grid>
