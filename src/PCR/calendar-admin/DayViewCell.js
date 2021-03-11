@@ -238,6 +238,9 @@ const DayViewCell = ({key, date, time}) => {
 
     const bookingCliked = (event, booking) =>
     {
+        if (state.role === 'pcrlab')
+            return
+
         setSelectedBooking(booking);
         setOpenDialog(true);
     }

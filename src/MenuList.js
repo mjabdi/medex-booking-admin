@@ -329,30 +329,18 @@ export const MenuList_PCR = [
 export const MenuList_PCRLAB = [
   {
     index: 0,
-    id: `todayBookings`,
-    title: `Today's Bookings`,
-    icon: <NewReleasesIcon />,
-  },
-  {
-    index: 1,
     id: `liveBookings`,
     title: `Live Bookings`,
     icon: <LiveTvIcon />,
   },
   {
-    index: 2,
-    id: `futureBookings`,
-    title: `Future Bookings`,
-    icon: <TimelineIcon />,
-  },
-  {
-    index: 3,
+    index: 1,
     id: `latebookings`,
     title: `40 Hours Late`,
     icon: <HourglassEmptyIcon />,
   },
   {
-    index: 4,
+    index: 2,
     id: `calendarView`,
     title: `Calendar View`,
     icon: <DateRangeIcon />,
@@ -401,14 +389,10 @@ export const getMenuContent = (role, index) => {
   } else if (role === "pcrlab") {
     switch (index) {
       case 0:
-        return <BookingTable date="today" />;
-      case 1:
         return <BookingTable date="live" />;
-      case 2:
-        return <BookingTable date="future" />;
-      case 3:
+      case 1:
         return <BookingTable date="late" />;
-      case 4:
+      case 2:
         return <PCRCalendarView />;
 
       default:

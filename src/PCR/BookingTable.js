@@ -1,35 +1,61 @@
-import React, {useEffect, useRef, useState} from 'react';
-import { DataGrid } from '@material-ui/data-grid';
-import BookService from './services/BookService';
-import { Button, Checkbox, CircularProgress, Dialog, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Grid, Icon, InputLabel, LinearProgress, Link, makeStyles, MenuItem, Paper, Select, SvgIcon, Switch, TextField, Tooltip } from '@material-ui/core';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import { IconButton } from '@material-ui/core';
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
-import GlobalState from './../GlobalState';
-import { getMenuIndex } from './../MenuList';
-import {FormatDateFromString, FormatDateFromStringShortYear} from './DateFormatter';
+import React, { useEffect, useRef, useState } from "react";
+import { DataGrid } from "@material-ui/data-grid";
+import BookService from "./services/BookService";
+import {
+  Button,
+  Checkbox,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  Icon,
+  InputLabel,
+  LinearProgress,
+  Link,
+  makeStyles,
+  MenuItem,
+  Paper,
+  Select,
+  SvgIcon,
+  Switch,
+  TextField,
+  Tooltip,
+} from "@material-ui/core";
+import RefreshIcon from "@material-ui/icons/Refresh";
+import { IconButton } from "@material-ui/core";
+import CheckIcon from "@material-ui/icons/Check";
+import CloseIcon from "@material-ui/icons/Close";
+import GlobalState from "./../GlobalState";
+import { getMenuIndex } from "./../MenuList";
+import {
+  FormatDateFromString,
+  FormatDateFromStringShortYear,
+} from "./DateFormatter";
 
-import SearchIcon from '@material-ui/icons/Search';
-import BookingDialog from './BookingDialog';
+import SearchIcon from "@material-ui/icons/Search";
+import BookingDialog from "./BookingDialog";
 
-import NewReleasesIcon from '@material-ui/icons/NewReleases';
-import HistoryIcon from '@material-ui/icons/History';
-import TimelineIcon from '@material-ui/icons/Timeline';
-import DescriptionIcon from '@material-ui/icons/Description';
-import AutorenewIcon from '@material-ui/icons/Autorenew';
-import LiveTvIcon from '@material-ui/icons/LiveTv';
-import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import DeleteIcon from '@material-ui/icons/Delete';
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import NewReleasesIcon from "@material-ui/icons/NewReleases";
+import HistoryIcon from "@material-ui/icons/History";
+import TimelineIcon from "@material-ui/icons/Timeline";
+import DescriptionIcon from "@material-ui/icons/Description";
+import AutorenewIcon from "@material-ui/icons/Autorenew";
+import LiveTvIcon from "@material-ui/icons/LiveTv";
+import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import DeleteIcon from "@material-ui/icons/Delete";
+import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
-import Draggable from 'react-draggable';
+import Draggable from "react-draggable";
 
-import * as dateformat from 'dateformat';
+import * as dateformat from "dateformat";
 
-import DateFnsUtils from '@date-io/date-fns';
+import DateFnsUtils from "@date-io/date-fns";
 
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
@@ -38,76 +64,74 @@ import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
   KeyboardDatePicker,
-} from '@material-ui/pickers';
+} from "@material-ui/pickers";
 
-import BusinessIcon from '@material-ui/icons/Business';
-import CreditCardIcon from '@material-ui/icons/CreditCard';
-import LocalAtmIcon from '@material-ui/icons/LocalAtm';
+import BusinessIcon from "@material-ui/icons/Business";
+import CreditCardIcon from "@material-ui/icons/CreditCard";
+import LocalAtmIcon from "@material-ui/icons/LocalAtm";
 
-
-import ReactHTMLTableToExcel from 'react-html-table-to-excel';
-import PriceCalculator from './PriceCalculator';
-import { corporates } from './Corporates';
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import PriceCalculator from "./PriceCalculator";
+import { corporates } from "./Corporates";
 
 const useStyles = makeStyles((theme) => ({
   title: {
     marginTop: theme.spacing(0),
     marginBottom: theme.spacing(1),
-
   },
-  
-  refreshButton:{
+
+  refreshButton: {
     marginLeft: theme.spacing(2),
   },
 
-  checkIcon:{
-    color: "green"
+  checkIcon: {
+    color: "green",
   },
 
-  closeIcon:{
-    color: "red"
+  closeIcon: {
+    color: "red",
   },
 
   RefLink: {
-    cursor: "pointer"
+    cursor: "pointer",
   },
 
-  BookedLabel:{
+  BookedLabel: {
     backgroundColor: "#606060",
     color: "#fff",
     width: "70px",
     textAlign: "center",
   },
 
-  PatientAttendedLabel:{
+  PatientAttendedLabel: {
     backgroundColor: "#0066aa",
     color: "#fff",
     width: "70px",
     textAlign: "center",
   },
 
-  SampleTakenLabel:{
+  SampleTakenLabel: {
     backgroundColor: "#0066cc",
     color: "#fff",
     width: "70px",
     textAlign: "center",
   },
 
-  ReportSentLabel:{
+  ReportSentLabel: {
     backgroundColor: "#009900",
     color: "#fff",
     width: "70px",
     textAlign: "center",
   },
 
-  ReportCertSentLabel:{
+  ReportCertSentLabel: {
     backgroundColor: "#009900",
     color: "#fff",
     width: "70px",
     textAlign: "center",
   },
 
-  PositiveLabel:{
+  PositiveLabel: {
     backgroundColor: "red",
     color: "#fff",
     width: "70px",
@@ -120,49 +144,45 @@ const useStyles = makeStyles((theme) => ({
     left: "40%",
     width: "600px",
     height: "300px",
-    backgroundColor : "#fafafa",
-    color : "#111",
+    backgroundColor: "#fafafa",
+    color: "#111",
     zIndex: "1000",
     display: "flex",
     alignItems: "center",
-    justifyItems: "center"
+    justifyItems: "center",
   },
 
-  ExportToExcelButton:
-  {
+  ExportToExcelButton: {
     // marginBottom : "20px",
-    color : "#2f942e",
+    color: "#2f942e",
     borderColor: "#2f942e",
     "&:hover": {
       background: "#fafffa",
       borderColor: "#2f942e",
     },
-    textDecoration : "none !important", 
-   
+    textDecoration: "none !important",
   },
 
-  ExportToExcelButtonInline:
-  {
+  ExportToExcelButtonInline: {
     // marginBottom : "20px",
-    color : "#2f942e",
+    color: "#2f942e",
     borderColor: "#2f942e",
     "&:hover": {
       background: "#fafffa",
       borderColor: "#2f942e",
     },
-    textDecoration : "none !important", 
+    textDecoration: "none !important",
     cursor: "pointer",
-    padding: "10px"
-   
+    padding: "10px",
   },
 
   table: {
     width: "100%",
     border: "1px solid #ddd",
     borderCollapse: "collapse",
-},
+  },
 
-th: {
+  th: {
     border: "1px solid #ddd",
     borderCollapse: "collapse",
     verticalAlign: "middle",
@@ -173,663 +193,709 @@ th: {
     paddingBottom: "5px",
     width: "14%",
     paddingLeft: "5px",
-},
+  },
 
-td: {
+  td: {
     border: "1px solid #ddd",
     borderCollapse: "collapse",
     verticalAlign: "middle",
     paddingLeft: "5px",
-},
+  },
 
-topSelect: {
-  margin: theme.spacing(1),
-  minWidth: 80,
-}
-
+  topSelect: {
+    margin: theme.spacing(1),
+    minWidth: 80,
+  },
 }));
 
-const getTableTitle = (str) =>{
-
-  if (str === 'today')
-  {
+const getTableTitle = (str) => {
+  if (str === "today") {
     return `Today's Bookings`;
-  }else if (str === 'old')
-  {
+  } else if (str === "old") {
     return `Old Bookings`;
-  }else if (str === 'future')
-  {
+  } else if (str === "future") {
     return `Future Bookings`;
-  }else if (str === 'recent')
-  {
+  } else if (str === "recent") {
     return `Recent Bookings`;
-  }else if (str === 'live')
-  {
+  } else if (str === "live") {
     return `Live Bookings`;
-  }else if (str === 'completed')
-  {
+  } else if (str === "completed") {
     return `Completed Bookings`;
-  }else if (str === 'positive')
-  {
+  } else if (str === "positive") {
     return `Positive Results`;
-  }else if (str === 'deleted')
-  {
+  } else if (str === "deleted") {
     return `Deleted Records`;
-  }else if (str === 'late')
-  {
+  } else if (str === "late") {
     return `40 Hours Late`;
-  }else if (str === 'tr')
-  {
+  } else if (str === "tr") {
     return `Test & Release Bookings`;
-  }
-  
-  else
-  {
+  } else {
     return `All Bookings`;
   }
+};
 
-}
-
-const getTableIcon = (str) =>{
-
-  if (str === 'today')
-  {
-    return <NewReleasesIcon style={{fontSize:"2.2rem"}} />;
-  }else if (str === 'old')
-  {
-    return <HistoryIcon style={{fontSize:"2.2rem"}} />;
-  }else if (str === 'future')
-  {
-    return <TimelineIcon style={{fontSize:"2.2rem"}} />;
-  }else if (str === 'recent')
-  {
-    return <AutorenewIcon style={{fontSize:"2.2rem"}} />;
-  }else if (str === 'live')
-  {
-    return <LiveTvIcon style={{fontSize:"2.2rem"}} />;
-  }else if (str === 'completed')
-  {
-    return  <PlaylistAddCheckIcon style={{fontSize:"2.2rem"}} />;
-  }else if (str === 'positive')
-  {
-    return <AddCircleOutlineIcon style={{fontSize:"2.2rem"}} />
-  }else if (str === 'deleted')
-  {
-    return <DeleteIcon style={{fontSize:"2.2rem"}} />;
-  }else if (str === 'late')
-  {
-    return <HourglassEmptyIcon style={{fontSize:"2.2rem"}} />;
+const getTableIcon = (str) => {
+  if (str === "today") {
+    return <NewReleasesIcon style={{ fontSize: "2.2rem" }} />;
+  } else if (str === "old") {
+    return <HistoryIcon style={{ fontSize: "2.2rem" }} />;
+  } else if (str === "future") {
+    return <TimelineIcon style={{ fontSize: "2.2rem" }} />;
+  } else if (str === "recent") {
+    return <AutorenewIcon style={{ fontSize: "2.2rem" }} />;
+  } else if (str === "live") {
+    return <LiveTvIcon style={{ fontSize: "2.2rem" }} />;
+  } else if (str === "completed") {
+    return <PlaylistAddCheckIcon style={{ fontSize: "2.2rem" }} />;
+  } else if (str === "positive") {
+    return <AddCircleOutlineIcon style={{ fontSize: "2.2rem" }} />;
+  } else if (str === "deleted") {
+    return <DeleteIcon style={{ fontSize: "2.2rem" }} />;
+  } else if (str === "late") {
+    return <HourglassEmptyIcon style={{ fontSize: "2.2rem" }} />;
+  } else {
+    return <DescriptionIcon style={{ fontSize: "2.2rem" }} />;
   }
-  
-  else
-  {
-    return <DescriptionIcon style={{fontSize:"2.2rem"}} />;
-  }
-
-}
+};
 
 function PaperComponent(props) {
   return (
-    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+    <Draggable
+      handle="#draggable-dialog-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
       <Paper {...props} />
     </Draggable>
   );
 }
 
 export default function BookingTable(props) {
-  
   const classes = useStyles();
 
-  const [topCount, setTopCount] = React.useState(25)
-  const topCountChanged = (event) =>
-  {
-    setTopCount(event.target.value)
-    loadData(event.target.value)
-  }
-  
+  const [state, setState] = React.useContext(GlobalState);
+
+  const [topCount, setTopCount] = React.useState(25);
+  const topCountChanged = (event) => {
+    setTopCount(event.target.value);
+    loadData(event.target.value);
+  };
 
   const [openDialogExcel, setOpenDialogExcel] = useState(false);
-  const handleCloseDialogExcel = () =>
-  {
+  const handleCloseDialogExcel = () => {
     setCorporate(corporates[0]);
     setJustCorporate(false);
     setOpenDialogExcel(false);
-  }
+  };
 
-
-  const [fromDate, setFromDate] = React.useState(new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000 ));
+  const [fromDate, setFromDate] = React.useState(
+    new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
+  );
   const handleFromDateChange = (date) => {
     setFromDate(date);
-    setFromDateStr(dateformat(date,'yyyy-mm-dd'));
+    setFromDateStr(dateformat(date, "yyyy-mm-dd"));
   };
 
-  const [untilDate, setUntilDate] = React.useState(new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000 ));
+  const [untilDate, setUntilDate] = React.useState(
+    new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
+  );
   const handleUntilDateChange = (date) => {
     setUntilDate(date);
-    seUntilDateStr(dateformat(date,'yyyy-mm-dd'));
+    seUntilDateStr(dateformat(date, "yyyy-mm-dd"));
   };
 
-  const [fromDateStr, setFromDateStr] = useState(dateformat(new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000 ), 'yyyy-mm-dd'));
-  const [untilDateStr, seUntilDateStr] = useState(dateformat(new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000 ), 'yyyy-mm-dd'));
+  const [fromDateStr, setFromDateStr] = useState(
+    dateformat(
+      new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
+      "yyyy-mm-dd"
+    )
+  );
+  const [untilDateStr, seUntilDateStr] = useState(
+    dateformat(
+      new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000),
+      "yyyy-mm-dd"
+    )
+  );
 
   const [justCorporate, setJustCorporate] = useState(false);
 
-  const[chkDate, setChkDate] = useState(true);
-  const[chkForename, setChkForename] = useState(true);
-  const[chkSurname, setChkSurname] = useState(true);
-  const[chkDOB, setChkDOB] = useState(true);
-  const[chkEmail, setChkEmail] = useState(true);
-  const[chkTel, setChkTel] = useState(true);
-  const[chkCertificate, setChkCertidicate] = useState(true);
-  const[chkAntiBodyTest, setChkAntiBodyTest] = useState(true);
-  const[chkextRef, setChkExtRef] = useState(true);
-  const[chkPrice, setChkPrice] = useState(true);
+  const [chkDate, setChkDate] = useState(true);
+  const [chkForename, setChkForename] = useState(true);
+  const [chkSurname, setChkSurname] = useState(true);
+  const [chkDOB, setChkDOB] = useState(true);
+  const [chkEmail, setChkEmail] = useState(true);
+  const [chkTel, setChkTel] = useState(true);
+  const [chkCertificate, setChkCertidicate] = useState(true);
+  const [chkAntiBodyTest, setChkAntiBodyTest] = useState(true);
+  const [chkextRef, setChkExtRef] = useState(true);
+  const [chkPrice, setChkPrice] = useState(true);
 
-  const justCorporateChanged = (event) =>
-  {
+  const justCorporateChanged = (event) => {
     setJustCorporate(event.target.checked);
-  }
-  
+  };
 
-  const chkDateChanged = (event) =>
-  {
+  const chkDateChanged = (event) => {
     setChkDate(event.target.checked);
-  }
+  };
 
-  const chkForenameChanged = (event) =>
-  {
+  const chkForenameChanged = (event) => {
     setChkForename(event.target.checked);
-  }
+  };
 
-  const chkSurnameChanged = (event) =>
-  {
+  const chkSurnameChanged = (event) => {
     setChkSurname(event.target.checked);
-  }
+  };
 
-  const chkDOBChanged = (event) =>
-  {
+  const chkDOBChanged = (event) => {
     setChkDOB(event.target.checked);
-  }
+  };
 
-  const chkEmailChanged = (event) =>
-  {
+  const chkEmailChanged = (event) => {
     setChkEmail(event.target.checked);
-  }
+  };
 
-  const chkTelChanged = (event) =>
-  {
+  const chkTelChanged = (event) => {
     setChkTel(event.target.checked);
-  }
+  };
 
-  const chkCertificateChanged = (event) =>
-  {
+  const chkCertificateChanged = (event) => {
     setChkCertidicate(event.target.checked);
-  }
+  };
 
-  const chkAntiBodyTestChanged = (event) =>
-  {
+  const chkAntiBodyTestChanged = (event) => {
     setChkAntiBodyTest(event.target.checked);
-  }
+  };
 
-  const chkextRefChanged = (event) =>
-  {
+  const chkextRefChanged = (event) => {
     setChkExtRef(event.target.checked);
-  }
+  };
 
-  const chkPriceChanged = (event) =>
-  {
+  const chkPriceChanged = (event) => {
     setChkPrice(event.target.checked);
-  }
-
-
+  };
 
   var columns = [];
 
-  if (props.date === 'recent')
-  {
+  if (props.date === "recent" && state.role !== "pcrlab") {
     columns = [
       // { field: 'id', headerName: '#', width: 70 },
-  
-      {field: '_id', headerName:' ', width: 70, renderCell: (params) =>{
+
+      {
+        field: "_id",
+        headerName: " ",
+        width: 70,
+        renderCell: (params) => {
           return (
+            <React.Fragment>
+              {params.getValue("tr") ? (
+                <span
+                  style={{
+                    position: "absolute",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    color: "#7e0082",
+                  }}
+                >
+                  TR
+                </span>
+              ) : (
+                ""
+              )}
 
-           <React.Fragment>
-
-                {params.getValue('tr') ? 
-                
-                  <span style={{ position:"absolute", fontSize:"12px", fontWeight:"600", color:"#7e0082"}}>
-                    TR
-                  </span> 
-                
-                : 
-                
-                ''}
-
-                <Button 
-                        color="primary"
-                        onClick = {event => openDetailsDialog(event, params.value)}
-                > 
-            
-            <SearchIcon/> 
-            
-            </Button>
-
-           </React.Fragment>
-
-          
-  
-          ); 
-      
-        }
+              {state.role !== "pcrlab" && (
+                <Button
+                  color="primary"
+                  onClick={(event) => openDetailsDialog(event, params.value)}
+                >
+                  <SearchIcon />
+                </Button>
+              )}
+            </React.Fragment>
+          );
+        },
       },
 
-      { field: 'timeStamp', headerName: 'TimeStamp', width: 200, valueFormatter: (params) => { 
-        return formatTimeStamp(params.value);
-        }
+      {
+        field: "timeStamp",
+        headerName: "TimeStamp",
+        width: 200,
+        valueFormatter: (params) => {
+          return formatTimeStamp(params.value);
+        },
       },
-  
-      { field: 'bookingDate', headerName: 'B Date', width: 110, valueFormatter: (params) => { 
-              return FormatDateFromString(params.value);
-          }
-       },
-      { field: 'bookingTimeNormalized', headerName: 'B Time', width: 105 , valueGetter: (params) => {
-        return params.getValue('bookingTime');
-      }},
-      { field: 'status', headerName: 'Status', width: 100, renderCell: (params) =>{
-          if (params.value === 'booked')
-          {
-            return (
-              <span className={classes.BookedLabel}>  BM </span>
-            );
-        
-          }else if (params.value === 'patient_attended')
-          {
-            return (
-              <span  className={classes.PatientAttendedLabel}> PA </span>
-            );
-  
-          }else if (params.value === 'sample_taken')
-          {
-            return (
-              <span  className={classes.SampleTakenLabel}>  ST </span>
-            );
-  
-          }else if (params.value === 'report_sent')
-          {
-            return (
-              <span  className={classes.ReportSentLabel}>  RS </span>
-            );
-  
-          }else if (params.value === 'report_cert_sent')
-          {
-            return (
-              <span  className={classes.ReportCertSentLabel}>  RCS </span>
-            );
-  
-          }else if (params.value === 'positive')
-          {
-            return (
-              <span  className={classes.PositiveLabel}> POS </span>
-            );
-          }
-          
-          else{
-            return 'Unknown';
-          }
-        }
+
+      {
+        field: "bookingDate",
+        headerName: "B Date",
+        width: 110,
+        valueFormatter: (params) => {
+          return FormatDateFromString(params.value);
+        },
       },
-      { field: 'bookingRef', headerName: 'Ref No.', width: 120 , renderCell: (params) =>{
-        return (
-          <Tooltip title="Go Find By Ref" placement="right">
-              <Link className={classes.RefLink}
+      {
+        field: "bookingTimeNormalized",
+        headerName: "B Time",
+        width: 105,
+        valueGetter: (params) => {
+          return params.getValue("bookingTime");
+        },
+      },
+      {
+        field: "status",
+        headerName: "Status",
+        width: 100,
+        renderCell: (params) => {
+          if (params.value === "booked") {
+            return <span className={classes.BookedLabel}> BM </span>;
+          } else if (params.value === "patient_attended") {
+            return <span className={classes.PatientAttendedLabel}> PA </span>;
+          } else if (params.value === "sample_taken") {
+            return <span className={classes.SampleTakenLabel}> ST </span>;
+          } else if (params.value === "report_sent") {
+            return <span className={classes.ReportSentLabel}> RS </span>;
+          } else if (params.value === "report_cert_sent") {
+            return <span className={classes.ReportCertSentLabel}> RCS </span>;
+          } else if (params.value === "positive") {
+            return <span className={classes.PositiveLabel}> POS </span>;
+          } else {
+            return "Unknown";
+          }
+        },
+      },
+      {
+        field: "bookingRef",
+        headerName: "Ref No.",
+        width: 120,
+        renderCell: (params) => {
+          return (
+            // <Tooltip title="Go Find By Ref" placement="right">
+            <Link
+              className={classes.RefLink}
               //  onClick={
               //   () => {
               //     console.log(params.value);
-  
+
               //     setState(state => ({...state, currentMenuIndex: getMenuIndex(`pcr` , `findByRef`)}));
               //     setState(state => ({...state, ref : params.value}));
-              //     setState(state => ({...state, refError : false})); 
+              //     setState(state => ({...state, refError : false}));
               //     setState(state => ({...state, foundRecords : []}));
               //     setState(state => ({...state, findRecords : !state.findRecords}));
               //   }
               // }
-              
-              >
-                {params.value}
-              </Link>
-          </Tooltip>
-  
-        );
-      }},
-      { field: 'forenameCapital', headerName: 'Forename', width: 150 },
-      { field: 'surnameCapital', headerName: 'Surname', width: 150 },
-      { field: 'birthDate', headerName: 'D.O.B', width: 110, valueFormatter: (params) => { 
-        return FormatDateFromString(params.value);
-         }
-      },
-      { field: 'email', headerName: 'Email', width: 200 , valueFormatter : (params) => {
-        return params.value.toUpperCase();
-      }},
-      { field: 'phone', headerName: 'Tel', width: 150 },
-      { field: 'passportNumber', headerName: 'Passport No.', width: 250, 
-      //  valueGetter: (params) => {
-      //   const pass2 = params.getValue('passportNumber2');
-      //   if (pass2 && pass2.length > 0 && pass2.trim().length > 0)
-      //   {
-      //     return `${params.getValue('passportNumber')?.toUpperCase()} - ${params.getValue('passportNumber2')?.toUpperCase()}`
-      //   }
-      //   else
-      //   {
-      //     return params.getValue('passportNumber')?.toUpperCase();
-      //   }
-      // }
-    },
-      { field: 'certificate', headerName: 'Certificate', width: 120,  renderCell: (params) => {
-          return params.value ? (
-            <CheckIcon className={classes.checkIcon}/>
-          ) :
-          (
-            <CloseIcon className={classes.closeIcon}/> 
+            >
+              {params.value}
+            </Link>
+            // </Tooltip>
           );
-      } },
-      { field: 'antiBodyTest', headerName: 'Antibody Test', width: 120,  renderCell: (params) => {
-        return params.value ? (
-          <CheckIcon className={classes.checkIcon}/>
-        ) :
-        (
-        <  CloseIcon className={classes.closeIcon}/> 
-        );
-    } },
-      { field: 'postCode', headerName: 'Post Code', width: 150, valueFormatter : (params) => {
-        return params.value.toUpperCase();
-      } },
-      { field: 'address', headerName: 'Address', width: 500, valueFormatter : (params) => {
-        return params.value.toUpperCase();
-      } },
+        },
+      },
+      { field: "forenameCapital", headerName: "Forename", width: 150 },
+      { field: "surnameCapital", headerName: "Surname", width: 150 },
+      {
+        field: "birthDate",
+        headerName: "D.O.B",
+        width: 110,
+        valueFormatter: (params) => {
+          return FormatDateFromString(params.value);
+        },
+      },
+      {
+        field: "email",
+        headerName: "Email",
+        width: 200,
+        valueFormatter: (params) => {
+          return params.value.toUpperCase();
+        },
+      },
+      { field: "phone", headerName: "Tel", width: 150 },
+      {
+        field: "passportNumber",
+        headerName: "Passport No.",
+        width: 250,
+        //  valueGetter: (params) => {
+        //   const pass2 = params.getValue('passportNumber2');
+        //   if (pass2 && pass2.length > 0 && pass2.trim().length > 0)
+        //   {
+        //     return `${params.getValue('passportNumber')?.toUpperCase()} - ${params.getValue('passportNumber2')?.toUpperCase()}`
+        //   }
+        //   else
+        //   {
+        //     return params.getValue('passportNumber')?.toUpperCase();
+        //   }
+        // }
+      },
+      {
+        field: "certificate",
+        headerName: "Certificate",
+        width: 120,
+        renderCell: (params) => {
+          return params.value ? (
+            <CheckIcon className={classes.checkIcon} />
+          ) : (
+            <CloseIcon className={classes.closeIcon} />
+          );
+        },
+      },
+      {
+        field: "antiBodyTest",
+        headerName: "Antibody Test",
+        width: 120,
+        renderCell: (params) => {
+          return params.value ? (
+            <CheckIcon className={classes.checkIcon} />
+          ) : (
+            <CloseIcon className={classes.closeIcon} />
+          );
+        },
+      },
+      {
+        field: "postCode",
+        headerName: "Post Code",
+        width: 150,
+        valueFormatter: (params) => {
+          return params.value.toUpperCase();
+        },
+      },
+      {
+        field: "address",
+        headerName: "Address",
+        width: 500,
+        valueFormatter: (params) => {
+          return params.value.toUpperCase();
+        },
+      },
       // { field: 'notes', headerName: 'Notes', width: 500 },
-    
     ];
-
-  }
-  else
-  {
+  } else if (state.role === "pcrlab") {
+    columns = [
+      {
+        field: "bookingDate",
+        headerName: "Booking Date",
+        width: 200,
+        valueFormatter: (params) => {
+          return FormatDateFromString(params.value);
+        },
+      },
+      {
+        field: "bookingTimeNormalized",
+        headerName: "Booking Time",
+        width: 200,
+        valueGetter: (params) => {
+          return params.getValue("bookingTime");
+        },
+      },
+      {
+        field: "status",
+        headerName: "Status",
+        width: 100,
+        renderCell: (params) => {
+          if (params.value === "booked") {
+            return <span className={classes.BookedLabel}> BM </span>;
+          } else if (params.value === "patient_attended") {
+            return <span className={classes.PatientAttendedLabel}> PA </span>;
+          } else if (params.value === "sample_taken") {
+            return <span className={classes.SampleTakenLabel}> ST </span>;
+          } else if (params.value === "report_sent") {
+            return <span className={classes.ReportSentLabel}> RS </span>;
+          } else if (params.value === "report_cert_sent") {
+            return <span className={classes.ReportCertSentLabel}> RCS </span>;
+          } else if (params.value === "positive") {
+            return <span className={classes.PositiveLabel}> POS </span>;
+          } else {
+            return "Unknown";
+          }
+        },
+      },
+      { field: "forenameCapital", headerName: "Forename", width: 300 },
+      { field: "surnameCapital", headerName: "Surname", width: 300 },
+      {
+        field: "birthDate",
+        headerName: "D.O.B",
+        width: 110,
+        valueFormatter: (params) => {
+          return FormatDateFromString(params.value);
+        },
+      },
+    ];
+  } else {
     columns = [
       // { field: 'id', headerName: '#', width: 70 },
-  
-      {field: '_id', headerName:' ', width: 70, renderCell: (params) =>{
+
+      {
+        field: "_id",
+        headerName: " ",
+        width: 70,
+        renderCell: (params) => {
           return (
             <React.Fragment>
+              {params.getValue("tr") ? (
+                <span
+                  style={{
+                    position: "absolute",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    color: "#7e0082",
+                  }}
+                >
+                  TR
+                </span>
+              ) : (
+                ""
+              )}
 
-                {params.getValue('tr') ? 
-                
-                  <span style={{ position:"absolute", fontSize:"12px", fontWeight:"600", color:"#7e0082"}}>
-                    TR
-                  </span> 
-                
-                : 
-                
-                ''}
-
-                <Button 
-                        color="primary"
-                        onClick = {event => openDetailsDialog(event, params.value)}
-                > 
-            
-            <SearchIcon/> 
-            
-            </Button>
-
-           </React.Fragment>
-  
-          ); 
-      
-        }
-      },
-
-      { field: 'paid', headerName: 'Paid', align: 'center' , width: 90, renderCell: (params) => { 
-               if (!params.value)
-               {
-                  return ( <CloseIcon className={classes.closeIcon}/> );
-               }
-               else
-               {
-                  if (params.getValue('paidBy') === 'credit card')
-                  {
-                    return ( <CreditCardIcon className={classes.checkIcon}/> );
-                  }
-                  else if (params.getValue('paidBy') === 'cash')
-                  {
-                    return ( <LocalAtmIcon className={classes.checkIcon}/> );
-                  }
-                  else if (params.getValue('paidBy') === 'corporate')
-                  {
-                    return ( <BusinessIcon className={classes.checkIcon}/> );
-                  }
-                  else
-                  {
-                    return '';  
-                  }
-               }
-         }
-        },
-  
-      { field: 'bookingDate', headerName: 'B Date', width: 110, valueFormatter: (params) => { 
-              return FormatDateFromString(params.value);
-          }
-       },
-      { field: 'bookingTimeNormalized', headerName: 'B Time', width: 105 , valueGetter: (params) => {
-        return params.getValue('bookingTime');
-      }},
-      { field: 'status', headerName: 'Status', width: 100, renderCell: (params) =>{
-          if (params.value === 'booked')
-          {
-            return (
-              <span className={classes.BookedLabel}>  BM </span>
-            );
-        
-          }else if (params.value === 'patient_attended')
-          {
-            return (
-              <span  className={classes.PatientAttendedLabel}> PA </span>
-            );
-  
-          }else if (params.value === 'sample_taken')
-          {
-            return (
-              <span  className={classes.SampleTakenLabel}>  ST </span>
-            );
-  
-          }else if (params.value === 'report_sent')
-          {
-            return (
-              <span  className={classes.ReportSentLabel}>  RS </span>
-            );
-  
-          }else if (params.value === 'report_cert_sent')
-          {
-            return (
-              <span  className={classes.ReportCertSentLabel}>  RCS </span>
-            );
-  
-          }else if (params.value === 'positive')
-          {
-            return (
-              <span  className={classes.PositiveLabel}> POS </span>
-            );
-          }
-          
-          else{
-            return 'Unknown';
-          }
-        }
-      },
-      { field: 'bookingRef', headerName: 'Ref No.', width: 120 , renderCell: (params) =>{
-        return (
-          <Tooltip title="Go Find By Ref" placement="right">
-              <Link className={classes.RefLink} onClick={
-                () => {
-                  // console.log(params.value);
-  
-                  // setState(state => ({...state, currentMenuIndex: getMenuIndex(`findByRef`)}));
-                  // setState(state => ({...state, ref : params.value}));
-                  // setState(state => ({...state, refError : false})); 
-                  // setState(state => ({...state, foundRecords : []}));
-                  // setState(state => ({...state, findRecords : !state.findRecords}));
-                }
-              }>
-                {params.value}
-              </Link>
-          </Tooltip>
-  
-        );
-      }},
-      { field: 'forenameCapital', headerName: 'Forename', width: 150 },
-      { field: 'surnameCapital', headerName: 'Surname', width: 150 },
-      { field: 'birthDate', headerName: 'D.O.B', width: 110, valueFormatter: (params) => { 
-        return FormatDateFromString(params.value);
-         }
-      },
-      { field: 'email', headerName: 'Email', width: 200 , valueFormatter : (params) => {
-        return params.value.toUpperCase();
-      }},
-      { field: 'phone', headerName: 'Tel', width: 150 },
-      { field: 'passportNumber', headerName: 'Passport No.', width: 250,  
-      // valueGetter: (params) => {
-      //   const pass2 = params.getValue('passportNumber2');
-      //   if (pass2 && pass2.length > 0 && pass2.trim().length > 0)
-      //   {
-      //     return `${params.getValue('passportNumber')?.toUpperCase()} - ${params.getValue('passportNumber2')?.toUpperCase()}`
-      //   }
-      //   else
-      //   {
-      //     return params.getValue('passportNumber')?.toUpperCase();
-      //   }
-      // }
-    },
-      { field: 'certificate', headerName: 'Certificate', width: 120,  renderCell: (params) => {
-          return params.value ? (
-            <CheckIcon className={classes.checkIcon}/>
-          ) :
-          (
-            <CloseIcon className={classes.closeIcon}/> 
+              {state.role !== "pcrlab" && (
+                <Button
+                  color="primary"
+                  onClick={(event) => openDetailsDialog(event, params.value)}
+                >
+                  <SearchIcon />
+                </Button>
+              )}
+            </React.Fragment>
           );
-      } },
-      { field: 'antiBodyTest', headerName: 'Antibody Test', width: 120,  renderCell: (params) => {
-        return params.value ? (
-          <CheckIcon className={classes.checkIcon}/>
-        ) :
-        (
-        <  CloseIcon className={classes.closeIcon}/> 
-        );
-    } },
-      { field: 'postCode', headerName: 'Post Code', width: 150, valueFormatter : (params) => {
-        return params.value.toUpperCase();
-      } },
-      { field: 'address', headerName: 'Address', width: 500, valueFormatter : (params) => {
-        return params.value.toUpperCase();
-      } },
-      // { field: 'notes', headerName: 'Notes', width: 500 },
-    
-    ];
-  
+        },
+      },
 
+      {
+        field: "paid",
+        headerName: "Paid",
+        align: "center",
+        width: 90,
+        renderCell: (params) => {
+          if (!params.value) {
+            return <CloseIcon className={classes.closeIcon} />;
+          } else {
+            if (params.getValue("paidBy") === "credit card") {
+              return <CreditCardIcon className={classes.checkIcon} />;
+            } else if (params.getValue("paidBy") === "cash") {
+              return <LocalAtmIcon className={classes.checkIcon} />;
+            } else if (params.getValue("paidBy") === "corporate") {
+              return <BusinessIcon className={classes.checkIcon} />;
+            } else {
+              return "";
+            }
+          }
+        },
+      },
+
+      {
+        field: "bookingDate",
+        headerName: "B Date",
+        width: 110,
+        valueFormatter: (params) => {
+          return FormatDateFromString(params.value);
+        },
+      },
+      {
+        field: "bookingTimeNormalized",
+        headerName: "B Time",
+        width: 105,
+        valueGetter: (params) => {
+          return params.getValue("bookingTime");
+        },
+      },
+      {
+        field: "status",
+        headerName: "Status",
+        width: 100,
+        renderCell: (params) => {
+          if (params.value === "booked") {
+            return <span className={classes.BookedLabel}> BM </span>;
+          } else if (params.value === "patient_attended") {
+            return <span className={classes.PatientAttendedLabel}> PA </span>;
+          } else if (params.value === "sample_taken") {
+            return <span className={classes.SampleTakenLabel}> ST </span>;
+          } else if (params.value === "report_sent") {
+            return <span className={classes.ReportSentLabel}> RS </span>;
+          } else if (params.value === "report_cert_sent") {
+            return <span className={classes.ReportCertSentLabel}> RCS </span>;
+          } else if (params.value === "positive") {
+            return <span className={classes.PositiveLabel}> POS </span>;
+          } else {
+            return "Unknown";
+          }
+        },
+      },
+      {
+        field: "bookingRef",
+        headerName: "Ref No.",
+        width: 120,
+        renderCell: (params) => {
+          return (
+            // <Tooltip title="Go Find By Ref" placement="right">
+            <Link
+              className={classes.RefLink}
+              onClick={() => {
+                // console.log(params.value);
+                // setState(state => ({...state, currentMenuIndex: getMenuIndex(`findByRef`)}));
+                // setState(state => ({...state, ref : params.value}));
+                // setState(state => ({...state, refError : false}));
+                // setState(state => ({...state, foundRecords : []}));
+                // setState(state => ({...state, findRecords : !state.findRecords}));
+              }}
+            >
+              {params.value}
+            </Link>
+            // </Tooltip>
+          );
+        },
+      },
+      { field: "forenameCapital", headerName: "Forename", width: 150 },
+      { field: "surnameCapital", headerName: "Surname", width: 150 },
+      {
+        field: "birthDate",
+        headerName: "D.O.B",
+        width: 110,
+        valueFormatter: (params) => {
+          return FormatDateFromString(params.value);
+        },
+      },
+      {
+        field: "email",
+        headerName: "Email",
+        width: 200,
+        valueFormatter: (params) => {
+          return params.value.toUpperCase();
+        },
+      },
+      { field: "phone", headerName: "Tel", width: 150 },
+      {
+        field: "passportNumber",
+        headerName: "Passport No.",
+        width: 250,
+        // valueGetter: (params) => {
+        //   const pass2 = params.getValue('passportNumber2');
+        //   if (pass2 && pass2.length > 0 && pass2.trim().length > 0)
+        //   {
+        //     return `${params.getValue('passportNumber')?.toUpperCase()} - ${params.getValue('passportNumber2')?.toUpperCase()}`
+        //   }
+        //   else
+        //   {
+        //     return params.getValue('passportNumber')?.toUpperCase();
+        //   }
+        // }
+      },
+      {
+        field: "certificate",
+        headerName: "Certificate",
+        width: 120,
+        renderCell: (params) => {
+          return params.value ? (
+            <CheckIcon className={classes.checkIcon} />
+          ) : (
+            <CloseIcon className={classes.closeIcon} />
+          );
+        },
+      },
+      {
+        field: "antiBodyTest",
+        headerName: "Antibody Test",
+        width: 120,
+        renderCell: (params) => {
+          return params.value ? (
+            <CheckIcon className={classes.checkIcon} />
+          ) : (
+            <CloseIcon className={classes.closeIcon} />
+          );
+        },
+      },
+      {
+        field: "postCode",
+        headerName: "Post Code",
+        width: 150,
+        valueFormatter: (params) => {
+          return params.value.toUpperCase();
+        },
+      },
+      {
+        field: "address",
+        headerName: "Address",
+        width: 500,
+        valueFormatter: (params) => {
+          return params.value.toUpperCase();
+        },
+      },
+      // { field: 'notes', headerName: 'Notes', width: 500 },
+    ];
   }
 
-
-
-  const [state, setState] = React.useContext(GlobalState);  
-
-  const [data, setData] = React.useState({bookings: [] , cachedBookings: [], isFetching : true});
+  const [data, setData] = React.useState({
+    bookings: [],
+    cachedBookings: [],
+    isFetching: true,
+  });
 
   const [selectedRow, setSelectedRow] = React.useState(null);
 
   const [selectedBooking, setSelectedBooking] = React.useState(null);
   const [seeDetailsDialogOpen, setSeeDetailsDialogOpen] = React.useState(false);
 
-  const dateFormatter = str => {
+  const dateFormatter = (str) => {
     return str;
   };
 
   const [corporate, setCorporate] = useState(corporates[0]);
-  const corporateChanged = (event) =>
-  {
+  const corporateChanged = (event) => {
     setCorporate(event.target.value);
-  }
-  
+  };
 
-  const [filter,setFilter] = React.useState('');
-
+  const [filter, setFilter] = React.useState("");
 
   const lastPromise = useRef();
 
-  const formatTimeStamp = (timeStamp) =>
-  {
-    const todayStr = dateformat(new Date(), 'yyyy-mm-dd');
-    const timeStampStr = dateformat(timeStamp, 'yyyy-mm-dd');
-    if (todayStr === timeStampStr)
-    {
+  const formatTimeStamp = (timeStamp) => {
+    const todayStr = dateformat(new Date(), "yyyy-mm-dd");
+    const timeStampStr = dateformat(timeStamp, "yyyy-mm-dd");
+    if (todayStr === timeStampStr) {
       return dateformat(timeStamp, "'Today', h:MM:ss TT");
+    } else {
+      return dateformat(timeStamp, "mmm dS, h:MM:ss TT");
     }
-    else
-    {
-       return dateformat(timeStamp, "mmm dS, h:MM:ss TT");
-    }
-  }
+  };
 
-  const loadData = (top) =>
-  {
+  const loadData = (top) => {
     var api = BookService.getAllBookings;
-    if (props.date === 'today')
-    {
+    if (props.date === "today") {
       api = BookService.getTodayBookings;
-    }else if (props.date === 'old')
-    {
+    } else if (props.date === "old") {
       api = BookService.getOldBookings;
-    }else if (props.date === 'future')
-    {
+    } else if (props.date === "future") {
       api = BookService.getFutureBookings;
-    }else if (props.date === 'recent')
-    {
+    } else if (props.date === "recent") {
       api = BookService.getRecentBookingsAll;
-    }else if (props.date === 'live')
-    {
+    } else if (props.date === "live") {
       api = BookService.getLiveBookings;
-    }else if (props.date === 'completed')
-    {
+    } else if (props.date === "completed") {
       api = BookService.getCompletedBookings;
-    }
-    else if (props.date === 'positive')
-    {
+    } else if (props.date === "positive") {
       api = BookService.getPositiveBookings;
-    }
-    else if (props.date === 'deleted')
-    {
+    } else if (props.date === "deleted") {
       api = BookService.getDeletedBookings;
-    }
-    else if (props.date === 'late')
-    {
+    } else if (props.date === "late") {
       api = BookService.getLateBookings;
-    }
-    else if (props.date === 'tr')
-    {
+    } else if (props.date === "tr") {
       api = BookService.getAllTRBookings;
     }
-               
-    setData({bookings: [], cachedBookings: [], isFetching: true});
-   
+
+    setData({ bookings: [], cachedBookings: [], isFetching: true });
+
     // console.log(props)
 
-    const currentPromise = api(top).then( (res) =>{
-      // console.log(res)
-      for (var i=0; i < res.data.length; i++)
-      {
-        res.data[i] = {...res.data[i], id : i + 1}
-      }  
-      setData({bookings: [...res.data], cachedBookings: [...res.data], isFetching: false});
-      // return res.data;
-    }).catch(err => {
-      console.error(err)
-    })
+    const currentPromise = api(top)
+      .then((res) => {
+        // console.log(res)
+        for (var i = 0; i < res.data.length; i++) {
+          res.data[i] = { ...res.data[i], id: i + 1 };
+        }
+        setData({
+          bookings: [...res.data],
+          cachedBookings: [...res.data],
+          isFetching: false,
+        });
+        // return res.data;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
 
     // lastPromise.current = currentPromise;
 
@@ -846,89 +912,82 @@ export default function BookingTable(props) {
     //         setData({bookings: data.bookings, cachedBookings: data.cachedBookings, isFetching: false});
     //     }
     //   });
+  };
 
-  }
+  useEffect(() => {
+    setTopCount(25);
+    loadData(25);
+  }, [props.date]);
 
-  useEffect( () => {
-            setTopCount(25)
-            loadData(25)
-        },
-        [props.date]);
+  useEffect(() => {
+    if (filter && filter.trim().length > 0) {
+      var filteredData = data.cachedBookings.filter(
+        (element) =>
+          element.forename.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ||
+          element.surname.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ||
+          `${element.forename} ${element.surname}`
+            .toLowerCase()
+            .indexOf(filter.toLowerCase()) >= 0
+      );
 
+      setData({
+        bookings: [...filteredData],
+        cachedBookings: data.cachedBookings,
+        isFetching: false,
+      });
+    } else {
+      setData({
+        bookings: [...data.cachedBookings],
+        cachedBookings: data.cachedBookings,
+        isFetching: false,
+      });
+    }
+  }, [filter]);
 
+  useEffect(() => {
+    loadData(topCount);
+  }, [state.bookingDialogDataChanged]);
 
-
-  useEffect( () => {
-
-        if (filter && filter.trim().length > 0)
-        {
-          var filteredData = data.cachedBookings.filter( (element) => 
-
-             (element.forename.toLowerCase().indexOf(filter.toLowerCase()) >= 0) ||
-                   (element.surname.toLowerCase().indexOf(filter.toLowerCase()) >= 0) 
-                  || (`${element.forename} ${element.surname}`.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
-          );
-  
-  
-          setData({bookings: [...filteredData], cachedBookings: data.cachedBookings, isFetching: false});
-        }else
-        {
-          setData({bookings: [...data.cachedBookings], cachedBookings: data.cachedBookings, isFetching: false});
-        }
-      },
-      [filter]);
-
-  
-      useEffect(() => {
-
-       loadData(topCount)
-    
-      }, [state.bookingDialogDataChanged]);    
-
-
-  const handleCloseSeeDetaisDialog = () =>
-  {
+  const handleCloseSeeDetaisDialog = () => {
     setSelectedBooking(null);
     setSeeDetailsDialogOpen(false);
-  }    
-  
-  const openDetailsDialog = (event, id) =>
-  {
-    const booking = data.bookings.find(element => element._id === id);
+  };
+
+  const openDetailsDialog = (event, id) => {
+    const booking = data.bookings.find((element) => element._id === id);
     setSelectedBooking(booking);
     setSeeDetailsDialogOpen(true);
+  };
 
-  }
+  const refreshClicked = (event) => {
+    setFilter("");
+    loadData(topCount);
+  };
 
-  const refreshClicked = (event) =>{
-    setFilter('');
-    loadData(topCount)
-  }
-
-  const filterChanged = (event) =>{
+  const filterChanged = (event) => {
     setFilter(event.target.value);
-  }
+  };
 
-  const handleSelectionChanged = (newSelection) =>
-  {
-    if (newSelection.length > 0){
+  const handleSelectionChanged = (newSelection) => {
+    if (newSelection.length > 0) {
       setSelectedRow(newSelection.rows[0]);
     }
-    
-  }
+  };
 
   const [page, setPage] = React.useState(1);
 
-  const handleExcelButtonClicked = (event) =>
-  {
+  const handleExcelButtonClicked = (event) => {
     setOpenDialogExcel(true);
-  }
+  };
 
-  const isTopSelectHidden = (date)=>
-  {
-    return date === 'live' || date === 'positive' || date === 'late' || date === 'today'
-  }
-
+  const isTopSelectHidden = (date) => {
+    return (
+      date === "live" ||
+      date === "positive" ||
+      date === "late" ||
+      date === "today"
+    );
+  };
 
   return (
     <React.Fragment>
@@ -985,7 +1044,7 @@ export default function BookingTable(props) {
         </Grid>
 
         <Grid item md={3}>
-          {props.date === "completed" && state.userId.username === 'admin' && (
+          {props.date === "completed" && state.userId.username === "admin" && (
             <div style={{ paddingBottom: "5px" }}>
               <Button
                 className={classes.ExportToExcelButton}
@@ -1149,7 +1208,7 @@ export default function BookingTable(props) {
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <Grid row container justify="center" spacing={3}>
                     <Grid item>
-                    <KeyboardDatePicker
+                      <KeyboardDatePicker
                         autoOk={true}
                         disableToolbar
                         variant="inline"
@@ -1416,4 +1475,4 @@ export default function BookingTable(props) {
       )}
     </React.Fragment>
   );
-} 
+}
