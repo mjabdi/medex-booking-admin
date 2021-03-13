@@ -292,6 +292,7 @@ export default function InvoiceDialog(props) {
 
   useEffect(() => {
     if (props.invoice) {
+      console.log(props.invoice.items)
       setItems(props.invoice.items);
       setNotes(props.invoice.notes || "");
       setTitle("EDIT INVOICE");
@@ -304,7 +305,7 @@ export default function InvoiceDialog(props) {
     return () => {
       setItems([]);
     };
-  }, [props.invoice]);
+  }, [props.invoice, props.open]);
 
   useEffect(() => {
     if (!props.invoice && props.defaultCodes) {
