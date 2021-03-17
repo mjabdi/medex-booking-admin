@@ -37,11 +37,18 @@ import GPFindByRef from "./GP/FindByRef";
 import GPCalendarView from "./GP/calendar-admin/CalendarView";
 //----------------------------
 
-/// GP -------------------
+/// STD -------------------
 import STDBookingTable from "./STD/BookingTable";
 import STDDashboardPreview from "./STD/DashboardPreview";
 import STDFindByRef from "./STD/FindByRef";
 import STDCalendarView from "./STD/calendar-admin/CalendarView";
+//----------------------------
+
+/// Blood -------------------
+import BloodBookingTable from "./Blood/BookingTable";
+import BloodDashboardPreview from "./Blood/DashboardPreview";
+import BloodFindByRef from "./Blood/FindByRef";
+import BloodCalendarView from "./Blood/calendar-admin/CalendarView";
 //----------------------------
 
 // Admin ----------------
@@ -196,6 +203,53 @@ export const MenuList_GP = [
 ];
 
 export const MenuList_STD = [
+  { index: 0, id: `dashboard`, title: `Dashboard`, icon: <DashboardIcon /> },
+  {
+    index: 1,
+    id: `recentBookings`,
+    title: `Recent Bookings`,
+    icon: <AutorenewIcon />,
+  },
+  {
+    index: 2,
+    id: `todayBookings`,
+    title: `Today's Bookings`,
+    icon: <NewReleasesIcon />,
+  },
+  {
+    index: 3,
+    id: `oldBookings`,
+    title: `Old Bookings`,
+    icon: <HistoryIcon />,
+  },
+  {
+    index: 4,
+    id: `futureBookings`,
+    title: `Future Bookings`,
+    icon: <TimelineIcon />,
+  },
+  {
+    index: 5,
+    id: `allBookings`,
+    title: `All Bookings`,
+    icon: <DescriptionIcon />,
+  },
+  {
+    index: 6,
+    id: `deletedBookings`,
+    title: `Deleted Records`,
+    icon: <DeleteIcon />,
+  },
+  {
+    index: 7,
+    id: `calendarView`,
+    title: `Calendar View`,
+    icon: <DateRangeIcon />,
+  },
+  { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+];
+
+export const MenuList_Blood = [
   { index: 0, id: `dashboard`, title: `Dashboard`, icon: <DashboardIcon /> },
   {
     index: 1,
@@ -467,6 +521,29 @@ export const getMenuContent = (role, index) => {
       default:
         return `Page Not Found!`;
     }
+  } else if (role === "blood") {
+    switch (index) {
+      case 0:
+        return <BloodDashboardPreview />;
+      case 1:
+        return <BloodBookingTable date="recent" />;
+      case 2:
+        return <BloodBookingTable date="today" />;
+      case 3:
+        return <BloodBookingTable date="old" />;
+      case 4:
+        return <BloodBookingTable date="future" />;
+      case 5:
+        return <BloodBookingTable date="all" />;
+      case 6:
+        return <BloodBookingTable date="deleted" />;
+      case 7:
+        return <BloodCalendarView />;
+      case 8:
+        return <BloodFindByRef />;
+      default:
+        return `Page Not Found!`;
+    }
   } else if (role === "admin") {
     switch (index) {
       case 0:
@@ -510,6 +587,9 @@ export const getMenuRole = (role) => {
       return MenuList_GP;
     case "std":
       return MenuList_STD;
+    case "blood":
+      return MenuList_Blood;
+
     default:
       return [];
   }

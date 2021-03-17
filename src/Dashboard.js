@@ -317,6 +317,12 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-10px",
   },
 
+  appsBloodLabel: {
+    color: "#dc2626",
+    fontWeight: "600",
+    fontSize: "0.95rem",
+    marginTop: "-10px",
+  },
 
   
 
@@ -443,6 +449,15 @@ export default function Dashboard() {
             />
           ); 
 
+          case "blood":
+            return (
+              <img
+                src={getGlobalPath("/images/blood-logo.png")}
+                className={classes.appsLogo}
+              />
+            ); 
+  
+
       default:
         return null;
     }
@@ -460,6 +475,9 @@ export default function Dashboard() {
           return <div className={classes.appsGPLabel}> {"GP"} </div>;
           case "std":
             return <div className={classes.appsSTDLabel}> {"STD"} </div>;
+            case "blood":
+              return <div className={classes.appsBloodLabel}> {"Blood"} </div>;
+  
   
       default:
         return null;
@@ -715,6 +733,25 @@ export default function Dashboard() {
                     <Grid item>{getAppsLabel("std")}</Grid>
                   </Grid>
                 </Grid>
+
+                <Grid item>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                    className={
+                      state.role === "blood"
+                        ? classes.appsBoxSelected
+                        : classes.appsBox
+                    }
+                    onClick={() => appsClicked("blood")}
+                  >
+                    <Grid item>{getAppsLogo("blood")}</Grid>
+                    <Grid item>{getAppsLabel("blood")}</Grid>
+                  </Grid>
+                </Grid>
+
 
               </Grid>
             </StyledMenuApps>
