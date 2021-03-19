@@ -448,6 +448,7 @@ export default function BookingDialog(props) {
         bookingDate !== FormatDateFromString(booking.bookingDate) ||
         bookingTime !== booking.bookingTime ||
         fullname !== booking.fullname ||
+        dob !== FormatDateFromString(booking.birthDate) ||
         email !== booking.email ||
         tel !== booking.phone ||
         notes !== booking.notes ||
@@ -522,6 +523,7 @@ export default function BookingDialog(props) {
       setBookingTime(person.bookingTime.toUpperCase());
       setEmail(person.email);
       setTel(person.phone);
+      setDOB(FormatDateFromString(person.birthDate));
       setService(person.packageName);
       if (person.notes) {
         setNotes(person.notes);
@@ -538,6 +540,7 @@ export default function BookingDialog(props) {
       booking.phone = tel;
       booking.fullname = fullname;
       booking.notes = notes;
+      booking.birthDate = RevertFormatDateFromString(dob);
       booking.packageName = service;
       booking.bookingDate = RevertFormatDateFromString(bookingDate);
       booking.bookingTime = bookingTime;
@@ -619,6 +622,11 @@ export default function BookingDialog(props) {
     if (!validateDate(booking.bookingDate)) {
       error = true;
       setValidationError({ ...validationError, bookingDateError: true });
+    }
+
+    if (!validateDate(booking.birthDate)) {
+      error = true;
+      setValidationError({ ...validationError, dobError: true });
     }
 
     if (!validateTime(booking.bookingTime)) {
@@ -793,7 +801,7 @@ export default function BookingDialog(props) {
   };
 
   const downloadRegForm = (id) => {
-    PDFService.downloadSTDRegForm(id)
+    PDFService.downloadBloodRegForm(id)
       .then((res) => {
         const file = new Blob([res.data], { type: "application/pdf" });
 
@@ -897,6 +905,27 @@ export default function BookingDialog(props) {
 
   //***************************** */
 
+  const [dob, setDOB] = React.useState("");
+  const dobChanged = (event) => {
+    setDOB(event.target.value);
+    setValidationError({ ...validationError, dobError: false });
+    setFieldChanged(!fieldChanged);
+  };
+
+  const getIndivisualTestsString = (indivisualTests) => {
+    if (!indivisualTests)
+      return '-'
+    const tests = JSON.parse(indivisualTests);
+    let testsString = "";
+    tests.forEach((item) => {
+      testsString += item.description;
+      testsString += " , ";
+    });
+    return testsString;
+  };
+
+
+
   return (
     <React.Fragment>
       {booking && (
@@ -922,7 +951,7 @@ export default function BookingDialog(props) {
                   <IconButton
                     onClick={() => {
                       navigator.clipboard.writeText(
-                        `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/std/${booking._id}`
+                        `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/blood/${booking._id}`
                       );
                       setCopied(true);
                       setTimeout(() => {
@@ -1479,7 +1508,7 @@ export default function BookingDialog(props) {
                             </span>
                           </Grid>
                           <Grid item xs={6}>
-                            <span className={classes.infoTitle}>NOTES</span>
+                          <span className={classes.infoTitle}>D.O.B</span>
                             <span
                               hidden={
                                 editMode.edit &&
@@ -1487,7 +1516,7 @@ export default function BookingDialog(props) {
                               }
                               className={classes.infoData}
                             >
-                              {booking.notes}
+                              {FormatDateFromString(booking.birthDate)}
                             </span>
                             <span
                               hidden={
@@ -1500,9 +1529,10 @@ export default function BookingDialog(props) {
                             >
                               <TextField
                                 fullWidth
+                                error={validationError.dobError}
                                 className={classes.TextBox}
-                                value={notes}
-                                onChange={notesChanged}
+                                value={dob}
+                                onChange={dobChanged}
                                 inputProps={{
                                   style: {
                                     padding: 0,
@@ -1510,6 +1540,7 @@ export default function BookingDialog(props) {
                                 }}
                               ></TextField>
                             </span>
+
                           </Grid>
                         </Grid>
                       </li>
@@ -1545,6 +1576,51 @@ export default function BookingDialog(props) {
                             }}
                           ></TextField>
                         </span>
+                      </li>
+
+                      <li className={classes.li} style={{ paddingTop: "10px" }}>
+                        <span className={classes.infoTitle}>Indivisual Tests</span>
+                        <span
+                          className={classes.infoData}
+                        >
+                          {getIndivisualTestsString(booking.indivisualTests)}
+                        </span>
+                      </li>
+
+
+                      <li className={classes.li} style={{ paddingTop: "10px" }}>
+                      <span className={classes.infoTitle}>NOTES</span>
+                            <span
+                              hidden={
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              }
+                              className={classes.infoData}
+                            >
+                              {booking.notes}
+                            </span>
+                            <span
+                              hidden={
+                                !(
+                                  editMode.edit &&
+                                  editMode.person._id === booking._id
+                                )
+                              }
+                              className={classes.infoData}
+                            >
+                              <TextField
+                                fullWidth
+                                className={classes.TextBox}
+                                value={notes}
+                                onChange={notesChanged}
+                                inputProps={{
+                                  style: {
+                                    padding: 0,
+                                  },
+                                }}
+                              ></TextField>
+                            </span>
+
                       </li>
 
                       <li className={classes.li} style={{ paddingTop: "10px" }}>

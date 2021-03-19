@@ -3,9 +3,9 @@ import API from './api';
 export default class PDFService {
 
 
-    static downloadSTDRegForm = (id) =>
+    static downloadBloodRegForm = (id) =>
     {
-       return API.get(`/api/pdf/downloadstdregform?id=${id}`, {
+       return API.get(`/api/pdf/downloadbloodregform?id=${id}`, {
         responseType: 'arraybuffer',
         id: id,
         headers: {
