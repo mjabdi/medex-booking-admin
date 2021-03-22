@@ -915,7 +915,7 @@ export default function PersonsBox() {
                                           </TextField> 
                                         </span>  
                             </li>
-                            <li className={classes.li}>
+                            <li className={classes.li} hidden={true}>
                                 <span className={classes.infoTitle}>SERVICE</span>
                                  <span hidden={(editMode.edit && editMode.person._id  === person._id)} className={classes.infoData}>{person.service}</span>  
                                         <span hidden={!(editMode.edit && editMode.person._id  === person._id)} className={classes.infoData}>
@@ -934,7 +934,7 @@ export default function PersonsBox() {
                                           </TextField> 
                                         </span>  
                             </li>
-                            <li className={classes.li}>
+                            <li className={classes.li} hidden={true}>
                                 <span className={classes.infoTitle}>NOTES</span>
                                  <span hidden={(editMode.edit && editMode.person._id  === person._id)} className={classes.infoData}>{person.notes}</span>  
                                         <span hidden={!(editMode.edit && editMode.person._id  === person._id)} className={classes.infoData}>

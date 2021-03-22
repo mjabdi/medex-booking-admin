@@ -15,6 +15,7 @@ import PersonsBoxPCR from "./../PCR/PersonsBox";
 import PersonsBoxGP from "./../GP/PersonsBox";
 import PersonsBoxGynae from "./../Gynae/PersonsBox";
 import PersonsBoxSTD from "./../STD/PersonsBox";
+import PersonsBoxBlood from "./../Blood/PersonsBox";
 
 import { width } from "@material-ui/system";
 
@@ -201,7 +202,9 @@ export default function FindByRef() {
         return <PersonsBoxSTD />;
       case "gynae":
         return <PersonsBoxGynae />;
-
+        case "blood":
+          return <PersonsBoxBlood />;
+  
       default:
         return null;
     }
