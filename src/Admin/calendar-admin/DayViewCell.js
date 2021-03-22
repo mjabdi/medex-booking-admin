@@ -189,6 +189,11 @@ const useStyles = makeStyles((theme) => ({
     border: "4px solid",
     borderColor: CalendarColors.STD_COLOR,
   },
+  BookingBorderBlood: {
+    border: "4px solid",
+    borderColor: CalendarColors.BLOOD_COLOR,
+  },
+
 }));
 
 const DayViewCell = ({ key, date, time }) => {
@@ -360,6 +365,9 @@ const DayViewCell = ({ key, date, time }) => {
         return classes.BookingBorderGP;
       case "std":
         return classes.BookingBorderSTD;
+        case "blood":
+          return classes.BookingBorderBlood;
+    
       default:
         return null;
     }
