@@ -740,7 +740,6 @@ export default function BookingTable(props) {
           var filteredData = data.cachedBookings.filter( (element) => 
 
              (element.fullname.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
-             || (element.service.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
                
               
           );
