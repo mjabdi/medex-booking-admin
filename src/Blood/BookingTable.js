@@ -769,7 +769,6 @@ export default function BookingTable(props) {
     const booking = data.bookings.find(element => element._id === id);
     setSelectedBooking(booking);
     setSeeDetailsDialogOpen(true);
-
   }
 
   const refreshClicked = (event) =>{

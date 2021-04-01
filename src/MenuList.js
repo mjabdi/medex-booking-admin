@@ -14,6 +14,9 @@ import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 import AirplanemodeActiveIcon from "@material-ui/icons/AirplanemodeActive";
+
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+
 /// PCR ------------------
 import FindByRef from "./PCR/FindByRef";
 import BookingTable from "./PCR/BookingTable";
@@ -49,6 +52,11 @@ import BloodBookingTable from "./Blood/BookingTable";
 import BloodDashboardPreview from "./Blood/DashboardPreview";
 import BloodFindByRef from "./Blood/FindByRef";
 import BloodCalendarView from "./Blood/calendar-admin/CalendarView";
+import BloodUnmatchedRecords from "./Blood/UnmatchedRecords";
+import BloodMatchedRecords from "./Blood/MatchedRecords";
+
+
+
 //----------------------------
 
 // Admin ----------------
@@ -289,11 +297,24 @@ export const MenuList_Blood = [
   },
   {
     index: 7,
+    id: `bloodMatchedRecords`,
+    title: `Matched Results`,
+    icon: <DoneOutlineIcon />,
+  },
+  {
+    index: 8,
+    id: `bloodUnatchedRecords`,
+    title: `Unmatched Results`,
+    icon: <WarningIcon />,
+  },
+
+  {
+    index: 9,
     id: `calendarView`,
     title: `Calendar View`,
     icon: <DateRangeIcon />,
   },
-  { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 10, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
 ];
 
 export const MenuList_PCR = [
@@ -538,8 +559,14 @@ export const getMenuContent = (role, index) => {
       case 6:
         return <BloodBookingTable date="deleted" />;
       case 7:
-        return <BloodCalendarView />;
+        return <BloodMatchedRecords />;
+
       case 8:
+        return <BloodUnmatchedRecords />;
+
+      case 9:
+        return <BloodCalendarView />;
+      case 10:
         return <BloodFindByRef />;
       default:
         return `Page Not Found!`;

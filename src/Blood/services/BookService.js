@@ -3,6 +3,43 @@ import axiosRetry from 'axios-retry';
 
 export default class BookService {
 
+   static getNewMatchedBloodReports = () =>
+   {
+      return API.get(`/api/blood/book/getnewmatchedbloodreports`);
+   }
+
+   static getArchivedMatchedBloodReports = () =>
+   {
+      return API.get(`/api/blood/book/getarchivedmatchedbloodreports`);
+   }
+
+   static getNewUnmatchedBloodReports = () =>
+   {
+      return API.get(`/api/blood/book/getnewunmatchedbloodreports`);
+   }
+
+   static getArchivedUnmatchedBloodReports = () =>
+   {
+      return API.get(`/api/blood/book/getarchivedunmatchedbloodreports`);
+   }
+
+   static sendBloodReportEmail = (bloodreportId, email, notes) =>
+   {
+      return API.post(`/api/blood/book/sendbloodreportemail?id=${bloodreportId}`, {email, notes});
+   }
+
+   static archiveBloodReport = (bloodreportId) =>
+   {
+      return API.post(`/api/blood/book/archivebloodreport?id=${bloodreportId}`);
+   }
+
+   static unArchiveBloodReport = (bloodreportId) =>
+   {
+      return API.post(`/api/blood/book/unarchivebloodreport?id=${bloodreportId}`);
+   }
+
+
+
 
    static addNewBooking = (payload) =>
    {
@@ -25,10 +62,8 @@ export default class BookService {
 
    static getShouldRefundsCount = () =>
    {
-      return API.get(`/api/blood/book/getshouldrefundscount?`);
-   }
-
-   
+      return API.get(`/api/blood/book/getshouldrefundscount`);
+   }  
 
    static refundBooking = (bookingId) =>
    {

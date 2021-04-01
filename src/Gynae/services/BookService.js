@@ -29,7 +29,7 @@ export default class BookService {
 
    static getShouldRefundsCount = () =>
    {
-      return API.get(`/api/gynae/book/getshouldrefundscount?`);
+      return API.get(`/api/gynae/book/getshouldrefundscount`);
    }
 
    static manualRefundBooking = (bookingId) =>
