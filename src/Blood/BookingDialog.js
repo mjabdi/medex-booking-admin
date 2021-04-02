@@ -982,14 +982,14 @@ export default function BookingDialog(props) {
                 style={{
                   position: "absolute",
                   top: "25x",
-                  right: "60px",
+                  right: "20px",
                   backgroundColor: CalendarColors.BLOOD_COLOR,
                   color: "#fff",
                   padding: "0px 5px",
                   borderRadius: "10px",
                 }}
               >
-                Blood
+                {booking.doctorConsultation ? "Blood + Doctor Consultation" : "Blood"}
               </div>
 
               <Grid
