@@ -55,6 +55,9 @@ import InvoiceService from "../services/InvoiceService";
 import InvoiceDialog from "../InvoiceDialog";
 import { getInitialColumnReorderState } from "@material-ui/data-grid";
 
+import { Document, Page } from 'react-pdf';
+
+
 const useStyles = makeStyles((theme) => ({
   box: {
     backgroundColor: "#373737",
@@ -370,6 +373,14 @@ function PaperComponent(props) {
 
 export default function BloodReportDialog(props) {
   const classes = useStyles();
+
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+  }
+
 
   const [state, setState] = React.useContext(GlobalState);
 
@@ -718,6 +729,7 @@ export default function BloodReportDialog(props) {
 
   useEffect(() => {
     if (props.booking) {
+      loadFileUrl(props.booking._id)
       setBooking(props.booking);
       setEmail(props.booking.email)
       setNotes(props.booking.notes)
@@ -764,6 +776,28 @@ export default function BloodReportDialog(props) {
     }
   };
 
+  const [fileURL, setFileURL] = React.useState(null)
+  const loadFileUrl = (id) => {
+    setFileURL(null)
+    PDFService.downloadPdfLabReport(id)
+      .then((res) => {
+        const file = new Blob([res.data], { type: "application/pdf" });
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = function () {
+          var base64data = reader.result;
+          console.log(base64data);
+          setFileURL(base64data)
+        }
+        // const _fileURL = URL.createObjectURL(file);
+        // setFileURL(_fileURL)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+
   const downloadRegForm = (id) => {
     PDFService.downloadPdfLabReport(id)
       .then((res) => {
@@ -780,7 +814,7 @@ export default function BloodReportDialog(props) {
   const sendRegForm = (id) => {
     setSaving(true);
     setEmailSent(false);
-    BookService.sendBloodReportEmail(id,email,notes)
+    BookService.sendBloodReportEmail(id, email, notes)
       .then((res) => {
         setSaving(false);
         if (res.data.status === "OK") {
@@ -892,17 +926,17 @@ export default function BloodReportDialog(props) {
   };
 
   const getColorFromClinic = (clinic) => {
-    switch(clinic){
+    switch (clinic) {
       case 'blood':
         return CalendarColors.BLOOD_COLOR
-        case 'std':
-          return CalendarColors.STD_COLOR
-          case 'gp':
-            return CalendarColors.GP_COLOR
-            case 'gynae':
-              return CalendarColors.GYNAE_COLOR
+      case 'std':
+        return CalendarColors.STD_COLOR
+      case 'gp':
+        return CalendarColors.GP_COLOR
+      case 'gynae':
+        return CalendarColors.GYNAE_COLOR
       default:
-          return "#999"  
+        return "#999"
     }
   }
 
@@ -913,7 +947,7 @@ export default function BloodReportDialog(props) {
       {booking && (
         <React.Fragment>
           <Dialog
-            maxWidth="xs"
+            maxWidth="lg"
             open={props.open}
             TransitionComponent={Transition}
             keepMounted
@@ -1254,7 +1288,12 @@ export default function BloodReportDialog(props) {
 
                       {/* ****************************************************************************************** */}
 
+
+
                       <li className={classes.li}>
+
+                        <Grid container spacing={2}>
+                          <Grid item xs={12} md={4}>
                             <span className={classes.infoTitle}>
                               TEST DATE :
                             </span>
@@ -1268,9 +1307,10 @@ export default function BloodReportDialog(props) {
                             >
                               {FormatDateFromString(booking.testDate)}
                             </span>
-                      </li>
 
-                      <li className={classes.li}>
+
+                          </Grid>
+                          <Grid item xs={12} md={4}>
                             <span className={classes.infoTitle}>NAME : </span>
                             <span
                               hidden={
@@ -1281,8 +1321,10 @@ export default function BloodReportDialog(props) {
                             >
                               {booking.name}
                             </span>
-                      </li>
-                      <li className={classes.li}>
+
+
+                          </Grid>
+                          <Grid item xs={12} md={4}>
                             <span className={classes.infoTitle}>D.O.B : </span>
                             <span
                               hidden={
@@ -1293,56 +1335,79 @@ export default function BloodReportDialog(props) {
                             >
                               {FormatDateFromString(booking.birthDate)}
                             </span>
+
+                          </Grid>
+
+                        </Grid>
+
                       </li>
 
+                      {fileURL && (
+                        <div>
+                          {/* <Document
+                          file={{data:fileURL}}
+                          onLoadSuccess={onDocumentLoadSuccess}
+                        >
+                          <Page pageNumber={pageNumber} />
+                        </Document>
+                        <p>Page {pageNumber} of {numPages}</p> */}
+                          <iframe style={{ width: "100%", minHeight: "500px" }} src={fileURL}></iframe>
+                        </div>
+
+                      )}
+
+
+
                       <li>
-                        <span className={classes.infoTitle}>EMAIL :</span>
+                        {/* <span className={classes.infoTitle}>EMAIL :</span> */}
                         <span
                           className={classes.infoData}
                         >
                           <TextField
-                            style={{margin:"10px"}}
+                            label="EMAIL"
+                            style={{ margin: "10px" }}
                             fullWidth
                             variant="outlined"
                             className={classes.TextBox}
                             value={email}
                             onChange={emailChanged}
-                            // inputProps={{
-                            //   style: {
-                            //     padding: 0,
-                            //   },
-                            // }}
+                          // inputProps={{
+                          //   style: {
+                          //     padding: 0,
+                          //   },
+                          // }}
                           ></TextField>
                         </span>
 
                       </li>
 
-                      <li className={classes.li} style={{ paddingTop: "10px" }}>
-                        <span className={classes.infoTitle}>NOTES :</span>
+                      <li className={classes.li} style={{ paddingTop: "0px" }}>
+                        {/* <span className={classes.infoTitle}>NOTES :</span> */}
                         <span
                           className={classes.infoData}
                         >
                           <TextField
                             fullWidth
-                            style={{margin:"10px"}}
+                            label="NOTES"
+                            style={{ margin: "10px" }}
                             className={classes.TextBox}
                             value={notes}
                             onChange={notesChanged}
                             variant="outlined"
                             multiline
                             rows={4}
-                            // inputProps={{
-                            //   style: {
-                            //     padding: 0,
-                            //   },
-                            // }}
+                          // inputProps={{
+                          //   style: {
+                          //     padding: 0,
+                          //   },
+                          // }}
                           ></TextField>
                         </span>
 
                       </li>
 
 
-                      <li hidden={booking.deleted || editMode.edit}>
+                      {/* <li hidden={booking.deleted || editMode.edit}>
                         <Button
                           startIcon={<PrintIcon />}
                           type="button"
@@ -1356,7 +1421,7 @@ export default function BloodReportDialog(props) {
                         >
                           Download LAB Report
                         </Button>
-                      </li>
+                      </li> */}
 
                       <li
                         hidden={
@@ -1374,7 +1439,7 @@ export default function BloodReportDialog(props) {
                             sendRegForm(booking._id);
                           }}
                           className={classes.DownloadForm}
-                          style={{ position: "relative", marginBottom:"10px" }}
+                          style={{ position: "relative", marginBottom: "10px" }}
                         >
                           Send Email To Patient
                           {emailSent && (

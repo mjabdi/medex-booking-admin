@@ -185,7 +185,7 @@ const useStyles = makeStyles((theme) => ({
 
   downloadPDFButton:
   {
-    marginLeft: "50px"
+    marginRight: "50px"
   },
 
   clinicTitle: {
@@ -300,14 +300,13 @@ export default function MatchedRecords() {
   const [seeDetailsDialogOpen, setSeeDetailsDialogOpen] = React.useState(false);
 
 
-  const openDetailsDialog = (id) =>
-  {
+  const openDetailsDialog = (id) => {
     const booking = data.bookings.find(element => element._id === id);
     setSelectedBooking(booking);
     setSeeDetailsDialogOpen(true);
   }
 
-  
+
 
 
   const columns = [
@@ -368,6 +367,16 @@ export default function MatchedRecords() {
               <Button
                 disabled={params.value === disableId}
                 type="button"
+                color="primary"
+                onClick={event => downloadLabReport(params.value)}
+                className={classes.downloadPDFButton}
+              >
+                view pdf
+              </Button>
+
+              <Button
+                disabled={params.value === disableId}
+                type="button"
                 variant="contained"
                 color="primary"
                 onClick={event => archiveRecord(event, params.value)}
@@ -377,15 +386,7 @@ export default function MatchedRecords() {
               </Button>
 
 
-              <Button
-                disabled={params.value === disableId}
-                type="button"
-                color="primary"
-                onClick={event => downloadLabReport(params.value)}
-                className={classes.downloadPDFButton}
-              >
-                view pdf
-              </Button>
+
 
 
             </React.Fragment>
@@ -1349,10 +1350,10 @@ export default function MatchedRecords() {
       </Dialog>
 
       <BloodReportDialog
-            booking={selectedBooking}
-            open={seeDetailsDialogOpen}
-            onClose={handleCloseSeeDetaisDialog}
-          />
+        booking={selectedBooking}
+        open={seeDetailsDialogOpen}
+        onClose={handleCloseSeeDetaisDialog}
+      />
 
     </React.Fragment>
   );

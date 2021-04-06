@@ -185,7 +185,7 @@ const useStyles = makeStyles((theme) => ({
 
   downloadPDFButton:
   {
-    marginLeft: "50px"
+    marginRight: "50px"
   },
 
   clinicTitle: {
@@ -381,16 +381,6 @@ export default function MatchedRecords() {
                     smart match
               </Button> */}
 
-              <Button
-                disabled={params.value === disableId}
-                type="button"
-                variant="contained"
-                color="primary"
-                onClick={event => archiveRecord(event, params.value)}
-                className={classes.archiveButton}
-              >
-                archive
-              </Button>
 
 
               <Button
@@ -402,6 +392,18 @@ export default function MatchedRecords() {
               >
                 view pdf
               </Button>
+
+              <Button
+                disabled={params.value === disableId}
+                type="button"
+                variant="contained"
+                color="primary"
+                onClick={event => archiveRecord(event, params.value)}
+                className={classes.archiveButton}
+              >
+                archive
+              </Button>
+
 
 
             </React.Fragment>
