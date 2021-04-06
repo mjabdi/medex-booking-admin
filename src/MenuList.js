@@ -17,6 +17,8 @@ import AirplanemodeActiveIcon from "@material-ui/icons/AirplanemodeActive";
 import ArchiveIcon from '@material-ui/icons/Archive';
 
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+import SendRoundedIcon from '@material-ui/icons/SendRounded';
+
 
 /// PCR ------------------
 import FindByRef from "./PCR/FindByRef";
@@ -56,6 +58,7 @@ import BloodCalendarView from "./Blood/calendar-admin/CalendarView";
 import BloodUnmatchedRecords from "./Blood/UnmatchedRecords";
 import BloodMatchedRecords from "./Blood/MatchedRecords";
 import BloodArchivedRecords from "./Blood/ArchivedRecords";
+import SentBloodRecords from "./Blood/SentRecords";
 
 
 
@@ -317,14 +320,22 @@ export const MenuList_Blood = [
     icon: <ArchiveIcon />,
   },
 
-
   {
     index: 10,
+    id: `bloodSent`,
+    title: `Sent Results`,
+    icon: <SendRoundedIcon />,
+  },
+
+
+
+  {
+    index: 11,
     id: `calendarView`,
     title: `Calendar View`,
     icon: <DateRangeIcon />,
   },
-  { index: 11, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 12, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
 ];
 
 export const MenuList_PCR = [
@@ -576,10 +587,12 @@ export const getMenuContent = (role, index) => {
       case 9:
         return <BloodArchivedRecords />;
 
-
       case 10:
-        return <BloodCalendarView />;
+        return <SentBloodRecords />;
+
       case 11:
+        return <BloodCalendarView />;
+      case 12:
         return <BloodFindByRef />;
       default:
         return `Page Not Found!`;

@@ -7,6 +7,7 @@ import GlobalState from "./GlobalState";
 import { Grid, LinearProgress } from "@material-ui/core";
 
 import ReportProblemOutlinedIcon from "@material-ui/icons/ReportProblemOutlined";
+import { CalendarColors } from "./Admin/calendar-admin/colors";
 
 const useStyles = makeStyles((theme) => ({
   countLabel: {
@@ -101,7 +102,7 @@ export default function ShouldRefundBookingView() {
             </Grid>
             <Grid item style={{ textAlign: "left" }}>
               <span className={data === 0 ? classes.Title : classes.TitleRed}>
-                Gynae Waiting for Refunds
+                <span style={{color:CalendarColors.GYNAE_COLOR}}>GYNAE</span>  Waiting for Refunds
               </span>
             </Grid>
           </Grid>

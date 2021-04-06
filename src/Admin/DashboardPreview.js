@@ -34,7 +34,7 @@ export default function DashboardPreview() {
   return (
         <React.Fragment>
 
-<           Grid container spacing={3}>
+        <Grid container spacing={3}>
                     {/* Chart */}
                     <Grid item xs={12} md={4} lg={6}>
                     <Paper className={fixedHeightPaper}>

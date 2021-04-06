@@ -1,20 +1,20 @@
 import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Title from "./Title";
-import PCRBookService from "./PCR/services/BookService";
+import BloodBookService from "./Blood/services/BookService";
 
 import GlobalState from "./GlobalState";
 import { Grid, LinearProgress } from "@material-ui/core";
 
-import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
+import ReportProblemOutlinedIcon from "@material-ui/icons/ReportProblemOutlined";
 import { CalendarColors } from "./Admin/calendar-admin/colors";
 
 const useStyles = makeStyles((theme) => ({
   countLabel: {
-   position: "absolute",
-   top: "65px",
-   left: "44%",
-   fontSize: "3rem",
+    position: "absolute",
+    top: "65px",
+    left: "44%",
+    fontSize: "3rem",
   },
 
   countLabelRed: {
@@ -22,27 +22,24 @@ const useStyles = makeStyles((theme) => ({
     top: "65px",
     left: "44%",
     fontSize: "3rem",
-    color: theme.palette.secondary.main
-   },
+    color: theme.palette.secondary.main,
+  },
 
-   Icon: {
-    fontSize: "2rem"
-
+  Icon: {
+    fontSize: "2rem",
   },
 
   IconRed: {
-   fontSize: "2rem",
-  //  color: theme.palette.secondary.main,
+    fontSize: "2rem",
+    // color: theme.palette.secondary.main,
   },
 
-  TitleRed:{
+  TitleRed: {
     // color: theme.palette.secondary.main,
-  }
-
-
+  },
 }));
 
-export default function LateBookingView() {
+export default function NewBloodResultsBookingView() {
   const classes = useStyles();
   const [state, setState] = React.useContext(GlobalState);
 
@@ -56,9 +53,9 @@ export default function LateBookingView() {
     setLoading(true);
 
     try {
-      const res = await PCRBookService.getLateBookings();
+      const res = await BloodBookService.getNewBloodResultsCount();
 
-      setData(res.data.length);
+      setData(res.data.result);
 
       setLoading(false);
     } catch (err) {
@@ -77,10 +74,9 @@ export default function LateBookingView() {
       setRefresh((refresh) => !refresh);
     }, 30000);
 
-    return () =>
-    {
-      clearInterval(interval)
-    }
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   return (
@@ -100,18 +96,27 @@ export default function LateBookingView() {
           >
             <Grid item>
               <div style={{ paddingTop: "5px" }}>
-                <HourglassEmptyIcon className={data === 0 ? classes.Icon : classes.IconRed } />
+                <ReportProblemOutlinedIcon
+                  className={data === 0 ? classes.Icon : classes.IconRed}
+                />
               </div>
             </Grid>
             <Grid item style={{ textAlign: "left" }}>
               <span className={data === 0 ? classes.Title : classes.TitleRed}>
-              <span style={{color:CalendarColors.PCR_COLOR}}>PCR</span> 40-Hours Late
+              <span style={{color:CalendarColors.BLOOD_COLOR}}>BLOOD</span> New Results
               </span>
-           
             </Grid>
           </Grid>
 
-          {data !== null && <div className={data === 0 ? classes.countLabel : classes.countLabelRed }>{data}</div>}
+          {data !== null && (
+            <div
+              className={
+                data === 0 ? classes.countLabel : classes.countLabelRed
+              }
+            >
+              {data}
+            </div>
+          )}
         </Title>
       </div>
     </React.Fragment>

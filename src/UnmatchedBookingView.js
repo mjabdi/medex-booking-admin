@@ -7,6 +7,7 @@ import GlobalState from "./GlobalState";
 import { Grid, LinearProgress } from "@material-ui/core";
 
 import ReportProblemOutlinedIcon from "@material-ui/icons/ReportProblemOutlined";
+import { CalendarColors } from "./Admin/calendar-admin/colors";
 
 const useStyles = makeStyles((theme) => ({
   countLabel: {
@@ -102,7 +103,7 @@ export default function UnmatchedBookingView() {
             </Grid>
             <Grid item style={{ textAlign: "left" }}>
               <span className={data === 0 ? classes.Title : classes.TitleRed}>
-                PCR Unmatched Records
+              <span style={{color:CalendarColors.PCR_COLOR}}>PCR</span> Unmatched Records
               </span>
             </Grid>
           </Grid>

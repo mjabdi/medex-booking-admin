@@ -8,6 +8,19 @@ export default class BookService {
        return API.get(`/api/medex/invoice/getallbloodcodes`)
    }
 
+   
+
+   static getNewBloodResultsCount = () =>
+   {
+      return API.get(`/api/blood/book/getnewbloodresultscount`);
+   }
+
+   static getSentBloodReports = () =>
+   {
+      return API.get(`/api/blood/book/getsentbloodreports`);
+   }
+
+
    static getArchivedBloodReports = () =>
    {
       return API.get(`/api/blood/book/getarchivedbloodreports`);

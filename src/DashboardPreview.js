@@ -16,6 +16,7 @@ import { setRole } from "./Role";
 import { useLocation, useHistory } from "react-router-dom";
 import { getGlobalPath } from "./GlobalPath";
 import { getMenuId, getMenuIndex } from "./MenuList";
+import NewBloodResultsBookingView from "./NewBloodResultsBookingView";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -58,6 +59,15 @@ export default function DashboardPreview() {
     setState((state) => ({ ...state, role: role }));
     history.push(getGlobalPath(`/${getMenuId(role, getMenuIndex(role,'unmatchedRecords'))}`));
   }
+
+  const gotoBlood = () =>
+  {
+    const role = 'blood'
+    setRole(role);
+    setState((state) => ({ ...state, role: role }));
+    history.push(getGlobalPath(`/${getMenuId(role, getMenuIndex(role,'dashboard'))}`));
+  }
+
   
   const gotoRefundGynae = () =>
   {
@@ -108,6 +118,13 @@ export default function DashboardPreview() {
              <ShouldRefundBookingView />
           </Paper>
         </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Paper className={fixedHeightPaperSmall} onClick={gotoBlood}>
+             <NewBloodResultsBookingView />
+          </Paper>
+        </Grid>
+
 
       </Grid>
     </React.Fragment>
