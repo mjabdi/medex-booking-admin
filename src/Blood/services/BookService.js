@@ -3,6 +3,11 @@ import axiosRetry from 'axios-retry';
 
 export default class BookService {
 
+   static getArchivedBloodReports = () =>
+   {
+      return API.get(`/api/blood/book/getarchivedbloodreports`);
+   }
+
    static getNewMatchedBloodReports = () =>
    {
       return API.get(`/api/blood/book/getnewmatchedbloodreports`);
@@ -27,6 +32,12 @@ export default class BookService {
    {
       return API.post(`/api/blood/book/sendbloodreportemail?id=${bloodreportId}`, {email, notes});
    }
+
+   static updateBloodReport = (bloodreportId, email, notes) =>
+   {
+      return API.post(`/api/blood/book/updatebloodreport?id=${bloodreportId}`, {email, notes});
+   }
+
 
    static archiveBloodReport = (bloodreportId) =>
    {

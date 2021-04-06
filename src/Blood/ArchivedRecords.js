@@ -48,6 +48,8 @@ import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 
+import ArchiveIcon from '@material-ui/icons/Archive';
+
 
 var interval;
 
@@ -276,7 +278,7 @@ function PaperComponent(props) {
   );
 }
 
-export default function MatchedRecords() {
+export default function ArchivedRecords() {
 
   const classes = useStyles();
 
@@ -303,13 +305,14 @@ export default function MatchedRecords() {
   const [seeDetailsDialogOpen, setSeeDetailsDialogOpen] = React.useState(false);
 
 
-  const openDetailsDialog = (id) => {
+  const openDetailsDialog = (id) =>
+  {
     const booking = data.bookings.find(element => element._id === id);
     setSelectedBooking(booking);
     setSeeDetailsDialogOpen(true);
   }
 
-
+  
 
 
   const columns = [
@@ -413,10 +416,10 @@ export default function MatchedRecords() {
                 type="button"
                 variant="contained"
                 color="primary"
-                onClick={event => archiveRecord(event, params.value)}
+                onClick={event => unArchiveRecord(event, params.value)}
                 className={classes.archiveButton}
               >
-                archive
+                Restore
               </Button>
 
 
@@ -441,17 +444,6 @@ export default function MatchedRecords() {
                         smart match
                   </Button> */}
 
-
-              <Button
-                disabled={params.value === disableId}
-                type="button"
-                color="primary"
-                onClick={event => downloadLabReport(params.value)}
-                className={classes.downloadPDFButton}
-              >
-                view pdf
-                  </Button>
-
               <Button
                 disabled={params.value === disableId}
                 type="button"
@@ -463,6 +455,15 @@ export default function MatchedRecords() {
                 Restore
                   </Button>
 
+              <Button
+                disabled={params.value === disableId}
+                type="button"
+                color="primary"
+                onClick={event => downloadLabReport(params.value)}
+                className={classes.downloadPDFButton}
+              >
+                view pdf
+                  </Button>
 
             </React.Fragment>
           );
@@ -619,10 +620,10 @@ export default function MatchedRecords() {
 
   useEffect(() => {
 
-    var api = BookService.getNewMatchedBloodReports;
-    if (selectedTab === 'archived') {
-      api = BookService.getArchivedMatchedBloodReports;
-    }
+    var api = BookService.getArchivedBloodReports;
+    // if (selectedTab === 'archived') {
+    //   api = BookService.getArchivedMatchedBloodReports;
+    // }
 
     setLoading(true)
 
@@ -865,10 +866,10 @@ export default function MatchedRecords() {
           <div style={{ textAlign: "left", paddingLeft: "10px" }}>
             <Grid container direction="row" justify="flex-start" alignItems="center">
               <Grid item>
-                <span style={{ paddingRight: "15px", color: "#008c00" }}> <DoneOutlineIcon style={{ fontSize: "2.2rem" }} /> </span>
+                <span style={{ paddingRight: "15px", color: "#777" }}> <ArchiveIcon style={{ fontSize: "2.2rem" }} /> </span>
               </Grid>
               <Grid item>
-                <span style={{ fontSize: '1.4rem', fontWeight: "600", color: "#555" }}> Matched Blood Results </span>
+                <span style={{ fontSize: '1.4rem', fontWeight: "600", color: "#555" }}> Archived Blood Results </span>
               </Grid>
               <Grid item>
                 <Tooltip title="Refresh" placement="right">
@@ -885,7 +886,7 @@ export default function MatchedRecords() {
           </div>
         </Grid>
 
-        <Grid item md={3}>
+        {/* <Grid item md={3}>
           <ToggleButtonGroup
             value={selectedTab}
             style={{ marginBottom: "10px" }}
@@ -900,7 +901,7 @@ export default function MatchedRecords() {
               Archived
             </ToggleButton>
           </ToggleButtonGroup>
-        </Grid>
+        </Grid> */}
 
         <Grid item md={3}>
           <TextField
@@ -1386,10 +1387,10 @@ export default function MatchedRecords() {
       </Dialog>
 
       <BloodReportDialog
-        booking={selectedBooking}
-        open={seeDetailsDialogOpen}
-        onClose={handleCloseSeeDetaisDialog}
-      />
+            booking={selectedBooking}
+            open={seeDetailsDialogOpen}
+            onClose={handleCloseSeeDetaisDialog}
+          />
 
     </React.Fragment>
   );

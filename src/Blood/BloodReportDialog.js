@@ -41,6 +41,7 @@ import {
   RevertFormatDateFromString,
 } from "./DateFormatter";
 import PayDialog from "./PayDialog";
+import SaveIcon from '@material-ui/icons/Save';
 
 import PrintIcon from "@material-ui/icons/Print";
 import UndoIcon from "@material-ui/icons/Undo";
@@ -56,6 +57,9 @@ import InvoiceDialog from "../InvoiceDialog";
 import { getInitialColumnReorderState } from "@material-ui/data-grid";
 
 import { Document, Page } from 'react-pdf';
+
+import SendRoundedIcon from '@material-ui/icons/SendRounded';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -387,6 +391,7 @@ export default function BloodReportDialog(props) {
   const [copied, setCopied] = useState(false);
 
   const [emailSent, setEmailSent] = React.useState(false);
+  const [changesSaved, setChangesSaved] = React.useState(false);
 
   const [openResendDialog, setOpenResendDialog] = React.useState(false);
   const [openPayDialog, setOpenPayDialog] = React.useState(false);
@@ -819,6 +824,9 @@ export default function BloodReportDialog(props) {
         setSaving(false);
         if (res.data.status === "OK") {
           setEmailSent(true);
+          setState(state => ({ ...state, bloodReportRefresh: !state.bloodReportRefresh }))
+          booking.emailSent = true
+
         }
       })
       .catch((err) => {
@@ -827,8 +835,27 @@ export default function BloodReportDialog(props) {
       });
   };
 
+  const saveChanges = (id) => {
+    setSaving(true);
+    setChangesSaved(false);
+    BookService.updateBloodReport(id, email, notes)
+      .then((res) => {
+        setSaving(false);
+        if (res.data.status === "OK") {
+          setChangesSaved(true);
+          setState(state => ({ ...state, bloodReportRefresh: !state.bloodReportRefresh }))
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setSaving(false);
+      });
+  };
+
+
   const onClose = () => {
     setEmailSent(false);
+    setChangesSaved(false)
     setEmailSentInvoice(false);
     setInvoice(null);
 
@@ -975,6 +1002,22 @@ export default function BloodReportDialog(props) {
                 }}
               >
                 {booking.clinic?.toUpperCase()}
+              </div>
+
+              <div
+                style={{
+                  position: "absolute",
+                  top: "25x",
+                  left: "20px",
+                  color: "#fff",
+                  padding: "0px 5px",
+                }}
+                hidden={!booking.emailSent}
+              >
+                <Tooltip style={{ fontSize: "20px" }} title="Email has been sent">
+                  <SendRoundedIcon style={{ fontSize: "25px", color: "#009634" }} />
+                </Tooltip>
+
               </div>
 
               <Grid
@@ -1423,11 +1466,7 @@ export default function BloodReportDialog(props) {
                         </Button>
                       </li> */}
 
-                      <li
-                        hidden={
-                          booking.deleted || editMode.edit || booking.formData
-                        }
-                      >
+                      <li>
                         <Button
                           disabled={!email || !EmailValidator.validate(email)}
                           startIcon={<SendIcon />}
@@ -1456,6 +1495,36 @@ export default function BloodReportDialog(props) {
                           )}
                         </Button>
                       </li>
+
+                      <li>
+                        <Button
+                          startIcon={<SaveIcon />}
+                          type="button"
+                          fullWidth
+                          variant="outlined"
+                          color="secondary"
+                          onClick={() => {
+                            saveChanges(booking._id);
+                          }}
+                          className={classes.DownloadForm}
+                          style={{ position: "relative", marginBottom: "10px" }}
+                        >
+                          Save Changes
+                          {changesSaved && (
+                            <div
+                              style={{
+                                position: "absolute",
+                                right: "10px",
+                                top: "5px",
+                                color: "#05ad19",
+                              }}
+                            >
+                              Saved Successfully
+                            </div>
+                          )}
+                        </Button>
+                      </li>
+
 
 
 

@@ -14,6 +14,7 @@ import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 import AirplanemodeActiveIcon from "@material-ui/icons/AirplanemodeActive";
+import ArchiveIcon from '@material-ui/icons/Archive';
 
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 
@@ -54,6 +55,7 @@ import BloodFindByRef from "./Blood/FindByRef";
 import BloodCalendarView from "./Blood/calendar-admin/CalendarView";
 import BloodUnmatchedRecords from "./Blood/UnmatchedRecords";
 import BloodMatchedRecords from "./Blood/MatchedRecords";
+import BloodArchivedRecords from "./Blood/ArchivedRecords";
 
 
 
@@ -310,11 +312,19 @@ export const MenuList_Blood = [
 
   {
     index: 9,
+    id: `bloodArchived`,
+    title: `Archived Results`,
+    icon: <ArchiveIcon />,
+  },
+
+
+  {
+    index: 10,
     id: `calendarView`,
     title: `Calendar View`,
     icon: <DateRangeIcon />,
   },
-  { index: 10, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 11, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
 ];
 
 export const MenuList_PCR = [
@@ -563,10 +573,13 @@ export const getMenuContent = (role, index) => {
 
       case 8:
         return <BloodUnmatchedRecords />;
-
       case 9:
-        return <BloodCalendarView />;
+        return <BloodArchivedRecords />;
+
+
       case 10:
+        return <BloodCalendarView />;
+      case 11:
         return <BloodFindByRef />;
       default:
         return `Page Not Found!`;

@@ -45,6 +45,11 @@ import { FormatDateFromString, RevertFormatDateFromString } from './DateFormatte
 import PDFService from './services/PDFService';
 
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import EmailRoundedIcon from '@material-ui/icons/EmailRounded';
+import SendRoundedIcon from '@material-ui/icons/SendRounded';
+
+import DraftsIcon from '@material-ui/icons/Drafts';
 
 var interval;
 
@@ -311,10 +316,23 @@ export default function MatchedRecords() {
 
   const columns = [
     {
-      field: 'id', headerName: ' ', width: 70, renderCell: (params) => {
+      field: 'id', headerName: ' ', width: 100, renderCell: (params) => {
         return (
 
           <React.Fragment>
+
+            { params.getValue("emailSent") && (
+              <Tooltip style={{ fontSize: "20px" }} title="Email has been sent">
+                <SendRoundedIcon style={{ fontSize: "20px", color: "#009634" }} />
+              </Tooltip>
+            )
+            }
+            { !params.getValue("emailSent") && (
+              <SendRoundedIcon style={{ fontSize: "20px", color: "#fafafa" }} />
+            )
+            }
+
+
 
             <Button
               color="primary"
@@ -412,6 +430,16 @@ export default function MatchedRecords() {
               <Button
                 disabled={params.value === disableId}
                 type="button"
+                color="primary"
+                onClick={event => downloadLabReport(params.value)}
+                className={classes.downloadPDFButton}
+              >
+                view pdf
+                  </Button>
+
+              <Button
+                disabled={params.value === disableId}
+                type="button"
                 variant="contained"
                 color="primary"
                 onClick={event => unArchiveRecord(event, params.value)}
@@ -420,15 +448,7 @@ export default function MatchedRecords() {
                 Restore
                   </Button>
 
-              <Button
-                disabled={params.value === disableId}
-                type="button"
-                color="primary"
-                onClick={event => downloadLabReport(params.value)}
-                className={classes.downloadPDFButton}
-              >
-                view pdf
-                  </Button>
+
 
             </React.Fragment>
           );
@@ -619,7 +639,7 @@ export default function MatchedRecords() {
         }
       });
   },
-    [refresh, selectedTab]);
+    [refresh, selectedTab, state.bloodReportRefresh]);
 
 
 
