@@ -273,6 +273,25 @@ const useStyles = makeStyles((theme) => ({
     }
   },
 
+  BoxBlood: {
+    width : "100%",
+    padding: "10px",
+    borderRadius: "8px",
+    border: "1px solid",
+    fontSize: "1.2rem",
+    fontWeight: "500",
+    textAlign: "center",
+    cursor: "pointer",
+    borderColor: CalendarColors.BLOOD_COLOR,
+    color: CalendarColors.BLOOD_COLOR,
+    transition: "all 0.2s ease",
+    "&:hover": {
+      backgroundColor: CalendarColors.BLOOD_COLOR,
+      color: "#fff"
+    }
+  },
+
+
 
 
 }));
@@ -428,7 +447,7 @@ export default function NewBookingDialog(props) {
             <DialogContent>
               <div
                 style={{
-                  height: "310px",
+                  height: "370px",
                 }}
               >
                 <Grid
@@ -473,6 +492,13 @@ export default function NewBookingDialog(props) {
                       STD
                     </div>
                   </Grid>
+
+                  <Grid item xs={12}>
+                    <div className={classes.BoxBlood} onClick={() => clinicClicked("blood")}>
+                      BLOOD
+                    </div>
+                  </Grid>
+
 
                 </Grid>
 

@@ -5,7 +5,9 @@ import {
   Backdrop,
   Button,
   Checkbox,
+  Chip,
   CircularProgress,
+  DialogActions,
   Divider,
   FormControlLabel,
   Grid,
@@ -48,6 +50,11 @@ import AddIcon from "@material-ui/icons/Add";
 import { validate } from "email-validator";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import { CalendarColors } from "../Admin/calendar-admin/colors";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+
+import { matchSorter } from 'match-sorter'
+import DateField from "./DateField";
+
 
 var interval;
 
@@ -203,36 +210,26 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.secondary.main,
     fontWeight: "600",
   },
+
+  listOptions:{
+    backgroundColor: "#dcf0f5",
+    color: "#034859",
+    borderRadius:"30px",
+    padding: "10px",
+    fontWeight:"500",
+    fontSize: "1rem"
+  }
+
 }));
 
 const Packages = [
-  { packageName: "Sexual Health Clinic - Bronze" },
-  { packageName: `Sexual Health Clinic - Silver` },
-  { packageName: `Sexual Health Clinic - Gold` },
-  { packageName: `Sexual Health Clinic - Platinium` },
-  { packageName: `BLOOD SAMPLE AND URINE` },
-  { packageName: `BLOOD SAMPLE AND URINE OR SWAB` },
-  { packageName: `Indivisual Tests` },
-  { packageName: `Combo STD Checks` },
+  { packageName: "-" }, 
+  { packageName: "SLIVER BLOOD TEST" },
+  { packageName: `SLIVER PLUS BLOOD TEST"` },
+  { packageName: `GOLD BLOOD TEST` },
+  { packageName: `PLATINIUM BLOOD TEST` },
 ];
 
-const IndivisualTests = [
-  "HIV TESTING",
-  "CHLAMYDIA TESTING",
-  "SYPHILIS BLOOD TESTING",
-  "HERPES TESTING",
-  "GONORRHOEA TESTING",
-  "HEPATITIS A PROFILE TESTING",
-  "HEPATITIS B PROFILE TESTING",
-  "HEPATITIS C ANTIBODIES TESTING",
-  "HPV TESTING",
-  "BACTERIAL SWAB TESTING",
-];
-
-const comboSTDChecks = [
-  "CHLAMYDIA, GONORRHOEA AND TRICHOMONAS",
-  "HIV I & II WITH SYPHILIS",
-];
 
 function NumberFormatCustom(props) {
   const { inputRef, onChange, ...other } = props;
@@ -330,6 +327,61 @@ export default function NewBookingDialog(props) {
   const [indivisualArray, setIndivisualArray] = React.useState([]);
   const [comboArray, setComboArray] = React.useState([]);
 
+  const [noOptionsText, setNoOptionsText] = React.useState('')
+
+  const [allCodes, setAllCodes] = React.useState([]);
+
+  const [indivisualTests, setIndivisualTests] = React.useState([])
+
+  const [birthDate, setBirthDate] = React.useState(null);
+  const [birthDateError, setBirthDateError] = React.useState(false);
+
+  const birthDateChanged = (dateStr) =>
+  {
+      setBirthDate(dateStr);
+      setBirthDateError(false)
+  }  
+
+
+  const fetchAllCodes = async () => {
+    try {
+      const res = await BookService.getAllCodes();
+      const data = res.data.result
+      const options = data.map((option) => {
+        const firstLetter = option.code[0].toUpperCase();
+        return {
+          firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
+          ...option,
+        };
+      });
+
+      console.log(options)
+      setAllCodes(options);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if ((!allCodes || allCodes.length === 0) && props.open)
+      fetchAllCodes();
+  }, [props.open]);
+
+
+
+  const filterOptions = (options, { inputValue }) => {
+
+    if (inputValue && inputValue.length >= 3) {
+      setNoOptionsText("")
+      return matchSorter(options, inputValue, { keys: ['code', 'description'] });
+    }
+    else {
+      setNoOptionsText("Please enter at least 3 characters")
+      return matchSorter(options, '$$$$', { keys: ['code', 'description'] });
+    }
+  }
+
   const fullnameChanged = (event) => {
     setFullname(event.target.value);
     setFullnameError(false);
@@ -364,6 +416,8 @@ export default function NewBookingDialog(props) {
     setNotes("");
     setIndivisualArray([]);
     setComboArray([]);
+    setBirthDate(null)
+    setIndivisualTests([])
 
     props.handleClose();
     setSaving(false);
@@ -376,21 +430,9 @@ export default function NewBookingDialog(props) {
       error = true;
     }
 
-    if (!service || service.trim().length < 1)
+    if (!birthDate || birthDate.length !== 10)
     {
-      setServiceError(true)
-      error = true
-    }
-
-    if (service === 'Indivisual Tests' && indivisualArray.length === 0)
-    {
-      setServiceError(true)
-      error = true
-    }
-
-    if (service === 'Combo STD Checks' && comboArray.length === 0)
-    {
-      setServiceError(true)
+      setBirthDateError(true)
       error = true
     }
 
@@ -405,25 +447,6 @@ export default function NewBookingDialog(props) {
     setSaving(true);
 
     let packageName = service;
-    if (service === "Indivisual Tests") {
-      let temp = "";
-      indivisualArray.forEach((item, index) => {
-        temp += item;
-        if (index < indivisualArray.length - 1) {
-          temp += " - ";
-        }
-      });
-      packageName = `Indivisual Tests : ( ${temp} )`;
-    } else if (service === "Combo STD Checks") {
-      let temp = "";
-      comboArray.forEach((item, index) => {
-        temp += item;
-        if (index < comboArray.length - 1) {
-          temp += " - ";
-        }
-      });
-      packageName = `Combo STD Checks : ( ${temp} )`;
-    }
 
     try {
       await BookService.addNewBooking({
@@ -433,6 +456,8 @@ export default function NewBookingDialog(props) {
         phone: phone,
         email: email,
         packageName: packageName,
+        birthDate: birthDate,
+        indivisualTests: indivisualTests.length === 0 ? null : JSON.stringify(indivisualTests),
         notes: notes,
       });
       setSaving(false);
@@ -512,8 +537,8 @@ export default function NewBookingDialog(props) {
                 </Grid>
               </Grid>
 
-              <div style={{position:"absolute", top: "5px", right: "5px", backgroundColor:CalendarColors.STD_COLOR, color:"#fff", padding: "0px 5px", borderRadius:"10px", fontSize:"1rem"}}>
-                    STD
+              <div style={{ position: "absolute", top: "5px", right: "5px", backgroundColor: CalendarColors.BLOOD_COLOR, color: "#fff", padding: "0px 5px", borderRadius: "10px", fontSize: "1rem" }}>
+                Blood
               </div>
 
 
@@ -522,7 +547,7 @@ export default function NewBookingDialog(props) {
             <DialogContent>
               <div
                 style={{
-                  height: "600px",
+                  height: "620px",
                 }}
               >
                 <Grid
@@ -591,7 +616,18 @@ export default function NewBookingDialog(props) {
                   </Grid>
 
                   <Grid item xs={12} md={12}>
-                    <FormControl className={classes.formControl} fullWidth required error={serviceError}>
+                    <DateField
+                      error={birthDateError}
+                      title="Date of Birth"
+                      value={birthDate}
+                      dateChanged={birthDateChanged}
+                    >
+
+                    </DateField>
+                  </Grid>
+
+                  <Grid item xs={12} md={12}>
+                    <FormControl className={classes.formControl} fullWidth error={serviceError}>
                       <InputLabel id="service-label-id">Package</InputLabel>
                       <Select
                         fullWidth
@@ -609,50 +645,83 @@ export default function NewBookingDialog(props) {
                     </FormControl>
                   </Grid>
 
-                  {service === "Indivisual Tests" && (
-                    <Grid item xs={12}>
-                      {IndivisualTests.map((item) => (
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={
-                                indivisualArray.findIndex((e) => e === item) >=
-                                0
-                              }
-                              onChange={(event) =>
-                                IndivisualTestsChanged(event, item)
-                              }
-                              name={item}
-                            />
-                          }
-                          label={item}
-                        />
-                      ))}
-                    </Grid>
-                  )}
+                  <Grid item xs={12} md={12}>
 
-                  {service === "Combo STD Checks" && (
-                    <Grid item xs={12}>
-                      {comboSTDChecks.map((item) => (
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={
-                                comboArray.findIndex((e) => e === item) >= 0
-                              }
-                              onChange={(event) =>
-                                comboSTDChecksChanged(event, item)
-                              }
-                              name={item}
-                            />
-                          }
-                          label={item}
-                        />
-                      ))}
-                    </Grid>
-                  )}
 
-                  <Grid item xs={12}>
+                    <div
+                      style={{
+                        textAlign: "center",
+                        width: "100%",
+                        fontWeight: "400",
+                        color: "#777",
+                        marginTop:"20px"
+                      }}
+                    >
+                      <Autocomplete
+                        multiple
+                        id="tags-outlined"
+                        noOptionsText={noOptionsText}
+                        value={indivisualTests}
+                        onChange={(event, newValue) => {
+                          setIndivisualTests(newValue)
+                          setState(state => ({ ...state, indivisualTests: newValue }))
+                        }}
+                        filterOptions={filterOptions}
+                        options={allCodes.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+                        // groupBy={(option) => option.firstLetter}
+                        getOptionLabel={(option) => <div className={classes.listOptions}>
+                          {option.code} - {option.description} - {parseFloat(
+                            option.price
+                          ).toLocaleString("en-GB", {
+                            style: "currency",
+                            currency: "GBP",
+                          })}</div>
+                        }
+                        renderTags={(value, getTagProps) =>
+                          value.map((option, index) => (
+                            <Chip
+                              variant="outlined"
+                              color="primary"
+                              label={
+                                <Typography
+                                  style={{
+                                    whiteSpace: "normal",
+                                    fontSize: "0.9rem",
+                                    fontWeight: "500",
+                                    padding: "10px",
+                                    width: "100%",
+                                  }}
+                                >
+                                  {`${option.code} - ${option.description} - ${parseFloat(
+                                    option.price
+                                  ).toLocaleString("en-GB", {
+                                    style: "currency",
+                                    currency: "GBP",
+                                  })}`}
+                                </Typography>
+                              }
+                              {...getTagProps({ index })}
+                              style={{ height: "100%", width: "100%" }}
+                            />
+                          ))
+                        }
+                        filterSelectedOptions
+                        renderInput={(params) => (
+                          <TextField
+                            fullWidth
+                            {...params}
+                            variant="outlined"
+                            label="Blood Tests"
+                            placeholder="Enter blood test"
+                          />
+                        )}
+                      />
+
+                    </div>
+                  </Grid>
+
+
+                  <Grid item xs={12} style={{marginBottom:"20px"}}>
                     <TextField
                       fullWidth
                       label="Notes"
@@ -672,7 +741,16 @@ export default function NewBookingDialog(props) {
                     right: "20px",
                   }}
                 >
-                  <Grid
+                </div>
+              </div>
+
+              <Backdrop className={classes.backdrop} open={saving}>
+                <CircularProgress color="inherit" />
+              </Backdrop>
+            </DialogContent>
+
+            <DialogActions>
+            <Grid
                     container
                     direction="row"
                     justify="flex-end"
@@ -700,13 +778,8 @@ export default function NewBookingDialog(props) {
                       </Button>
                     </Grid>
                   </Grid>
-                </div>
-              </div>
 
-              <Backdrop className={classes.backdrop} open={saving}>
-                <CircularProgress color="inherit" />
-              </Backdrop>
-            </DialogContent>
+            </DialogActions>
           </Dialog>
         </React.Fragment>
       )}

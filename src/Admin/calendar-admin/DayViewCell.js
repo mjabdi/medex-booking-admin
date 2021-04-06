@@ -14,6 +14,7 @@ import clsx from "clsx";
 import NewGPDialog from "../../GP/NewBookingDialog";
 import NewGynaeDialog from "../../Gynae/NewBookingDialog";
 import NewSTDDialog from "../../STD/NewBookingDialog";
+import NewBloodDialog from "../../Blood/NewBookingDialog";
 
 const useStyles = makeStyles((theme) => ({
   Container: {
@@ -214,6 +215,8 @@ const DayViewCell = ({ key, date, time }) => {
   const [openDialogGP, setOpenDialogGP] = React.useState(false);
   const [openDialogGynae, setOpenDialogGynae] = React.useState(false);
   const [openDialogSTD, setOpenDialogSTD] = React.useState(false);
+  const [openDialogBlood, setOpenDialogBlood] = React.useState(false);
+
 
   const handleCloseDialogGP = () => {
     setOpenDialogGP(false);
@@ -227,6 +230,11 @@ const DayViewCell = ({ key, date, time }) => {
 
   const handleCloseDialogSTD = () => {
     setOpenDialogSTD(false);
+    setOpenDialogAddNew(false)
+  };
+
+  const handleCloseDialogBlood = () => {
+    setOpenDialogBlood(false);
     setOpenDialogAddNew(false)
   };
 
@@ -433,6 +441,9 @@ const DayViewCell = ({ key, date, time }) => {
       case "std":
         setOpenDialogSTD(true);
         break;
+      case "blood":
+        setOpenDialogBlood(true);
+        break;     
       default:
         break;
     }
@@ -478,6 +489,14 @@ const DayViewCell = ({ key, date, time }) => {
         open={openDialogGynae}
         handleClose={handleCloseDialogGynae}
       />
+
+    <NewBloodDialog
+        date={date}
+        time={time}
+        open={openDialogBlood}
+        handleClose={handleCloseDialogBlood}
+      />
+
     </React.Fragment>
   );
 };

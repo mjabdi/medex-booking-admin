@@ -312,7 +312,7 @@ const DayViewCell = ({key, date, time}) => {
               </div>
             ))}
   
-            {/* <div className={classes.bookingBoxNew} onClick={addNewBookingClicked}> + Add New Booking</div> */}
+            <div className={classes.bookingBoxNew} onClick={addNewBookingClicked}> + Add New Booking</div>
           </React.Fragment>
            );
         }

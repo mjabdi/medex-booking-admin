@@ -3,6 +3,11 @@ import axiosRetry from 'axios-retry';
 
 export default class BookService {
 
+   static getAllCodes = () =>
+   {
+       return API.get(`/api/medex/invoice/getallbloodcodes`)
+   }
+
    static getArchivedBloodReports = () =>
    {
       return API.get(`/api/blood/book/getarchivedbloodreports`);
