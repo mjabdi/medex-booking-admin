@@ -18,7 +18,7 @@ import ArchiveIcon from '@material-ui/icons/Archive';
 
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
-
+import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 
 /// PCR ------------------
 import FindByRef from "./PCR/FindByRef";
@@ -69,6 +69,7 @@ import AdminDashBoardPreview from "./DashboardPreview";
 import AdminFindByRef from "./Admin/FindByRef";
 import AdminBookingTable from "./Admin/BookingTable";
 import AdminCalendarView from "./Admin/calendar-admin/CalendarView";
+import SearchBookingTable from "./Admin/SearchBookingTable";
 
 //---------------
 
@@ -119,6 +120,8 @@ export const MenuList_Admin = [
   },
 
   { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 9, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+
 ];
 
 export const MenuList_Gynae = [
@@ -166,6 +169,8 @@ export const MenuList_Gynae = [
     icon: <DateRangeIcon />,
   },
   { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 9, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+
 ];
 
 export const MenuList_GP = [
@@ -213,6 +218,8 @@ export const MenuList_GP = [
     icon: <DateRangeIcon />,
   },
   { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 9, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+
 ];
 
 export const MenuList_STD = [
@@ -260,6 +267,8 @@ export const MenuList_STD = [
     icon: <DateRangeIcon />,
   },
   { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 9, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+
 ];
 
 export const MenuList_Blood = [
@@ -336,6 +345,8 @@ export const MenuList_Blood = [
     icon: <DateRangeIcon />,
   },
   { index: 12, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 13, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+
 ];
 
 export const MenuList_PCR = [
@@ -420,6 +431,8 @@ export const MenuList_PCR = [
   //   icon: <EventNoteIcon />,
   // },
   { index: 15, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 16, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+
 ];
 
 export const MenuList_PCRLAB = [
@@ -478,6 +491,8 @@ export const getMenuContent = (role, index) => {
         return <PCRCalendarView />;
       case 15:
         return <FindByRef />;
+      case 16:
+        return <SearchBookingTable />
 
       default:
         return `Page Not Found!`;
@@ -514,6 +529,9 @@ export const getMenuContent = (role, index) => {
         return <GynaeCalendarView />;
       case 8:
         return <GynaeFindByRef />;
+      case 9:
+        return <SearchBookingTable />;
+
       default:
         return `Page Not Found!`;
     }
@@ -537,6 +555,9 @@ export const getMenuContent = (role, index) => {
         return <GPCalendarView />;
       case 8:
         return <GPFindByRef />;
+      case 9:
+        return <SearchBookingTable />;
+
       default:
         return `Page Not Found!`;
     }
@@ -560,6 +581,9 @@ export const getMenuContent = (role, index) => {
         return <STDCalendarView />;
       case 8:
         return <STDFindByRef />;
+      case 9:
+        return <SearchBookingTable />;
+
       default:
         return `Page Not Found!`;
     }
@@ -594,6 +618,9 @@ export const getMenuContent = (role, index) => {
         return <BloodCalendarView />;
       case 12:
         return <BloodFindByRef />;
+      case 13:
+        return <SearchBookingTable />;
+
       default:
         return `Page Not Found!`;
     }
@@ -617,6 +644,9 @@ export const getMenuContent = (role, index) => {
         return <AdminCalendarView />;
       case 8:
         return <AdminFindByRef />;
+      case 9:
+        return <SearchBookingTable />;
+
       default:
         return `Page Not Found!`;
     }

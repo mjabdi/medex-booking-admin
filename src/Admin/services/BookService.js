@@ -123,6 +123,12 @@ export default class BookService {
       return API.get(`/api/admin/book/getallbookings?limit=${limit}`);
     }
 
+    static searchAllBookings = (filter) =>
+    {
+      return API.post(`/api/admin/book/searchallbookings`,{filter:filter});
+    }
+
+
     static getDeletedBookings= (limit) =>
     {
       if (!limit) limit = 25 
