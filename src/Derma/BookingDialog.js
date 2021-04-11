@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import GlobalState from "./../GlobalState";
+import GlobalState from "../GlobalState";
 import Grid from "@material-ui/core/Grid";
 import {
   Button,
@@ -480,6 +480,7 @@ export default function BookingDialog(props) {
         fullname !== booking.fullname ||
         email !== booking.email ||
         tel !== booking.phone ||
+        service !== booking.package ||
         notes !== booking.notes;
 
       setRecordChanged(isChanged);
@@ -551,6 +552,7 @@ export default function BookingDialog(props) {
       setBookingTime(person.bookingTime.toUpperCase());
       setEmail(person.email);
       setTel(person.phone);
+      setService(person.package)
       if (person.notes) {
         setNotes(person.notes);
       }
@@ -566,7 +568,7 @@ export default function BookingDialog(props) {
       booking.phone = tel;
       booking.fullname = fullname;
       booking.notes = notes;
-      booking.service = service;
+      booking.package = service;
       booking.bookingDate = RevertFormatDateFromString(bookingDate);
       booking.bookingTime = bookingTime;
       booking.bookingRef = person.bookingRef;
@@ -827,7 +829,7 @@ export default function BookingDialog(props) {
   };
 
   const downloadRegForm = (id) => {
-    PDFService.downloadGPRegForm(id)
+    PDFService.downloadDermaRegForm(id)
       .then((res) => {
         const file = new Blob([res.data], { type: "application/pdf" });
 
@@ -916,7 +918,7 @@ export default function BookingDialog(props) {
                   <IconButton
                     onClick={() => {
                       navigator.clipboard.writeText(
-                        `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/gp/${booking._id}`
+                        `https://londonmedicalclinic.co.uk/medicalexpressclinic/user/edit/derma/${booking._id}`
                       );
                       setCopied(true);
                       setTimeout(() => {
@@ -948,13 +950,13 @@ export default function BookingDialog(props) {
                   position: "absolute",
                   top: "25x",
                   right: "60px",
-                  backgroundColor: CalendarColors.GP_COLOR,
+                  backgroundColor: CalendarColors.DERMA_COLOR,
                   color: "#fff",
                   padding: "0px 5px",
                   borderRadius: "10px",
                 }}
               >
-                GP
+                Dermatology
               </div>
 
               {/* {booking.tr && (
@@ -1513,6 +1515,41 @@ export default function BookingDialog(props) {
                             </span>
                           </Grid>
                         </Grid>
+                      </li>
+
+                      <li className={classes.li} style={{paddingTop:"20px"}}>
+                      <span className={classes.infoTitle}>Service</span>
+                            <span
+                              hidden={
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              }
+                              className={classes.infoData}
+                            >
+                              {booking.package?.toUpperCase()}
+                            </span>
+                            <span
+                              hidden={
+                                !(
+                                  editMode.edit &&
+                                  editMode.person._id === booking._id
+                                )
+                              }
+                              className={classes.infoData}
+                            >
+                              <TextField
+                                fullWidth
+                                className={classes.TextBox}
+                                value={service}
+                                onChange={serviceChanged}
+                                inputProps={{
+                                  style: {
+                                    padding: 0,
+                                  },
+                                }}
+                              ></TextField>
+                            </span>
+
                       </li>
 
                       <li className={classes.li} style={{ paddingTop: "20px" }}>

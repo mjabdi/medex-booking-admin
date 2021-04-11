@@ -63,7 +63,7 @@ const StyledMenuApps = withStyles((theme) => ({
     marginTop: "5px",
     // marginRight: "5px",
     width: "280px",
-    height: "280px",
+    height: "340px",
     border: `1px solid #ddd`,
     borderRadius: "10px",
     padding: "10px",
@@ -324,6 +324,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-10px",
   },
 
+  appsDermaLabel: {
+    color: "#323e9a",
+    fontWeight: "600",
+    fontSize: "0.95rem",
+    marginTop: "-10px",
+  },
+
+
   
 
   appsInToolbar: {
@@ -456,6 +464,15 @@ export default function Dashboard() {
                 className={classes.appsLogo}
               />
             ); 
+
+            case "derma":
+              return (
+                <img
+                  src={getGlobalPath("/images/derma-logo.png")}
+                  className={classes.appsLogo}
+                />
+              ); 
+     
   
 
       default:
@@ -477,7 +494,9 @@ export default function Dashboard() {
             return <div className={classes.appsSTDLabel}> {"STD"} </div>;
             case "blood":
               return <div className={classes.appsBloodLabel}> {"Blood"} </div>;
-  
+              case "derma":
+              return <div className={classes.appsDermaLabel}> {"Dermatology"} </div>;
+
   
       default:
         return null;
@@ -751,6 +770,25 @@ export default function Dashboard() {
                     <Grid item>{getAppsLabel("blood")}</Grid>
                   </Grid>
                 </Grid>
+
+                <Grid item>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                    className={
+                      state.role === "derma"
+                        ? classes.appsBoxSelected
+                        : classes.appsBox
+                    }
+                    onClick={() => appsClicked("derma")}
+                  >
+                    <Grid item>{getAppsLogo("derma")}</Grid>
+                    <Grid item>{getAppsLabel("derma")}</Grid>
+                  </Grid>
+                </Grid>
+
 
 
               </Grid>

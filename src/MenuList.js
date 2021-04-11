@@ -60,9 +60,15 @@ import BloodMatchedRecords from "./Blood/MatchedRecords";
 import BloodArchivedRecords from "./Blood/ArchivedRecords";
 import SentBloodRecords from "./Blood/SentRecords";
 
-
-
 //----------------------------
+
+/// Derma -------------------
+import DermaBookingTable from "./Derma/BookingTable";
+import DermaDashboardPreview from "./Derma/DashboardPreview";
+import DermaFindByRef from "./Derma/FindByRef";
+import DermaCalendarView from "./Derma/calendar-admin/CalendarView";
+//----------------------------
+
 
 // Admin ----------------
 import AdminDashBoardPreview from "./DashboardPreview";
@@ -435,6 +441,56 @@ export const MenuList_PCR = [
 
 ];
 
+export const MenuList_Derma = [
+  { index: 0, id: `dashboard`, title: `Dashboard`, icon: <DashboardIcon /> },
+  {
+    index: 1,
+    id: `recentBookings`,
+    title: `Recent Bookings`,
+    icon: <AutorenewIcon />,
+  },
+  {
+    index: 2,
+    id: `todayBookings`,
+    title: `Today's Bookings`,
+    icon: <NewReleasesIcon />,
+  },
+  {
+    index: 3,
+    id: `oldBookings`,
+    title: `Old Bookings`,
+    icon: <HistoryIcon />,
+  },
+  {
+    index: 4,
+    id: `futureBookings`,
+    title: `Future Bookings`,
+    icon: <TimelineIcon />,
+  },
+  {
+    index: 5,
+    id: `allBookings`,
+    title: `All Bookings`,
+    icon: <DescriptionIcon />,
+  },
+  {
+    index: 6,
+    id: `deletedBookings`,
+    title: `Deleted Records`,
+    icon: <DeleteIcon />,
+  },
+  {
+    index: 7,
+    id: `calendarView`,
+    title: `Calendar View`,
+    icon: <DateRangeIcon />,
+  },
+  { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 9, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+
+];
+
+
 export const MenuList_PCRLAB = [
   {
     index: 0,
@@ -650,7 +706,35 @@ export const getMenuContent = (role, index) => {
       default:
         return `Page Not Found!`;
     }
-  } else {
+  }
+  else if (role === "derma") {
+    switch (index) {
+      case 0:
+        return <DermaDashboardPreview />;
+      case 1:
+        return <DermaBookingTable date="recent" />;
+      case 2:
+        return <DermaBookingTable date="today" />;
+      case 3:
+        return <DermaBookingTable date="old" />;
+      case 4:
+        return <DermaBookingTable date="future" />;
+      case 5:
+        return <DermaBookingTable date="all" />;
+      case 6:
+        return <DermaBookingTable date="deleted" />;
+      case 7:
+        return <DermaCalendarView />;
+      case 8:
+        return <DermaFindByRef />;
+      case 9:
+        return <SearchBookingTable />;
+
+      default:
+        return `Page Not Found!`;
+    }
+  }
+  else {
     return `Page Not Found!`;
   }
 };
@@ -672,6 +756,9 @@ export const getMenuRole = (role) => {
       return MenuList_STD;
     case "blood":
       return MenuList_Blood;
+    case "derma":
+      return MenuList_Derma;
+
 
     default:
       return [];
