@@ -247,6 +247,13 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "600",
     fontSize: "0.95rem",
   },
+
+  DermaLabel: {
+    color: "#323e9a",
+    fontWeight: "600",
+    fontSize: "0.95rem",
+  },
+
 }));
 
 const getTableTitle = (str) => {
@@ -321,9 +328,11 @@ export default function BookingTable(props) {
         return classes.GynaeLabel;
       case "std":
         return classes.STDLabel;
-        case "blood":
-          return classes.BloodLabel;
-    
+      case "blood":
+        return classes.BloodLabel;
+      case "derma":
+        return classes.DermaLabel;
+      
 
       default:
         return classes.clinicTitle;

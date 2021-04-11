@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   fixedHeight: {
-    height: 320,
+    height: 350,
   },
   fixedHeightSmall: {
     height: 200,
@@ -81,8 +81,38 @@ export default function DashboardPreview() {
 
   return (
     <React.Fragment>
-      <Grid container spacing={3}>       
+      <Grid container spacing={2}>       
        
+        <Grid item xs={12} md={6}>
+          <Paper className={fixedHeightPaperSmall} onClick={gotoLateBookings}>
+             <LateBookingView />
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Paper className={fixedHeightPaperSmall} onClick={gotoUnmatchedPCR}>
+             <UnmatchedBookingView />
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Paper className={fixedHeightPaperSmall} onClick={gotoRefundGynae}>
+             <ShouldRefundBookingView />
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Paper className={fixedHeightPaperSmall} onClick={gotoBlood}>
+             <NewBloodResultsBookingView />
+          </Paper>
+        </Grid>
+
+        {/* <Grid item xs={12} md={4}>
+        </Grid>
+        <Grid item xs={12} md={4}>
+        </Grid> */}
+
+
         <Grid item xs={12} md={4}>
           <Paper className={fixedHeightPaper}>
             <TodayBookingView />
@@ -98,30 +128,6 @@ export default function DashboardPreview() {
         <Grid item xs={12} md={4}>
           <Paper className={fixedHeightPaper}>
              <TotalBookingView />
-          </Paper>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Paper className={fixedHeightPaperSmall} onClick={gotoLateBookings}>
-             <LateBookingView />
-          </Paper>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Paper className={fixedHeightPaperSmall} onClick={gotoUnmatchedPCR}>
-             <UnmatchedBookingView />
-          </Paper>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Paper className={fixedHeightPaperSmall} onClick={gotoRefundGynae}>
-             <ShouldRefundBookingView />
-          </Paper>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Paper className={fixedHeightPaperSmall} onClick={gotoBlood}>
-             <NewBloodResultsBookingView />
           </Paper>
         </Grid>
 

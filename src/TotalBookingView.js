@@ -11,6 +11,8 @@ import GynaeBookService from "./Gynae/services/BookService";
 import GPBookService from "./GP/services/BookService";
 import STDBookService from "./STD/services/BookService";
 import BloodBookService from "./Blood/services/BookService";
+import DermaBookService from "./Derma/services/BookService";
+
 
 
 import { LinearProgress } from "@material-ui/core";
@@ -37,12 +39,14 @@ export default function TotalBookingView() {
       const res3 = await GPBookService.getAllBookingsCountAll()
       const res4 = await STDBookService.getAllBookingsCountAll()
       const res5 = await BloodBookService.getAllBookingsCountAll()
+      const res6 = await DermaBookService.getAllBookingsCountAll()
       
       const pcr =  parseInt(res1.data.count)
       const gynae = parseInt(res2.data.count)
       const gp = parseInt(res3.data.count)
       const std = parseInt(res4.data.count)
       const blood = parseInt(res5.data.count)
+      const derma = parseInt(res6.data.count)
 
       const _data = [
         {clinic: "PCR", count: pcr},
@@ -50,8 +54,9 @@ export default function TotalBookingView() {
         {clinic: "GP", count: gp},
         {clinic: "STD", count: std},
         {clinic: "Blood", count: blood},
+        {clinic: "Dermatology", count: blood},
 
-        {clinic: "Total", count: pcr+gynae+gp+std+blood}
+        {clinic: "Total", count: pcr+gynae+gp+std+blood+derma}
       ]
 
       setData(_data)

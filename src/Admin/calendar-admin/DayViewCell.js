@@ -15,6 +15,7 @@ import NewGPDialog from "../../GP/NewBookingDialog";
 import NewGynaeDialog from "../../Gynae/NewBookingDialog";
 import NewSTDDialog from "../../STD/NewBookingDialog";
 import NewBloodDialog from "../../Blood/NewBookingDialog";
+import NewDermaDialog from "../../Derma/NewBookingDialog";
 
 const useStyles = makeStyles((theme) => ({
   Container: {
@@ -195,6 +196,12 @@ const useStyles = makeStyles((theme) => ({
     borderColor: CalendarColors.BLOOD_COLOR,
   },
 
+  BookingBorderDerma: {
+    border: "4px solid",
+    borderColor: CalendarColors.DERMA_COLOR,
+  },
+
+
 }));
 
 const DayViewCell = ({ key, date, time }) => {
@@ -216,6 +223,7 @@ const DayViewCell = ({ key, date, time }) => {
   const [openDialogGynae, setOpenDialogGynae] = React.useState(false);
   const [openDialogSTD, setOpenDialogSTD] = React.useState(false);
   const [openDialogBlood, setOpenDialogBlood] = React.useState(false);
+  const [openDialogDerma, setOpenDialogDerma] = React.useState(false);
 
 
   const handleCloseDialogGP = () => {
@@ -238,6 +246,12 @@ const DayViewCell = ({ key, date, time }) => {
     setOpenDialogAddNew(false)
   };
 
+  const handleCloseDialogDerma = () => {
+    setOpenDialogDerma(false);
+    setOpenDialogAddNew(false)
+  };
+
+
   useEffect(() => {
     const todayStr = dateformat(new Date(), "yyyy-mm-dd");
     setIsPast(date < todayStr);
@@ -251,9 +265,9 @@ const DayViewCell = ({ key, date, time }) => {
           bookings.filter(
             (booking) =>
               booking.fullname?.toLowerCase().indexOf(search.toLowerCase()) >=
-                0 ||
+              0 ||
               booking.forename?.toLowerCase().indexOf(search.toLowerCase()) >=
-                0 ||
+              0 ||
               booking.surname?.toLowerCase().indexOf(search.toLowerCase()) >= 0
           )
         );
@@ -373,9 +387,12 @@ const DayViewCell = ({ key, date, time }) => {
         return classes.BookingBorderGP;
       case "std":
         return classes.BookingBorderSTD;
-        case "blood":
-          return classes.BookingBorderBlood;
-    
+      case "blood":
+        return classes.BookingBorderBlood;
+      case "derma":
+        return classes.BookingBorderDerma;
+
+
       default:
         return null;
     }
@@ -404,11 +421,10 @@ const DayViewCell = ({ key, date, time }) => {
                   )}
                   onClick={(event) => bookingCliked(event, booking)}
                 >
-                  {`${
-                    booking.fullname
+                  {`${booking.fullname
                       ? booking.fullname
                       : `${booking.forename} ${booking.surname}`
-                  }`.substring(0, 15)}
+                    }`.substring(0, 15)}
                 </div>
               )
           )}
@@ -443,7 +459,11 @@ const DayViewCell = ({ key, date, time }) => {
         break;
       case "blood":
         setOpenDialogBlood(true);
-        break;     
+        break;
+      case "derma":
+        setOpenDialogDerma(true);
+        break;
+
       default:
         break;
     }
@@ -490,12 +510,20 @@ const DayViewCell = ({ key, date, time }) => {
         handleClose={handleCloseDialogGynae}
       />
 
-    <NewBloodDialog
+      <NewBloodDialog
         date={date}
         time={time}
         open={openDialogBlood}
         handleClose={handleCloseDialogBlood}
       />
+
+      <NewDermaDialog
+        date={date}
+        time={time}
+        open={openDialogDerma}
+        handleClose={handleCloseDialogDerma}
+      />
+
 
     </React.Fragment>
   );

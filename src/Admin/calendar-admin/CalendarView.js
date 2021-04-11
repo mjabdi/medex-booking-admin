@@ -21,6 +21,7 @@ const Clinics = [
     {clinic: "GP", color: CalendarColors.GP_COLOR},
     {clinic: "STD", color: CalendarColors.STD_COLOR},
     {clinic: "BLOOD", color: CalendarColors.BLOOD_COLOR},
+    {clinic: "DERMA", color: CalendarColors.DERMA_COLOR},
 
 ]
 
@@ -75,7 +76,7 @@ export default function CalendarView() {
         const firstdayofweek = new Date(today.getTime() - ( dayofWeek * 86400000));
         setFirstDayofWeek(firstdayofweek);
         setState(state => ({...state, AdminCalendarCache : []}));
-        setState(state => ({...state, selectedClinics : ["PCR", "GP", "GYNAE", "STD", "BLOOD"]}));
+        setState(state => ({...state, selectedClinics : ["PCR", "GP", "GYNAE", "STD", "BLOOD","DERMA"]}));
 
         return () =>
         {
@@ -292,7 +293,7 @@ export default function CalendarView() {
                    {Clinics.map( item => (
                        <Grid item>
                            <div 
-                                style={state.selectedClinics?.findIndex(e => e === item.clinic) >= 0 ? {border:`1px solid ${item.color}`, backgroundColor:`${item.color}`, color:"#fff" ,fontSize:"0.95rem", fontWeight:"500", padding:"5px", width:"70px", textAlign:"center", cursor:"pointer"}   : {border:`1px solid ${item.color}`, color:`${item.color}`, fontSize:"0.95rem", fontWeight:"500", padding:"5px", width:"70px", textAlign:"center", cursor:"pointer"}}
+                                style={state.selectedClinics?.findIndex(e => e === item.clinic) >= 0 ? {border:`1px solid ${item.color}`, backgroundColor:`${item.color}`, color:"#fff" ,fontSize:"0.95rem", fontWeight:"500", padding:"5px", minWidth:"70px", textAlign:"center", cursor:"pointer"}   : {border:`1px solid ${item.color}`, color:`${item.color}`, fontSize:"0.95rem", fontWeight:"500", padding:"5px", minWidth:"70px", textAlign:"center", cursor:"pointer"}}
                                 onClick= {() => clinicClicked(item.clinic)}   
                                 > 
                                {item.clinic}

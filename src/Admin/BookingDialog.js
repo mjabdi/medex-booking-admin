@@ -5,6 +5,7 @@ import GPBookingDialog from "./../GP/BookingDialog";
 import GynaeBookingDialog from "./../Gynae/BookingDialog";
 import STDBookingDialog from "./../STD/BookingDialog";
 import BloodBookingDialog from "./../Blood/BookingDialog";
+import DermaBookingDialog from "./../Derma/BookingDialog";
 
 
 const useStyles = makeStyles((theme) => ({}));
@@ -57,7 +58,15 @@ export default function BookingDialog(props) {
               onClose={props.onClose}
             />
           );
-  
+          case "derma":
+          return (
+            <DermaBookingDialog
+              booking={props.booking}
+              open={props.open}
+              onClose={props.onClose}
+            />
+          );
+
 
       default:
         return null;

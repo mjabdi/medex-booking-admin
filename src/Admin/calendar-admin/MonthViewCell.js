@@ -142,6 +142,15 @@ const useStyles = makeStyles((theme) => ({
     height: "120%",
   },
 
+  DermaGauge: {
+    position: "absolute",
+    bottom: "-20px",
+    left: "115px",
+    width: "20px",
+    height: "120%",
+  },
+
+
   DayLabelContainer: {
     position: "absolute",
     top: "15%",
@@ -156,6 +165,7 @@ const MAX_BOOKING_COUNT_GP = 10;
 const MAX_BOOKING_COUNT_STD = 10;
 const MAX_BOOKING_COUNT_GYNAE = 10;
 const MAX_BOOKING_COUNT_BLOOD = 10;
+const MAX_BOOKING_COUNT_DERMA = 10;
 
 
 const MonthViewCell = ({ key, cellIndex, month, daysInMonth, dayClicked }) => {
@@ -287,9 +297,13 @@ const MonthViewCell = ({ key, cellIndex, month, daysInMonth, dayClicked }) => {
         {clinic === "std" &&
           state.selectedClinics.findIndex((e) => e === "STD") >= 0 &&
           getSTDClinicBar(count)}
-                  {clinic === "blood" &&
+        {clinic === "blood" &&
           state.selectedClinics.findIndex((e) => e === "BLOOD") >= 0 &&
           getBloodClinicBar(count)}
+        {clinic === "derma" &&
+          state.selectedClinics.findIndex((e) => e === "DERMA") >= 0 &&
+          getDermaClinicBar(count)}
+  
 
       </React.Fragment>
     );
@@ -556,6 +570,57 @@ const MonthViewCell = ({ key, cellIndex, month, daysInMonth, dayClicked }) => {
     );
   };
 
+  const getDermaClinicBar = (count) => {
+    let width = (count / MAX_BOOKING_COUNT_DERMA) * 100 + 5;
+    if (width > 100) width = 100;
+
+    if (width < 20) width = 20;
+
+    if (count === 0) {
+      width = minHeight;
+    }
+
+    const percent = 100 - width;
+
+    return (
+      <div className={classes.DermaGauge}>
+        <div
+          style={{
+            padding: "0",
+            margin: "0",
+            width: "100%",
+            height: "100%",
+            backgroundColor: CalendarColors.DERMA_COLOR,
+            position: "relative",
+          }}
+        >
+          <div
+             style={{
+                position: "absolute",
+                bottom: "0px",
+                color: "#fff",
+                fontWeight: "500",
+                fontSize:"0.8rem",
+                textAlign: "center",
+                width: "100%",
+              }}
+          >
+            {count > 0 && count}
+          </div>
+
+          <div
+            style={{
+              padding: "0",
+              margin: "0",
+              width: "100%",
+              height: `${percent}%`,
+              backgroundColor: "#fafafa",
+            }}
+          ></div>
+        </div>
+      </div>
+    );
+  };
 
 
   const getBookingsCountLabel = (_bookingsCount) => {

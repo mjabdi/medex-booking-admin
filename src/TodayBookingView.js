@@ -11,6 +11,7 @@ import GynaeBookService from "./Gynae/services/BookService";
 import GPBookService from "./GP/services/BookService";
 import STDBookService from "./STD/services/BookService";
 import BloodBookService from "./Blood/services/BookService";
+import DermaBookService from "./Derma/services/BookService";
 
 
 import * as dateformat from "dateformat";
@@ -39,6 +40,7 @@ export default function TodayBookingView() {
       const res3 = await GPBookService.getAllBookingsCountByDateStr(today)
       const res4 = await STDBookService.getAllBookingsCountByDateStr(today)
       const res5 = await BloodBookService.getAllBookingsCountByDateStr(today)
+      const res6 = await DermaBookService.getAllBookingsCountByDateStr(today)
 
       
       const pcr =  parseInt(res1.data.count)
@@ -46,6 +48,7 @@ export default function TodayBookingView() {
       const gp = parseInt(res3.data.count)
       const std = parseInt(res4.data.count)
       const blood = parseInt(res5.data.count)
+      const derma = parseInt(res6.data.count)
 
       const _data = [
         {clinic: "PCR", count: pcr},
@@ -53,8 +56,9 @@ export default function TodayBookingView() {
         {clinic: "GP", count: gp},
         {clinic: "STD", count: std},
         {clinic: "Blood", count: blood},
+        {clinic: "Dermatology", count: derma},
 
-        {clinic: "Total", count: pcr+gynae+gp+std+blood}
+        {clinic: "Total", count: pcr+gynae+gp+std+blood+derma}
       ]
       setData(_data)
 

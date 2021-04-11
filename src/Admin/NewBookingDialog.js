@@ -291,6 +291,26 @@ const useStyles = makeStyles((theme) => ({
     }
   },
 
+  BoxDerma: {
+    width : "100%",
+    padding: "10px",
+    borderRadius: "8px",
+    border: "1px solid",
+    fontSize: "1.2rem",
+    fontWeight: "500",
+    textAlign: "center",
+    cursor: "pointer",
+    borderColor: CalendarColors.DERMA_COLOR,
+    color: CalendarColors.DERMA_COLOR,
+    transition: "all 0.2s ease",
+    "&:hover": {
+      backgroundColor: CalendarColors.DERMA_COLOR,
+      color: "#fff"
+    }
+  },
+
+
+
 
 
 
@@ -447,7 +467,7 @@ export default function NewBookingDialog(props) {
             <DialogContent>
               <div
                 style={{
-                  height: "370px",
+                  height: "420px",
                 }}
               >
                 <Grid
@@ -498,6 +518,13 @@ export default function NewBookingDialog(props) {
                       BLOOD
                     </div>
                   </Grid>
+
+                  <Grid item xs={12}>
+                    <div className={classes.BoxDerma} onClick={() => clinicClicked("derma")}>
+                      DERMATOLOGY
+                    </div>
+                  </Grid>
+
 
 
                 </Grid>

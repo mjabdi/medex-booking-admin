@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 
     ContainerPast: {
         width: "100%",
+        minHeight: "100px",
         paddingTop: "40%",
         position: "relative",
         backgroundColor: "#fafafa",
@@ -101,40 +102,48 @@ const useStyles = makeStyles((theme) => ({
         position: "absolute",
         bottom: "15px",
         left: "0",
-        width: "20px",
+        width: "15px",
         height: "90%",
       },
     
       GynaeGauge: {
         position: "absolute",
         bottom: "15px",
-        left: "21px",
-        width: "20px",
+        left: "16px",
+        width: "15px",
         height: "90%",
       },
     
       GPGauge: {
         position: "absolute",
         bottom: "15px",
-        left: "42px",
-        width: "20px",
+        left: "32px",
+        width: "15px",
         height: "90%",
       },
     
       STDGauge: {
         position: "absolute",
         bottom: "15px",
-        left: "63px",
-        width: "20px",
+        left: "48px",
+        width: "15px",
         height: "90%",
       },
       BloodGauge: {
         position: "absolute",
         bottom: "15px",
-        left: "84px",
-        width: "20px",
+        left: "64px",
+        width: "15px",
         height: "90%",
       },
+      DermaGauge: {
+        position: "absolute",
+        bottom: "15px",
+        left: "80px",
+        width: "15px",
+        height: "90%",
+      },
+
 
     
 
@@ -477,6 +486,59 @@ const WeekViewCell = ({key, date, time, dayClicked}) => {
       );
     };
 
+    const getDermaClinicBar = (count) => {
+      let width = (count / MAX_BOOKING_COUNT_GYNAE) * 100 + 5;
+      if (width > 100) width = 100;
+  
+      if (width < 30) width = 30;
+  
+      if (count === 0) {
+        width = minHeight;
+      }
+  
+      const percent = 100 - width;
+  
+      return (
+        <div className={classes.DermaGauge}>
+          <div
+            style={{
+              padding: "0",
+              margin: "0",
+              width: "100%",
+              height: "100%",
+              backgroundColor: CalendarColors.DERMA_COLOR,
+              position: "relative",
+            }}
+          >
+            <div
+               style={{
+                  position: "absolute",
+                  bottom: "0px",
+                  color: "#fff",
+                  fontWeight: "500",
+                  fontSize:"0.8rem",
+                  textAlign: "center",
+                  width: "100%",
+                }}
+            >
+              {count > 0 && count}
+            </div>
+  
+            <div
+              style={{
+                padding: "0",
+                margin: "0",
+                width: "100%",
+                height: `${percent}%`,
+                backgroundColor: "#fafafa",
+              }}
+            ></div>
+          </div>
+        </div>
+      );
+    };
+
+
   
   
     const getBookingsCountLabel = (_bookingsCount) => {
@@ -520,9 +582,13 @@ const WeekViewCell = ({key, date, time, dayClicked}) => {
             {clinic === "std" &&
               state.selectedClinics.findIndex((e) => e === "STD") >= 0 &&
               getSTDClinicBar(count)}
-                          {clinic === "blood" &&
+            {clinic === "blood" &&
               state.selectedClinics.findIndex((e) => e === "BLOOD") >= 0 &&
               getBloodClinicBar(count)}
+            {clinic === "derma" &&
+              state.selectedClinics.findIndex((e) => e === "DERMA") >= 0 &&
+              getDermaClinicBar(count)}
+   
 
           </React.Fragment>
         );
