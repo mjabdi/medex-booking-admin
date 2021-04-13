@@ -54,7 +54,7 @@ export default function TotalBookingView() {
         {clinic: "GP", count: gp},
         {clinic: "STD", count: std},
         {clinic: "Blood", count: blood},
-        {clinic: "Dermatology", count: blood},
+        {clinic: "Dermatology", count: derma},
 
         {clinic: "Total", count: pcr+gynae+gp+std+blood+derma}
       ]
