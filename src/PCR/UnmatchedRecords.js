@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DataGrid, ROW_CLICK } from '@material-ui/data-grid';
 import BookService from './services/BookService';
 import Typography from '@material-ui/core/Typography';
@@ -37,7 +37,7 @@ import Box from '@material-ui/core/Box';
 
 import WarningIcon from '@material-ui/icons/Warning';
 
-import {FormatDateFromString, RevertFormatDateFromString} from './DateFormatter';
+import { FormatDateFromString, RevertFormatDateFromString } from './DateFormatter';
 import PDFService from './services/PDFService';
 
 var interval;
@@ -48,16 +48,16 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(1),
 
   },
-  
-  refreshButton:{
+
+  refreshButton: {
     marginLeft: theme.spacing(2),
   },
 
-  checkIcon:{
+  checkIcon: {
     color: "green"
   },
 
-  closeIcon:{
+  closeIcon: {
     color: "red"
   },
 
@@ -65,35 +65,35 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer"
   },
 
-  BookedLabel:{
+  BookedLabel: {
     backgroundColor: "#606060",
     color: "#fff",
     paddingRight: "10px",
     paddingLeft: "10px"
   },
 
-  PatientAttendedLabel:{
+  PatientAttendedLabel: {
     backgroundColor: "#0066aa",
     color: "#fff",
     paddingRight: "15px",
     paddingLeft: "10px"
   },
 
-  SampleTakenLabel:{
+  SampleTakenLabel: {
     backgroundColor: "#0066cc",
     color: "#fff",
     paddingRight: "40px",
     paddingLeft: "10px"
   },
 
-  ReportSentLabel:{
+  ReportSentLabel: {
     backgroundColor: "#009900",
     color: "#fff",
     paddingRight: "90px",
     paddingLeft: "10px"
   },
 
-  ReportCertSentLabel:{
+  ReportCertSentLabel: {
     backgroundColor: "#009900",
     color: "#fff",
     paddingRight: "68px",
@@ -105,17 +105,17 @@ const useStyles = makeStyles((theme) => ({
   },
 
   smartMatchButton: {
-    backgroundColor : "#2f942e",
+    backgroundColor: "#2f942e",
     "&:hover": {
       background: "green",
       color: "#fff"
     },
-    textDecoration : "none !important",
-    marginRight : "10px"
+    textDecoration: "none !important",
+    marginRight: "10px"
     // padding: "10px"  
   },
 
-  infoTitle:  {
+  infoTitle: {
     fontWeight: "400"
   },
 
@@ -127,62 +127,62 @@ const useStyles = makeStyles((theme) => ({
   matchButton:
   {
     marginTop: "30px",
-    marginBottom : "20px",
-    backgroundColor : "#2f942e",
+    marginBottom: "20px",
+    backgroundColor: "#2f942e",
     "&:hover": {
       background: "green",
       color: "#fff"
     },
-    textDecoration : "none !important",
+    textDecoration: "none !important",
     padding: "10px",
-    paddingLeft : "50px",
-    paddingRight: "50px"   
+    paddingLeft: "50px",
+    paddingRight: "50px"
   },
 
   resendButton:
   {
     marginTop: "5px",
-    marginBottom : "5px",
-    backgroundColor : "#2f942e",
+    marginBottom: "5px",
+    backgroundColor: "#2f942e",
     "&:hover": {
       background: "green",
       color: "#fff"
     },
-    textDecoration : "none !important",
+    textDecoration: "none !important",
     padding: "10px",
-    paddingLeft : "50px",
-    paddingRight: "50px"   
+    paddingLeft: "50px",
+    paddingRight: "50px"
   },
 
-  resendFilesButton:{
+  resendFilesButton: {
     marginTop: "5px",
-    marginBottom : "5px",
-    backgroundColor : "#3792ad",
+    marginBottom: "5px",
+    backgroundColor: "#3792ad",
     "&:hover": {
       background: "#2f798f",
       color: "#fff"
     },
-    textDecoration : "none !important",
+    textDecoration: "none !important",
     padding: "10px",
-    paddingLeft : "50px",
-    paddingRight: "50px"   
+    paddingLeft: "50px",
+    paddingRight: "50px"
   },
 
   cancelButton:
   {
-    marginBottom : "10px",
-    textDecoration : "none !important",
+    marginBottom: "10px",
+    textDecoration: "none !important",
     padding: "10px",
-    paddingLeft : "90px",
-    paddingRight: "90px"   
+    paddingLeft: "90px",
+    paddingRight: "90px"
   },
 
   downloadPDFButton:
   {
     marginLeft: "50px"
   }
-  
-  
+
+
 }));
 
 const BorderLinearProgress = withStyles((theme) => ({
@@ -205,7 +205,7 @@ function LinearProgressWithLabel(props) {
         <BorderLinearProgress variant="determinate" {...props} />
       </Box>
       <Box minWidth={35}>
-        <Typography style={{fontWeight:"800", color :  "#5e855e"  }} variant="body2" color="textSecondary">{`${Math.round(
+        <Typography style={{ fontWeight: "800", color: "#5e855e" }} variant="body2" color="textSecondary">{`${Math.round(
           props.value,
         )}%`}</Typography>
       </Box>
@@ -231,127 +231,133 @@ function PaperComponent(props) {
 }
 
 export default function UnmatchedRecords() {
-  
+
   const classes = useStyles();
 
   const columns = [
     { field: 'id', headerName: '#', width: 50 },
 
-    { field: 'testDate', headerName: 'Test Date', width: 120, valueFormatter : (params) =>
-      {
+    {
+      field: 'testDate', headerName: 'Test Date', width: 120, valueFormatter: (params) => {
         return FormatDateFromString(params.value);
       }
-     },
+    },
     { field: 'forename', headerName: 'Forename', width: 200 },
     { field: 'surname', headerName: 'Surname', width: 200 },
-    { field: 'birthDate', headerName: 'D.O.B', width: 120 , valueFormatter : (params) =>
     {
-      return FormatDateFromString(params.value);
-    }},
-    { field: '_id' , headerName:'Action', width: 500 , renderCell: (params) => {
-        if (selectedTab === 'unresolved')
-        {
-            return (
-              <React.Fragment>
+      field: 'birthDate', headerName: 'D.O.B', width: 120, valueFormatter: (params) => {
+        return FormatDateFromString(params.value);
+      }
+    },
+    {
+      field: '_id', headerName: 'Action', width: 500, renderCell: (params) => {
+        if (selectedTab === 'unresolved') {
+          return (
+            <React.Fragment>
 
               <Button
-                    disabled = {params.value === disableId}
-                    type="button"
-                    variant="contained"
-                    color="primary"
-                    startIcon={<WbIncandescentIcon />}
-                    onClick = { event => smartMatchClicked(event,params.value)}
-                    className={classes.smartMatchButton}
-                    >
-                    smart match
-              </Button>
+                disabled={params.value === disableId}
+                type="button"
+                variant="contained"
+                color="primary"
+                startIcon={<WbIncandescentIcon />}
+                onClick={event => smartMatchClicked(event, params.value)}
+                className={classes.smartMatchButton}
+              >
+                smart match
+                </Button>
 
               <Button
-                    disabled = {params.value === disableId}
-                    type="button"
-                    variant="contained"
-                    color="primary"
-                    onClick = { event => archiveRecord(event,params.value)}
-                    className={classes.archiveButton}
-                  >
-                    archive
-              </Button>
-
+                disabled={params.value === disableId}
+                type="button"
+                variant="contained"
+                color="primary"
+                onClick={event => archiveRecord(event, params.value)}
+                className={classes.archiveButton}
+              >
+                archive
+                </Button>
 
               <Button
-                    disabled = {params.value === disableId}
-                    type="button"                   
-                    color="primary"
-                    onClick = { event => downloadLabReport(params.value)}
-                    className={classes.downloadPDFButton}
-                  >
-                    view pdf
+                disabled={params.value === disableId}
+                type="button"
+                color="primary"
+                onClick={event => downloadLabReport(params.value)}
+                className={classes.downloadPDFButton}
+              >
+                view pdf
               </Button>
 
 
-              </React.Fragment>
+            </React.Fragment>
 
-            );
-        }else
-        {
-            return (
+          );
+        } else {
+          return (
 
-              <React.Fragment>
+            <React.Fragment>
 
-                  <Button
-                        disabled = {params.value === disableId}
-                        type="button"
-                        variant="contained"
-                        color="primary"
-                        startIcon={<WbIncandescentIcon />}
-                        onClick = { event => smartMatchClicked(event,params.value)}
-                        className={classes.smartMatchButton}
-                        >
-                        smart match
+
+              {state.role !== "pcrlab" && (
+
+                <Button
+                  disabled={params.value === disableId}
+                  type="button"
+                  variant="contained"
+                  color="primary"
+                  startIcon={<WbIncandescentIcon />}
+                  onClick={event => smartMatchClicked(event, params.value)}
+                  className={classes.smartMatchButton}
+                >
+                  smart match
+                </Button>
+              )}
+
+              {state.role !== "pcrlab" && (
+
+                <Button
+                  disabled={params.value === disableId}
+                  type="button"
+                  variant="contained"
+                  color="primary"
+                  onClick={event => unArchiveRecord(event, params.value)}
+                  className={classes.archiveButton}
+                >
+                  Undo
+                </Button>
+              )}
+              <Button
+                disabled={params.value === disableId}
+                type="button"
+                color="primary"
+                onClick={event => downloadLabReport(params.value)}
+                className={classes.downloadPDFButton}
+              >
+                view pdf
                   </Button>
 
-                    <Button
-                    disabled = {params.value === disableId}
-                    type="button"
-                    variant="contained"
-                    color="primary"
-                    onClick = { event => unArchiveRecord(event,params.value)}
-                    className={classes.archiveButton}
-                  >
-                    Undo
-                  </Button>
-
-                  <Button
-                    disabled = {params.value === disableId}
-                    type="button"                   
-                    color="primary"
-                    onClick = { event => downloadLabReport(params.value)}
-                    className={classes.downloadPDFButton}
-                  >
-                    view pdf
-                  </Button>
-
-              </React.Fragment>
-            );
+            </React.Fragment>
+          );
         }
-        
-    } },
-   
+
+      }
+    },
+
   ];
 
-  const [state, setState] = React.useContext(GlobalState);  
+  const [state, setState] = React.useContext(GlobalState);
 
-  const [data, setData] = React.useState({bookings: [] , cachedBookings: [], isFetching : false});
+  const [data, setData] = React.useState({ bookings: [], cachedBookings: [], isFetching: false });
 
   const [selectedRow, setSelectedRow] = React.useState(null);
 
-  const [filter,setFilter] = React.useState('');
+  const [filter, setFilter] = React.useState('');
 
   const [refresh, setRefresh] = React.useState(false);
 
   const [disableId, setDisableId] = React.useState(null);
 
-  const [selectedTab, setSeletedTab] = React.useState('unresolved');
+  const [selectedTab, setSeletedTab] = React.useState(state.role !== "pcrlab" ? 'unresolved' : 'archived');
 
   const [openDialog, setOpenDialog] = React.useState(false);
 
@@ -384,15 +390,18 @@ export default function UnmatchedRecords() {
 
 
   const handleTabChanged = (event, value) => {
-      if (value && value.length)
-      {
-        setSeletedTab(value);
-      }
-   
+
+    if (state.role === "pcrlab") {
+      return
+    }
+
+    if (value && value.length) {
+      setSeletedTab(value);
+    }
+
   };
 
-  const handleCloseDialog = () =>
-  {
+  const handleCloseDialog = () => {
     setOpenDialog(false);
     setTimeout(() => {
       setSmartLinkId(null);
@@ -409,30 +418,26 @@ export default function UnmatchedRecords() {
     }, 100);
   }
 
-  const handleCloseSeeDetaisDialog = () =>
-  {
+  const handleCloseSeeDetaisDialog = () => {
     setSeeDetailsDialogOpen(false);
     setTimeout(() => {
       setSeeDetailsBooking(null);
     }, 500);
   }
 
-  const seeDetailsClicked = (event, row) =>
-  {
+  const seeDetailsClicked = (event, row) => {
     setSeeDetailsBooking(row);
     setSeeDetailsDialogOpen(true);
   }
 
-  const smartMatchClicked = (event, id) =>
-  {
+  const smartMatchClicked = (event, id) => {
     setSmartLinkId(id);
     setOpenDialog(true);
     findBestMatches(id);
   }
 
   useEffect(() => {
-    if (smartLinkId)
-    {
+    if (smartLinkId) {
       findBestMatches(smartLinkId);
       // console.log('refrshing....');
 
@@ -441,156 +446,142 @@ export default function UnmatchedRecords() {
 
   }, [state.bookingDialogDataChanged]);
 
-  const findBestMatches = (id) =>
-  {
-    BookService.getLinkDetails(id).then( res => {
+  const findBestMatches = (id) => {
+    BookService.getLinkDetails(id).then(res => {
       setSmartLinkDetails(res.data);
       console.log(res.data);
-    }).catch( err =>
-      {
-        console.log(err);
-      });
+    }).catch(err => {
+      console.log(err);
+    });
 
-    BookService.findBestMatches(id).then( res => {
+    BookService.findBestMatches(id).then(res => {
       setLikelyBookings(res.data.matchedBookings);
-    }).catch( err => {
+    }).catch(err => {
       console.log(err);
       setLikelyBookings([]);
     })
   }
 
-  const archiveRecord = (event, id) =>
-  {
-      if (disableId)
-      {
-        return;
+  const archiveRecord = (event, id) => {
+    if (disableId) {
+      return;
+    }
+    setDisableId(id);
+
+    BookService.archiveRecord(id).then(
+      (res) => {
+        setDisableId(null);
+        setRefresh(!refresh);
       }
-        setDisableId(id);
-        
-        BookService.archiveRecord(id).then(
-            (res) => {
-                setDisableId(null);
-                setRefresh(!refresh);
-            }
-        ).catch( (err) => {
-            setDisableId(null);
-        })
+    ).catch((err) => {
+      setDisableId(null);
+    })
   }
 
-  const unArchiveRecord = (event, id) =>
-  {
-      if (disableId)
-      {
-        return;
+  const unArchiveRecord = (event, id) => {
+    if (disableId) {
+      return;
+    }
+    setDisableId(id);
+
+    BookService.unArchiveRecord(id).then(
+      (res) => {
+        setDisableId(null);
+        setRefresh(!refresh);
       }
-        setDisableId(id);
-        
-        BookService.unArchiveRecord(id).then(
-            (res) => {
-                setDisableId(null);
-                setRefresh(!refresh);
-            }
-        ).catch( (err) => {
-            setDisableId(null);
-        })
+    ).catch((err) => {
+      setDisableId(null);
+    })
   }
 
 
   const lastPromise = useRef();
 
-  useEffect( () => {
+  useEffect(() => {
 
-            var api = BookService.getUnmatchedRecords;
-            if (selectedTab === 'archived')
-            {
-                api = BookService.getUnmatchedRecordsArchived;
-            }
-            
-            setLoading(true)
-            
-            setData({bookings: [], cachedBookings: [], isFetching: true});
-            const currentPromise = api().then( (res) =>{
-              
-              for (var i=0; i < res.data.length; i++)
-              {
-                res.data[i] = {...res.data[i], id : i + 1}
-              }  
-              
-              return res.data;
-            })
+    var api = BookService.getUnmatchedRecords;
+    if (selectedTab === 'archived') {
+      api = BookService.getUnmatchedRecordsArchived;
+    }
 
-            lastPromise.current = currentPromise;
+    setLoading(true)
 
-            currentPromise.then(
-              result => {
-                if (currentPromise === lastPromise.current) {
-                  setLoading(false)
-                  setData({bookings: result, cachedBookings: [...result], isFetching: false});
-                }
-              },
-              e => {
-                if (currentPromise === lastPromise.current) {
-                    setLoading(false)
-                    console.log(e);
-                    setData({bookings: data.bookings, cachedBookings: data.cachedBookings, isFetching: false});
-                }
-              });
-        },
-        [refresh, selectedTab]);
+    setData({ bookings: [], cachedBookings: [], isFetching: true });
+    const currentPromise = api().then((res) => {
 
+      for (var i = 0; i < res.data.length; i++) {
+        res.data[i] = { ...res.data[i], id: i + 1 }
+      }
 
+      return res.data;
+    })
 
-  useEffect( () => {
+    lastPromise.current = currentPromise;
 
-        if (filter && filter.trim().length > 0)
-        {
-          var filteredData = data.cachedBookings.filter( (element) => {
-
-            return (element.forename.toLowerCase().indexOf(filter.toLowerCase()) >= 0) ||
-                   (element.surname.toLowerCase().indexOf(filter.toLowerCase()) >= 0) 
-            ;
-  
-          });
-  
-  
-          setData({bookings: filteredData, cachedBookings: data.cachedBookings, isFetching: false});
-        }else
-        {
-          setData({bookings: [...data.cachedBookings], cachedBookings: data.cachedBookings, isFetching: false});
+    currentPromise.then(
+      result => {
+        if (currentPromise === lastPromise.current) {
+          setLoading(false)
+          setData({ bookings: result, cachedBookings: [...result], isFetching: false });
         }
       },
-      [filter]);
+      e => {
+        if (currentPromise === lastPromise.current) {
+          setLoading(false)
+          console.log(e);
+          setData({ bookings: data.bookings, cachedBookings: data.cachedBookings, isFetching: false });
+        }
+      });
+  },
+    [refresh, selectedTab]);
+
+
+
+  useEffect(() => {
+
+    if (filter && filter.trim().length > 0) {
+      var filteredData = data.cachedBookings.filter((element) => {
+
+        return (element.forename.toLowerCase().indexOf(filter.toLowerCase()) >= 0) ||
+          (element.surname.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
+          ;
+
+      });
+
+
+      setData({ bookings: filteredData, cachedBookings: data.cachedBookings, isFetching: false });
+    } else {
+      setData({ bookings: [...data.cachedBookings], cachedBookings: data.cachedBookings, isFetching: false });
+    }
+  },
+    [filter]);
 
 
 
 
 
 
-  const refreshClicked = (event) =>{
+  const refreshClicked = (event) => {
     setFilter('');
     setRefresh(!refresh);
 
   }
 
-  const filterChanged = (event) =>{
+  const filterChanged = (event) => {
     setFilter(event.target.value);
   }
 
-  const handleSelectionChanged = (newSelection) =>
-  {
-    if (newSelection.length > 0){
+  const handleSelectionChanged = (newSelection) => {
+    if (newSelection.length > 0) {
       setSelectedRow(newSelection.rows[0]);
     }
   }
 
-  const handleCheckChanged = (event, row) =>
-  {
-    if (event.target.checked)
-    {
+  const handleCheckChanged = (event, row) => {
+    if (event.target.checked) {
       setSelectedBooking(row);
     }
-    else
-    {
+    else {
       setSelectedBooking(null);
     }
   }
@@ -603,110 +594,67 @@ export default function UnmatchedRecords() {
       setSelectedBooking(res.data);
     });
 
-    BookService.matchRecords(selectedBooking._id, smartLinkId).then (res => {
+    BookService.matchRecords(selectedBooking._id, smartLinkId).then(res => {
 
-      if (res.data.status === 'OK'){
+      if (res.data.status === 'OK') {
         setMatching(false);
         setMatched(true);
       }
 
-    }).catch(err =>
-      {
-        console.log(err);
-      });
+    }).catch(err => {
+      console.log(err);
+    });
   }
 
-  const getProgress = (status) =>
-  {
+  const getProgress = (status) => {
     console.log(`status : ${status}`);
 
     if (status === 'downloadFailed')
-      return 10 ;
-    else if (status === 'downloading') 
-      return 30 ;  
-    else if (status === 'downloadSuccess') 
-      return 70 ;
+      return 10;
+    else if (status === 'downloading')
+      return 30;
+    else if (status === 'downloadSuccess')
+      return 70;
     else if (status === 'sent')
-      return 100;   
+      return 100;
     else
       return 0;
 
   }
 
-  useEffect( () => {
+  useEffect(() => {
 
     setSendingProgress((prevProgress) => (prevProgress >= 100 ? 100 : getProgress(sendingStatus)));
 
   }, [sendingStatus]);
 
-  const resendFilesClicked = (event) =>
-  {
+  const resendFilesClicked = (event) => {
     setSending(true);
     setSendingProgress(0);
     setSendingStatus('downloadFailed');
     setSendJustToPCR(true);
 
 
-    BookService.regenerateFiles(smartLinkId).then( res => {
+    BookService.regenerateFiles(smartLinkId).then(res => {
 
       interval = setInterval(() => {
-             
-       // setProgress(sendingCounter);
-
-       // setProgress(getProgress(sendingStatus));
-
-       BookService.getLinkDetails(smartLinkId).then( res => {
- 
-         setSendingStatus(res.data.status);
- 
-         if (res.data.status === 'sent')
-         {
-           setSending(false);
-           setSent(true);
-           setRefresh(!refresh);
-           clearInterval(interval);
-         }
-       });
- 
-     }, 1000);
-
-   }).catch(err => {
-     console.log(err);
-     setSending(false);
-   });
-
-
-  }
- 
-  const resendEmailsClicked = (event) => {
-    setSending(true);
-    setSendingProgress(0);
-    setSendingStatus('downloadFailed');
- 
-
-    BookService.resendEmails(smartLinkId).then( res => {
-
-       interval = setInterval(() => {
-        
-       
 
         // setProgress(sendingCounter);
 
         // setProgress(getProgress(sendingStatus));
 
-        BookService.getLinkDetails(smartLinkId).then( res => {
-  
+        BookService.getLinkDetails(smartLinkId).then(res => {
+
           setSendingStatus(res.data.status);
-  
-          if (res.data.status === 'sent')
-          {
+
+          if (res.data.status === 'sent') {
             setSending(false);
             setSent(true);
             setRefresh(!refresh);
             clearInterval(interval);
           }
         });
-  
+
       }, 1000);
 
     }).catch(err => {
@@ -714,7 +662,45 @@ export default function UnmatchedRecords() {
       setSending(false);
     });
 
-  
+
+  }
+
+  const resendEmailsClicked = (event) => {
+    setSending(true);
+    setSendingProgress(0);
+    setSendingStatus('downloadFailed');
+
+
+    BookService.resendEmails(smartLinkId).then(res => {
+
+      interval = setInterval(() => {
+
+
+
+        // setProgress(sendingCounter);
+
+        // setProgress(getProgress(sendingStatus));
+
+        BookService.getLinkDetails(smartLinkId).then(res => {
+
+          setSendingStatus(res.data.status);
+
+          if (res.data.status === 'sent') {
+            setSending(false);
+            setSent(true);
+            setRefresh(!refresh);
+            clearInterval(interval);
+          }
+        });
+
+      }, 1000);
+
+    }).catch(err => {
+      console.log(err);
+      setSending(false);
+    });
+
+
 
   }
 
@@ -722,23 +708,20 @@ export default function UnmatchedRecords() {
     setMatched(false);
   }
 
-  const downloadLabReport = (id) =>
-  {
-       PDFService.downloadPdfLabReport(id).then( (res) => 
-       {       
-         const file = new Blob(
-           [res.data], 
-           {type: 'application/pdf'});
+  const downloadLabReport = (id) => {
+    PDFService.downloadPdfLabReport(id).then((res) => {
+      const file = new Blob(
+        [res.data],
+        { type: 'application/pdf' });
 
-         const fileURL = URL.createObjectURL(file);   
-         window.open(fileURL, "_blank");
+      const fileURL = URL.createObjectURL(file);
+      window.open(fileURL, "_blank");
 
-       
 
-       }).catch( (err) =>
-       {
-           console.log(err);
-       });
+
+    }).catch((err) => {
+      console.log(err);
+    });
   }
 
 
@@ -758,27 +741,27 @@ export default function UnmatchedRecords() {
         alignItems="flex-end"
       >
         <Grid item md={5}>
-            <div style={{textAlign:"left", paddingLeft:"10px"}}>
-                <Grid container direction="row" justify="flex-start" alignItems="center">
-                        <Grid item>
-                                <span style={{paddingRight: "15px", color: "#555"}}> <WarningIcon style={{fontSize:"2.2rem"}}/> </span>
-                        </Grid>
-                        <Grid item>
-                              <span style={{fontSize: '1.4rem', fontWeight:"600", color: "#444"}}> Unmatched Records </span>
-                        </Grid>
-                        <Grid item>
-                            <Tooltip title="Refresh" placement="right">
-                                <IconButton
-                                  color="primary"
-                                  className={classes.refreshButton}
-                                  onClick={refreshClicked}
-                                >
-                                  <RefreshIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </Grid>
-                  </Grid>
-                </div>
+          <div style={{ textAlign: "left", paddingLeft: "10px" }}>
+            <Grid container direction="row" justify="flex-start" alignItems="center">
+              <Grid item>
+                <span style={{ paddingRight: "15px", color: "#555" }}> <WarningIcon style={{ fontSize: "2.2rem" }} /> </span>
+              </Grid>
+              <Grid item>
+                <span style={{ fontSize: '1.4rem', fontWeight: "600", color: "#444" }}> Unmatched Records </span>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Refresh" placement="right">
+                  <IconButton
+                    color="primary"
+                    className={classes.refreshButton}
+                    onClick={refreshClicked}
+                  >
+                    <RefreshIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid>
+          </div>
         </Grid>
 
         <Grid item md={3}>
@@ -1058,7 +1041,7 @@ export default function UnmatchedRecords() {
                             <TableCell
                               style={
                                 row.forenameCapital ===
-                                smartLinkDetails.forename
+                                  smartLinkDetails.forename
                                   ? { fontWeight: "800", color: "#2f942e" }
                                   : { fontWeight: "800", color: "#ff871f" }
                               }
@@ -1091,10 +1074,10 @@ export default function UnmatchedRecords() {
                                 <Grid item>
                                   {row.birthDate !==
                                     smartLinkDetails.birthDate && (
-                                    <span style={{ textAlign: "center" }}>
-                                      <ReportProblemIcon />
-                                    </span>
-                                  )}
+                                      <span style={{ textAlign: "center" }}>
+                                        <ReportProblemIcon />
+                                      </span>
+                                    )}
                                 </Grid>
                                 {FormatDateFromString(row.birthDate)}
                                 <Grid item></Grid>
@@ -1116,7 +1099,7 @@ export default function UnmatchedRecords() {
                             <TableCell>
                               <Button
                                 color="primary"
-                                disabled = {sending}
+                                disabled={sending}
                                 onClick={(event) =>
                                   seeDetailsClicked(event, row)
                                 }
@@ -1135,152 +1118,152 @@ export default function UnmatchedRecords() {
                   container
                   direction="column"
                   justify="center"
-                  spacing = {1}
+                  spacing={1}
                   alignItems="center"
                 >
 
-                {!matched && (
-                  <React.Fragment>
-                        <Grid item>
-                          <Button
-                            disabled = {!selectedBooking || matching}
-                            className={classes.matchButton}
-                            variant="contained"
-                            color="primary"
-                            onClick = {matchRecords}
-                          >
-                            GO Match THE Records
+                  {!matched && (
+                    <React.Fragment>
+                      <Grid item>
+                        <Button
+                          disabled={!selectedBooking || matching}
+                          className={classes.matchButton}
+                          variant="contained"
+                          color="primary"
+                          onClick={matchRecords}
+                        >
+                          GO Match THE Records
                           </Button>
-                        </Grid>
+                      </Grid>
 
-                        {!selectedBooking && (
-                            <Grid item>
-                              <Alert severity="warning">No Record is Selected ! — Please select a record you think it is a match.</Alert>
-                          </Grid>
+                      {!selectedBooking && (
+                        <Grid item>
+                          <Alert severity="warning">No Record is Selected ! — Please select a record you think it is a match.</Alert>
+                        </Grid>
+                      )}
+
+                    </React.Fragment>
+                  )}
+
+                  {matched && !sent && !sending && (
+                    <React.Fragment>
+
+                      <Grid item>
+
+                        <Alert style={{ marginTop: "10px", paddingLeft: "50px", paddingRight: "50px" }} severity="success"> Success — The Records are Matched Now !</Alert>
+
+                      </Grid>
+
+                      <Grid item>
+
+                        <div style={{ paddingTop: "5px", fontSize: "1rem", fontWeight: "500", color: "#555" }}>
+                          Do you want to Resend the LAB Report {selectedBooking.certificate ? ' and Certificate' : ''}  Now?
+                      </div>
+
+                      </Grid>
+
+                      <Grid item>
+                        <Button
+                          disabled={sending || sent}
+                          className={classes.resendButton}
+                          variant="contained"
+                          color="primary"
+                          onClick={resendEmailsClicked}
+                        >
+                          YES ! RESEND THE EMAILS
+                          </Button>
+                      </Grid>
+
+                      <Grid item>
+                        <Button
+                          disabled={sending || sent}
+                          className={classes.cancelButton}
+                          variant="contained"
+                          color="default"
+                          onClick={cancelResendEmailsClicked}
+                        >
+                          NO ! NOT NOW
+                          </Button>
+                      </Grid>
+
+
+                      <Grid item>
+                        <Button
+                          disabled={sending || sent}
+                          className={classes.resendFilesButton}
+                          variant="contained"
+                          color="primary"
+                          onClick={resendFilesClicked}
+                        >
+                          Just Generate The Files and send to pcrresults@medicalexpressclinic.co.uk
+                          </Button>
+                      </Grid>
+
+                      <Grid item>
+
+                        <Alert style={{ marginTop: "10px", paddingLeft: "50px", paddingRight: "50px" }} severity="warning">
+                          Caution! — The LAB Report and Certificate will be Sent According to the Record you have Selected !
+                          </Alert>
+
+                      </Grid>
+
+
+
+                    </React.Fragment>
+                  )}
+
+                  {matched && (sending || sent) && (
+                    <Grid item>
+
+                      <div style={{ paddingTop: "50px", color: "#2f942e", fontWeight: "600", fontSize: "1rem" }}>
+                        {sending && !sent && (
+                          'Sending ...'
                         )}
 
-                  </React.Fragment>
-                )}
+                        {sent && !sendJustToPCR && (
+                          <Alert style={{ marginTop: "10px", paddingLeft: "50px", paddingRight: "50px" }} severity="success">
+                            Success! — The LAB Report {selectedBooking.certificate ? ' and Certificate ' : ' '}  Successfully Sent.
+                          </Alert>
+                        )}
 
-                {matched && !sent && !sending && (
-                  <React.Fragment>
+                        {sent && sendJustToPCR && (
+                          <Alert style={{ marginTop: "10px", paddingLeft: "50px", paddingRight: "50px" }} severity="success">
+                            Success! — The LAB Report {selectedBooking.certificate ? ' and Certificate ' : ' '}  Successfully Sent Just to pcrresults@medicalexpressclinic.co.uk .
+                          </Alert>
+                        )}
 
-                    <Grid item>
-            
-                         <Alert style={{marginTop:"10px", paddingLeft:"50px", paddingRight:"50px"}} severity="success"> Success — The Records are Matched Now !</Alert>
-                    
-                    </Grid>
 
-                    <Grid item>
 
-                      <div style={{paddingTop:"5px", fontSize:"1rem", fontWeight: "500", color: "#555"}}>
-                         Do you want to Resend the LAB Report {selectedBooking.certificate ? ' and Certificate' : ''}  Now?
+
                       </div>
 
                     </Grid>
 
-                    <Grid item>
-                          <Button
-                            disabled = {sending || sent}
-                            className={classes.resendButton}
-                            variant="contained"
-                            color="primary"
-                            onClick = {resendEmailsClicked}
-                          >
-                            YES ! RESEND THE EMAILS
-                          </Button>
-                    </Grid>
-
-                    <Grid item>
-                          <Button
-                            disabled = {sending || sent}
-                            className={classes.cancelButton}
-                            variant="contained"
-                            color="default"
-                            onClick = {cancelResendEmailsClicked}
-                          >
-                            NO ! NOT NOW
-                          </Button>
-                    </Grid>
-
-                    
-                    <Grid item>
-                          <Button
-                            disabled = {sending || sent}
-                            className={classes.resendFilesButton}
-                            variant="contained"
-                            color="primary"
-                            onClick = {resendFilesClicked}
-                          >
-                            Just Generate The Files and send to pcrresults@medicalexpressclinic.co.uk
-                          </Button>
-                    </Grid>
-
-                    <Grid item>
-            
-                         <Alert style={{marginTop:"10px",  paddingLeft:"50px", paddingRight:"50px"}} severity="warning">
-                            Caution! — The LAB Report and Certificate will be Sent According to the Record you have Selected !
-                          </Alert>
-       
-                   </Grid>
-
-
-
-                  </React.Fragment>
-                )}
-
-                        {matched && (sending || sent) && ( 
-                          <Grid item>
-
-                            <div style={{paddingTop: "50px", color: "#2f942e" , fontWeight:"600", fontSize: "1rem"}}>
-                                 {sending && !sent && (
-                                   'Sending ...'
-                                 )}
-
-                                 {sent && !sendJustToPCR && (
-                                     <Alert style={{marginTop:"10px", paddingLeft:"50px", paddingRight:"50px"}} severity="success">
-                                          Success! — The LAB Report {selectedBooking.certificate? ' and Certificate ': ' ' }  Successfully Sent.
-                                     </Alert>
-                                 )}
-
-                                {sent && sendJustToPCR && (
-                                     <Alert style={{marginTop:"10px", paddingLeft:"50px", paddingRight:"50px"}} severity="success">
-                                          Success! — The LAB Report {selectedBooking.certificate? ' and Certificate ': ' ' }  Successfully Sent Just to pcrresults@medicalexpressclinic.co.uk .
-                                     </Alert>
-                                 )}
-
-
-
-                                 
-                            </div>
-                            
-                          </Grid>
-                          
-                        )}
+                  )}
 
                 </Grid>
               </React.Fragment>
             )}
 
 
-              {matched && (sending || sent) && (
-                  <React.Fragment>
+            {matched && (sending || sent) && (
+              <React.Fragment>
 
-                      <div style={{marginTop:"10px", width:"50%", marginLeft: "27%"}}>
-                        
-                           <LinearProgressWithLabel variant="determinate" color="primary"  value={sendingProgress} />     
+                <div style={{ marginTop: "10px", width: "50%", marginLeft: "27%" }}>
 
-                      </div>
+                  <LinearProgressWithLabel variant="determinate" color="primary" value={sendingProgress} />
 
-                      <div style={{paddingTop: "30px", color: "#2f942e" , fontWeight:"600", fontSize: "1rem",  marginLeft: "45%"}}>
-                            {sending && !sent && (
-                                   'PLEASE WAIT ...'
-                                 )}     
-                                  
-                    </div>
+                </div>
 
-                  </React.Fragment>
-                )}
+                <div style={{ paddingTop: "30px", color: "#2f942e", fontWeight: "600", fontSize: "1rem", marginLeft: "45%" }}>
+                  {sending && !sent && (
+                    'PLEASE WAIT ...'
+                  )}
+
+                </div>
+
+              </React.Fragment>
+            )}
 
 
           </div>

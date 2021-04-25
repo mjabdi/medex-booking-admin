@@ -506,6 +506,13 @@ export const MenuList_PCRLAB = [
   },
   {
     index: 2,
+    id: `unmatchedRecords`,
+    title: `Unmatched Records`,
+    icon: <WarningIcon />,
+  },
+
+  {
+    index: 3,
     id: `calendarView`,
     title: `Calendar View`,
     icon: <DateRangeIcon />,
@@ -560,6 +567,8 @@ export const getMenuContent = (role, index) => {
       case 1:
         return <BookingTable date="late" />;
       case 2:
+        return <UnmatchedRecords />;    
+      case 3:
         return <PCRCalendarView />;
 
       default:

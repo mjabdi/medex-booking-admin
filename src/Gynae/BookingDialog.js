@@ -53,6 +53,10 @@ import { CalendarColors } from "../Admin/calendar-admin/colors";
 import InvoiceService from "../services/InvoiceService";
 import InvoiceDialog from "../InvoiceDialog";
 
+import SearchIcon from '@material-ui/icons/Search';
+import BloodReportDialog from "../Blood/BloodReportDialog";
+
+
 const useStyles = makeStyles((theme) => ({
   box: {
     backgroundColor: "#373737",
@@ -877,10 +881,36 @@ export default function BookingDialog(props) {
   };
 
   React.useEffect(() => {
-    if (props.booking) {
+    if (props.booking && props.open) {
       fetchInvoice();
+      fetchBloodReports();
     }
   }, [props.booking, props.open]);
+
+  const [bloodReports, setBloodReports] = React.useState(null)
+  const [selectedBloodReport, setSelectedBloodReport] = React.useState(null)
+  const [bloodReportDialogOpen, setBloodReportDialogOpen] = React.useState(null)
+  const fetchBloodReports = async () => {
+    setBloodReports(null)
+    try {
+      const res = await BookService.getBloodReportsByBookingId(props.booking._id)
+      if (res.data && res.data.result && res.data.result.length > 0) {
+        setBloodReports(res.data.result)
+      }
+    }
+    catch (err) {
+      console.error(err)
+    }
+  }
+  const handleClodeBloodReportDialog = () => {
+    setBloodReportDialogOpen(false)
+    setSelectedBloodReport(null)
+  }
+  const showBloodReportClicked = (bloodReport) => {
+    setSelectedBloodReport(bloodReport)
+    setBloodReportDialogOpen(true)
+  }
+
 
   const handleCloseInvoiceDialog = (refresh) => {
     setOpenInvoiceDialog(false);
@@ -1003,9 +1033,9 @@ export default function BookingDialog(props) {
                     style={
                       booking.deleted
                         ? {
-                            paddingBottom: "5px",
-                            textDecoration: "line-through",
-                          }
+                          paddingBottom: "5px",
+                          textDecoration: "line-through",
+                        }
                         : {}
                     }
                   >
@@ -1020,17 +1050,17 @@ export default function BookingDialog(props) {
                         style={
                           booking.tr
                             ? {
-                                padding: 0,
-                                margin: 0,
-                                color: "#fff",
-                                fontSize: 25,
-                              }
+                              padding: 0,
+                              margin: 0,
+                              color: "#fff",
+                              fontSize: 25,
+                            }
                             : {
-                                padding: 0,
-                                margin: 0,
-                                color: "#333",
-                                fontSize: 25,
-                              }
+                              padding: 0,
+                              margin: 0,
+                              color: "#333",
+                              fontSize: 25,
+                            }
                         }
                       />
                     </Tooltip>
@@ -1944,6 +1974,33 @@ export default function BookingDialog(props) {
                           ).toLocaleString("en-GB")}`}</span>
                         </div>
                       </li>
+
+                      {bloodReports && bloodReports.length > 0 && (
+                        <React.Fragment>
+                          <Divider />
+                          <li>
+                            <div style={{ padding: "20px" }}>
+                              <Grid container spacing={2} alignItems="center">
+                                <Grid item xs={12}>
+                                  <div style={{ color: "#dc2626", fontWeight: "600", fontSize: "1rem" }}>
+                                    Blood Results :
+                                    </div>
+                                </Grid>
+                                {bloodReports.map(report => (
+                                  <Grid item>
+                                    <Button onClick={() => showBloodReportClicked(report)} startIcon={<SearchIcon />} style={{ color: "#dc2626" }} variant="outlined">
+                                      {report.filename}
+                                    </Button>
+                                  </Grid>
+                                ))}
+
+                              </Grid>
+                            </div>
+                          </li>
+                        </React.Fragment>
+                      )}
+
+
                     </ul>
                   </div>
                 </Grid>
@@ -1969,6 +2026,13 @@ export default function BookingDialog(props) {
               open={openInvoiceDialog}
               handleClose={handleCloseInvoiceDialog}
             />
+
+            <BloodReportDialog
+              booking={selectedBloodReport}
+              open={bloodReportDialogOpen}
+              onClose={handleClodeBloodReportDialog}
+            />
+
           </Dialog>
 
           <Dialog

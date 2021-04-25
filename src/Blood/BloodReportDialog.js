@@ -12,6 +12,7 @@ import {
   IconButton,
   TextField,
   Tooltip,
+  unstable_createMuiStrictModeTheme,
 } from "@material-ui/core";
 import PDFService from "./services/PDFService";
 
@@ -20,6 +21,8 @@ import * as EmailValidator from 'email-validator';
 import { calculatePrice } from "./PriceCalculator";
 
 import bookingService from "./services/BookService";
+import AdminBookingService from "../Admin/services/BookService";
+
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
 
@@ -47,6 +50,7 @@ import PrintIcon from "@material-ui/icons/Print";
 import UndoIcon from "@material-ui/icons/Undo";
 
 import SendIcon from "@material-ui/icons/Send";
+import SearchIcon from '@material-ui/icons/Search';
 
 import HistoryIcon from "@material-ui/icons/History";
 
@@ -59,6 +63,8 @@ import { getInitialColumnReorderState } from "@material-ui/data-grid";
 import { Document, Page } from 'react-pdf';
 
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
+
+import BookingDialog from '../Admin/BookingDialog'
 
 
 
@@ -733,13 +739,35 @@ export default function BloodReportDialog(props) {
 
 
   useEffect(() => {
-    if (props.booking) {
+    if (props.booking && props.open) {
       loadFileUrl(props.booking._id)
+      loadBookingDetail(props.booking.bookingId)
       setBooking(props.booking);
       setEmail(props.booking.email)
       setNotes(props.booking.notes)
+
+
     }
-  }, [props.booking]);
+  }, [props.booking, props.open]);
+
+  const loadBookingDetail = async (_id) => {
+    setSelectedBooking(null)
+    if (!_id) {
+      return
+    }
+
+    try {
+      const res = await AdminBookingService.getBookingById(_id)
+      if (res.data && res.data.length > 0) {
+        setSelectedBooking(res.data[0])
+      }
+
+    } catch (err) {
+      console.error(err)
+    }
+
+
+  }
 
   const undoPaymentClicked = async () => {
     setSaving(true);
@@ -965,6 +993,14 @@ export default function BloodReportDialog(props) {
       default:
         return "#999"
     }
+  }
+
+  const [openBookingDetailDialog, setOpenBookingDetailDialog] = React.useState(false)
+  const showBookingDetailClicked = () => {
+    setOpenBookingDetailDialog(true)
+  }
+  const handleCloseBookingDetailDialog = () => {
+    setOpenBookingDetailDialog(false)
   }
 
 
@@ -1335,8 +1371,8 @@ export default function BloodReportDialog(props) {
 
                       <li className={classes.li}>
 
-                        <Grid container spacing={2}>
-                          <Grid item xs={12} md={4}>
+                        <Grid container spacing={2} alignItems="center">
+                          <Grid item xs={12} md={3}>
                             <span className={classes.infoTitle}>
                               TEST DATE :
                             </span>
@@ -1353,7 +1389,7 @@ export default function BloodReportDialog(props) {
 
 
                           </Grid>
-                          <Grid item xs={12} md={4}>
+                          <Grid item xs={12} md={3}>
                             <span className={classes.infoTitle}>NAME : </span>
                             <span
                               hidden={
@@ -1367,7 +1403,7 @@ export default function BloodReportDialog(props) {
 
 
                           </Grid>
-                          <Grid item xs={12} md={4}>
+                          <Grid item xs={12} md={3}>
                             <span className={classes.infoTitle}>D.O.B : </span>
                             <span
                               hidden={
@@ -1380,6 +1416,15 @@ export default function BloodReportDialog(props) {
                             </span>
 
                           </Grid>
+
+                          {selectedBooking && (
+                            <Grid item xs={12} md={3}>
+                              <Button onClick={showBookingDetailClicked} startIcon={<SearchIcon />} color="primary" variant="contained">
+                                Show Booking Detail ...
+                              </Button>
+                            </Grid>
+                          )
+                          }
 
                         </Grid>
 
@@ -1411,8 +1456,8 @@ export default function BloodReportDialog(props) {
                             style={{ margin: "10px" }}
                             fullWidth
                             variant="outlined"
-                            className={classes.TextBox}
-                            value={email}
+                            // className={classes.TextBox}
+                            value={email || ''}
                             onChange={emailChanged}
                           // inputProps={{
                           //   style: {
@@ -1433,8 +1478,8 @@ export default function BloodReportDialog(props) {
                             fullWidth
                             label="NOTES"
                             style={{ margin: "10px" }}
-                            className={classes.TextBox}
-                            value={notes}
+                            // className={classes.TextBox}
+                            value={notes || ''}
                             onChange={notesChanged}
                             variant="outlined"
                             multiline
@@ -1538,6 +1583,15 @@ export default function BloodReportDialog(props) {
               >
                 <CircularProgress color="inherit" />
               </Backdrop>
+
+
+              <BookingDialog
+                booking={selectedBooking}
+                open={openBookingDetailDialog}
+                onClose={handleCloseBookingDetailDialog}
+              />
+
+
             </DialogContent>
 
             <PayDialog
@@ -1612,6 +1666,9 @@ export default function BloodReportDialog(props) {
                 Yes, Refund Payment
               </Button>
             </DialogActions>
+
+
+
           </Dialog>
         </React.Fragment>
       )}

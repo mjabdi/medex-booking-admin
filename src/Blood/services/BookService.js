@@ -9,6 +9,13 @@ export default class BookService {
    }
 
    
+   static getBloodReportsByBookingId = (bookingId) =>
+   {
+      return API.get(`/api/blood/book/getbloodreportsbybookingid?id=${bookingId}`);
+   }
+
+
+   
 
    static getNewBloodResultsCount = () =>
    {

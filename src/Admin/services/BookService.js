@@ -114,7 +114,7 @@ export default class BookService {
 
     static getBookingById = (id) =>
     {
-       return API.get(`/api/gp/book/getbookingbyid?id=${id}`);
+       return API.get(`/api/admin/book/getbookingbyid?id=${id}`);
     }
 
     static getAllBookings = (limit) =>
