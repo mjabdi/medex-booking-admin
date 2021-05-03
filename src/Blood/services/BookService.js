@@ -5,7 +5,7 @@ export default class BookService {
 
    static getAllCodes = () =>
    {
-       return API.get(`/api/medex/invoice/getallbloodcodes`)
+       return API.get(`/api/medex/invoice/getallbloodcodesadmin`)
    }
 
    
