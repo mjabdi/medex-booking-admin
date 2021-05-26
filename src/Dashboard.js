@@ -29,6 +29,7 @@ import Menu from "@material-ui/core/Menu";
 import dateformat from "dateformat";
 import { getRole, setRole, clearRole } from "./Role";
 import { getGlobalPath, getMenuIdFromGlobalPath } from "./GlobalPath";
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 
 const drawerWidth = 240;
 
@@ -331,8 +332,15 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-10px",
   },
 
+  appsPaymentLabel: {
+    color: "#008c77",
+    fontWeight: "600",
+    fontSize: "0.95rem",
+    marginTop: "-10px",
+  },
 
-  
+
+
 
   appsInToolbar: {
     position: "fixed",
@@ -441,39 +449,48 @@ export default function Dashboard() {
           />
         );
 
-        case "gp":
+      case "gp":
         return (
           <img
             src={getGlobalPath("/images/doctor.png")}
             className={classes.appsLogo}
           />
-        ); 
+        );
 
-        case "std":
-          return (
-            <img
-              src={getGlobalPath("/images/std-icon.png")}
-              className={classes.appsLogo}
-            />
-          ); 
+      case "std":
+        return (
+          <img
+            src={getGlobalPath("/images/std-icon.png")}
+            className={classes.appsLogo}
+          />
+        );
 
-          case "blood":
-            return (
-              <img
-                src={getGlobalPath("/images/blood-logo.png")}
-                className={classes.appsLogo}
-              />
-            ); 
+      case "blood":
+        return (
+          <img
+            src={getGlobalPath("/images/blood-logo.png")}
+            className={classes.appsLogo}
+          />
+        );
 
-            case "derma":
-              return (
-                <img
-                  src={getGlobalPath("/images/derma-logo.png")}
-                  className={classes.appsLogo}
-                />
-              ); 
-     
-  
+      case "derma":
+        return (
+          <img
+            src={getGlobalPath("/images/derma-logo.png")}
+            className={classes.appsLogo}
+          />
+        );
+
+      case "payment":
+        return (
+          // <img
+          //   src={getGlobalPath("/images/payment-logo.png")}
+          //   className={classes.appsLogo}
+          // />
+          <MonetizationOnIcon className={classes.appsLogo} style={{color:"#008c77", fontSize:"2rem", padding:"12px"}}/>
+        );
+
+
 
       default:
         return null;
@@ -488,16 +505,19 @@ export default function Dashboard() {
         return <div className={classes.appsPCRLabel}> {"PCR"} </div>;
       case "gynae":
         return <div className={classes.appsGynaeLabel}> {"Gynae"} </div>;
-        case "gp":
-          return <div className={classes.appsGPLabel}> {"GP"} </div>;
-          case "std":
-            return <div className={classes.appsSTDLabel}> {"STD"} </div>;
-            case "blood":
-              return <div className={classes.appsBloodLabel}> {"Blood"} </div>;
-              case "derma":
-              return <div className={classes.appsDermaLabel}> {"Dermatology"} </div>;
+      case "gp":
+        return <div className={classes.appsGPLabel}> {"GP"} </div>;
+      case "std":
+        return <div className={classes.appsSTDLabel}> {"STD"} </div>;
+      case "blood":
+        return <div className={classes.appsBloodLabel}> {"Blood"} </div>;
+      case "derma":
+        return <div className={classes.appsDermaLabel}> {"Dermatology"} </div>;
+      case "payment":
+        return <div className={classes.appsPaymentLabel}> {"Payments"} </div>;
 
-  
+
+
       default:
         return null;
     }
@@ -789,6 +809,25 @@ export default function Dashboard() {
                   </Grid>
                 </Grid>
 
+                <Grid item>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                    className={
+                      state.role === "payment"
+                        ? classes.appsBoxSelected
+                        : classes.appsBox
+                    }
+                    onClick={() => appsClicked("payment")}
+                  >
+                    <Grid item>{getAppsLogo("payment")}</Grid>
+                    <Grid item>{getAppsLabel("payment")}</Grid>
+                  </Grid>
+                </Grid>
+
+
 
 
               </Grid>
@@ -808,7 +847,7 @@ export default function Dashboard() {
                 <React.Fragment>
                   <img
                     className={classes.logoImage}
-                    src={getGlobalPath("/images/logo.png")} 
+                    src={getGlobalPath("/images/logo.png")}
                     alt="logo image"
                     style={{ marginRight: "10px" }}
                   />

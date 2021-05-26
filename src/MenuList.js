@@ -16,9 +16,15 @@ import EventNoteIcon from "@material-ui/icons/EventNote";
 import AirplanemodeActiveIcon from "@material-ui/icons/AirplanemodeActive";
 import ArchiveIcon from '@material-ui/icons/Archive';
 
-import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
+
+import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn';
+import SendIcon from '@material-ui/icons/Send';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+import MoneyOffIcon from '@material-ui/icons/MoneyOff';
+
 
 /// PCR ------------------
 import FindByRef from "./PCR/FindByRef";
@@ -76,6 +82,64 @@ import AdminFindByRef from "./Admin/FindByRef";
 import AdminBookingTable from "./Admin/BookingTable";
 import AdminCalendarView from "./Admin/calendar-admin/CalendarView";
 import SearchBookingTable from "./Admin/SearchBookingTable";
+
+
+// Payment ----------------
+import PaymentsTable from "./Payment/PaymentsTable";
+import PaymentsDashboard from "./Payment/DashboardPreview"
+
+//---------------
+
+import LinkIcon from '@material-ui/icons/Link';
+
+export const MenuList_Payment = [
+  {
+    index: 1,
+    id: `dashboard`,
+    title: `Dashboard`,
+    icon: <DashboardIcon />,
+  },
+  {
+    index: 2,
+    id: `paymentsTable`,
+    title: `Payment Links`,
+    icon: <LinkIcon />,
+  },
+  {
+    index: 3,
+    id: `paidpaymentsTable`,
+    title: `Successful Payments`,
+    icon: <DoneOutlineIcon />,
+  },
+  {
+    index: 4,
+    id: `latepaymentsTable`,
+    title: `4 Hours Late`,
+    icon: <HourglassEmptyIcon />,
+  },
+
+
+  {
+    index: 5,
+    id: `notyetPaid`,
+    title: `Not Yet Paid`,
+    icon: <MoneyOffIcon />,
+  },
+  {
+    index: 6,
+    id: `refundpaymentsTable`,
+    title: `Refunded Payments`,
+    icon: <KeyboardReturnIcon />,
+  },
+  {
+    index: 7,
+    id: `deletedpaymentsTable`,
+    title: `Deleted Records`,
+    icon: <DeleteIcon />,
+  },
+
+]
+
 
 //---------------
 
@@ -567,7 +631,7 @@ export const getMenuContent = (role, index) => {
       case 1:
         return <BookingTable date="late" />;
       case 2:
-        return <UnmatchedRecords />;    
+        return <UnmatchedRecords />;
       case 3:
         return <PCRCalendarView />;
 
@@ -742,6 +806,29 @@ export const getMenuContent = (role, index) => {
       default:
         return `Page Not Found!`;
     }
+  } else if (role === "payment") {
+    switch (index) {
+      case 1:
+        return <PaymentsDashboard />;
+      case 2:
+        return <PaymentsTable date="all" />;
+      case 3:
+        return <PaymentsTable date="paid" />;
+      case 4:
+        return <PaymentsTable date="late" />;
+      case 5:
+        return <PaymentsTable date="notpaid" />;
+      case 6:
+        return <PaymentsTable date="refund" />;
+      case 7:
+        return <PaymentsTable date="deleted" />;
+
+      default:
+        return `Page Not Found!`;
+    }
+
+
+
   }
   else {
     return `Page Not Found!`;
@@ -767,6 +854,9 @@ export const getMenuRole = (role) => {
       return MenuList_Blood;
     case "derma":
       return MenuList_Derma;
+    case "payment":
+      return MenuList_Payment;
+
 
 
     default:
