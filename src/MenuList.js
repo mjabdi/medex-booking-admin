@@ -94,25 +94,25 @@ import LinkIcon from '@material-ui/icons/Link';
 
 export const MenuList_Payment = [
   {
-    index: 1,
+    index: 0,
     id: `dashboard`,
     title: `Dashboard`,
     icon: <DashboardIcon />,
   },
   {
-    index: 2,
+    index: 1,
     id: `paymentsTable`,
     title: `Payment Links`,
     icon: <LinkIcon />,
   },
   {
-    index: 3,
+    index: 2,
     id: `paidpaymentsTable`,
     title: `Successful Payments`,
     icon: <DoneOutlineIcon />,
   },
   {
-    index: 4,
+    index: 3,
     id: `latepaymentsTable`,
     title: `4 Hours Late`,
     icon: <HourglassEmptyIcon />,
@@ -120,19 +120,19 @@ export const MenuList_Payment = [
 
 
   {
-    index: 5,
+    index: 4,
     id: `notyetPaid`,
     title: `Not Yet Paid`,
     icon: <MoneyOffIcon />,
   },
   {
-    index: 6,
+    index: 5,
     id: `refundpaymentsTable`,
     title: `Refunded Payments`,
     icon: <KeyboardReturnIcon />,
   },
   {
-    index: 7,
+    index: 6,
     id: `deletedpaymentsTable`,
     title: `Deleted Records`,
     icon: <DeleteIcon />,
@@ -808,19 +808,19 @@ export const getMenuContent = (role, index) => {
     }
   } else if (role === "payment") {
     switch (index) {
-      case 1:
+      case 0:
         return <PaymentsDashboard />;
-      case 2:
+      case 1:
         return <PaymentsTable date="all" />;
-      case 3:
+      case 2:
         return <PaymentsTable date="paid" />;
-      case 4:
+      case 3:
         return <PaymentsTable date="late" />;
-      case 5:
+      case 4:
         return <PaymentsTable date="notpaid" />;
-      case 6:
+      case 5:
         return <PaymentsTable date="refund" />;
-      case 7:
+      case 6:
         return <PaymentsTable date="deleted" />;
 
       default:
