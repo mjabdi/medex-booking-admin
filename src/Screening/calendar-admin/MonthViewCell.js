@@ -23,7 +23,8 @@ const useStyles = makeStyles((theme) => ({
         width: "100%",
         paddingTop: "70%",
         position: "relative",
-        backgroundColor: "#fafafa"
+        backgroundColor: "#fafafa",
+        cursor: "pointer"
     },
     
     DayLabel: {
@@ -44,7 +45,8 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "50%",
         padding: "5px",
         lineHight: "35px",
-        minWidth: "35px"
+        minWidth: "35px",
+        textAlign:"center"
     },
 
     DayLabelDisabled: {
@@ -274,7 +276,7 @@ const MonthViewCell = ({key, cellIndex, month, daysInMonth, dayClicked}) => {
     return (
         <React.Fragment>
 
-            <div className={classes.Container}  onClick={(event => dayClicked(event,cellDate))} >
+            <div className={classes.Container} onClick={(event => dayClicked(event,cellDate))}>
 
               {getDayLabel(cellIndex, month, daysInMonth)}
 

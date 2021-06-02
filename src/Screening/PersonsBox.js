@@ -808,6 +808,22 @@ export default function PersonsBox() {
                                  
                             {/* ****************************************************************************************** */}
 
+                      <li style={{marginBottom:"10px", maxWidth:"400px"}}>
+                        {!person.confirmed && (
+                          <div style={{ color: "red", fontSize: "1.1rem", fontWeight: "500", border: "0px solid red", padding: "5px", borderRadius: "8px" }}>
+                            NOT CONFIRMED!
+                          </div>
+                        )}
+
+
+                        {person.confirmed && (
+                          <div style={{ color: "#258200", fontSize: "1.1rem", fontWeight: "500", border: "0px solid #258200", padding: "5px", borderRadius: "8px" }}>
+                            CONFIRMED
+                          </div>
+                        )}
+
+                      </li>
+
                             <li className={classes.li}>
                                 <span className={classes.infoTitle}>BOOKED DATE</span> 
                             

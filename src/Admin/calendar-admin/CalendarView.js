@@ -22,6 +22,7 @@ const Clinics = [
     {clinic: "STD", color: CalendarColors.STD_COLOR},
     {clinic: "BLOOD", color: CalendarColors.BLOOD_COLOR},
     {clinic: "DERMA", color: CalendarColors.DERMA_COLOR},
+    {clinic: "SCREENING", color: CalendarColors.SCREENING_COLOR},
 
 ]
 
@@ -76,7 +77,7 @@ export default function CalendarView() {
         const firstdayofweek = new Date(today.getTime() - ( dayofWeek * 86400000));
         setFirstDayofWeek(firstdayofweek);
         setState(state => ({...state, AdminCalendarCache : []}));
-        setState(state => ({...state, selectedClinics : ["PCR", "GP", "GYNAE", "STD", "BLOOD","DERMA"]}));
+        setState(state => ({...state, selectedClinics : ["PCR", "GP", "GYNAE", "STD", "BLOOD","DERMA","SCREENING"]}));
 
         return () =>
         {

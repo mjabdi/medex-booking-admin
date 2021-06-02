@@ -208,15 +208,30 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Packages = [
-  { packageName: "Consultation with Consultant Gynaecologist" },
-  { packageName: `Coil Fitting/Coil Removal` },
-  { packageName: `Well Woman Check` },
-  { packageName: `Sexual Health Screening` },
-  { packageName: `Pre-pregnancy/Fertility check` },
-  { packageName: `Gynaecological Ultrasound` },
-  { packageName: `HPV Vaccination` },
-  { packageName: `Cervical / Pap Smear` },
-  { packageName: `HPV Treatment / Wart Cryo-Therapy` },
+  { packageName: "HEALTH SCREENING / MEDISCREEN BASIC MOT" },
+  { packageName: "HEALTH SCREENING / HEALTH BASICS MOT" },
+  { packageName: "HEALTH SCREENING / HEALTH ADVANCED MOT" },
+  { packageName: "HEALTH SCREENING / HEALTH ELITE MOT" },
+  { packageName: "HEALTH SCREENING / MEDISCREEN SEXUAL HEALTH MOT" },
+  { packageName: "HEALTH SCREENING / MEN'S HEALTH BASICS MOT" },
+  { packageName: "HEALTH SCREENING / MEN'S HEALTH ADVANCED MOT" },
+  { packageName: "HEALTH SCREENING / MEN'S HEALTH ELITE MOT" },
+  { packageName: "HEALTH SCREENING / PLATINIUM HEALTH SCREEN MEN" },
+  { packageName: "HEALTH SCREENING / MEDISCREEN SEXUAL HEALTH MOT" },
+  { packageName: "HEALTH SCREENING / WOMEN'S HEALTH BASICS MOT" },
+  { packageName: "HEALTH SCREENING / WOMEN'S HEALTH ADVANCED MOT" },
+  { packageName: "HEALTH SCREENING / WOMEN'S HEALTH ELITE MOT" },
+  { packageName: "HEALTH SCREENING / MEDISCREEN SEXUAL HEALTH MOT" },
+  { packageName: "HEALTH SCREENING / HEALTH ADVANCED PLUS MOT" },
+  { packageName: "HEALTH SCREENING / MEDISCREEN SEXUAL HEALTH MOT" },
+  { packageName: "ALLERGY SCREENING / ALLERGY BASICS MOT PACKAGE" },
+  { packageName: "ALLERGY SCREENING / ALLERGY ADVANCED MOT PACKAGE" },
+
+  { packageName: `OCCUPATIONAL HEALTH / PRE EMPLOYMENT` },
+  { packageName: `TRAVEL HEALTH & VACCINATION` },
+  { packageName: `VISA MEDICAL` },
+  { packageName: `CANCER SCREEENING` },
+  
 ];
 
 function NumberFormatCustom(props) {
@@ -309,6 +324,10 @@ export default function NewBookingDialog(props) {
   const [email, setEmail] = React.useState("");
   const [notes, setNotes] = React.useState("");
 
+  const [service, setService] = React.useState("");
+
+  const [serviceError, setServiceError] = React.useState(false);
+
   
   const fullnameChanged = (event) => {
     setFullname(event.target.value);
@@ -328,6 +347,12 @@ export default function NewBookingDialog(props) {
     setNotes(event.target.value);
   };
 
+  const serviceChanged = (event) => {
+    setService(event.target.value);
+    setServiceError(false)
+  };
+
+
   const handleClose = () => {
     if (saving) return;
 
@@ -336,6 +361,8 @@ export default function NewBookingDialog(props) {
     setPhone("");
     setEmail("");
     setNotes("");
+    setService("");
+    setServiceError(false)
     
     props.handleClose();
     setSaving(false);
@@ -347,6 +374,12 @@ export default function NewBookingDialog(props) {
       setFullnameError(true);
       error = true;
     }
+
+    if (!service)
+    {
+      setServiceError(true)
+    }
+
     return !error;
   };
 
@@ -365,6 +398,7 @@ export default function NewBookingDialog(props) {
         phone: phone,
         email: email,
         notes: notes,
+        service: service
       });
       setSaving(false);
       setState((state) => ({
@@ -385,7 +419,7 @@ export default function NewBookingDialog(props) {
       {props.date && props.time && (
         <React.Fragment>
           <Dialog
-            maxWidth="xs"
+            maxWidth="sm"
             open={props.open}
             onClose={handleClose}
             PaperComponent={PaperComponent}
@@ -417,8 +451,8 @@ export default function NewBookingDialog(props) {
                 </Grid>
               </Grid>
 
-              <div style={{position:"absolute", top: "5px", right: "5px", backgroundColor:CalendarColors.GP_COLOR, color:"#fff", padding: "0px 5px", borderRadius:"10px", fontSize:"1rem"}}>
-                    GP
+              <div style={{position:"absolute", top: "5px", right: "5px", backgroundColor:CalendarColors.SCREENING_COLOR, color:"#fff", padding: "0px 5px", borderRadius:"10px", fontSize:"1rem"}}>
+                    Screening
               </div>
 
 
@@ -427,7 +461,7 @@ export default function NewBookingDialog(props) {
             <DialogContent>
               <div
                 style={{
-                  height: "400px",
+                  height: "450px",
                 }}
               >
                 <Grid
@@ -494,6 +528,27 @@ export default function NewBookingDialog(props) {
                       autoComplete="none"
                     />
                   </Grid>
+
+                  <Grid item xs={12} md={12}>
+                    <FormControl className={classes.formControl} fullWidth>
+                      <InputLabel id="service-label-id">Package</InputLabel>
+                      <Select
+                        fullWidth
+                        labelId="service-label-id"
+                        id="service-id"
+                        value={service}
+                        onChange={serviceChanged}
+                        error={serviceError}
+                      >
+                        {Packages.map((item) => (
+                          <MenuItem value={item.packageName}>
+                            {item.packageName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+
 
 
                   <Grid item xs={12}>

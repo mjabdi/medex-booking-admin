@@ -891,7 +891,7 @@ export default function BookingDialog(props) {
   };
 
   const downloadRegForm = (id) => {
-    PDFService.downloadGPRegForm(id)
+    PDFService.downloadScreeningRegForm(id)
       .then((res) => {
         const file = new Blob([res.data], { type: "application/pdf" });
 

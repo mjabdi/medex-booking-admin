@@ -127,6 +127,29 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
+  bookingBoxPending: {
+    display: "flex",
+    marginRight: "10px",
+    marginTop: "5px",
+    padding: "10px",
+    maxWidth: "150px",
+    overflowX: "hidden",
+    border: "1px solid #eee",
+    fontSize: "12px",
+    fontWeight: "500",
+    cursor: "pointer",
+    backgroundColor: "#ddd",
+    color: "#777",
+    boxShadow: "2px 4px #fafafa",
+
+    "&:hover": {
+      background: "#eee",
+      color: "#333",
+    },
+  },
+
+
+
   bookingBoxPositive: {
     display: "flex",
     marginRight: "10px",
@@ -289,7 +312,13 @@ const DayViewCell = ({ key, date, time }) => {
     setOpenDialog(true);
   };
 
-  const getBookingClass = (status) => {
+  const getBookingClass = ({status, confirmed}) => {
+
+    if (!confirmed)
+    {
+      return classes.bookingBoxPending
+    }
+
     switch (status) {
       case "patient_attended":
         return classes.bookingBoxSampleTaken;
@@ -317,7 +346,7 @@ const DayViewCell = ({ key, date, time }) => {
             <div
               style={booking.tr ? { borderTop: "5px solid #d00fd6" } : {}}
               className={
-                getBookingClass(booking.status)
+                getBookingClass(booking)
                 }
               onClick={(event) => bookingCliked(event, booking)}
             >

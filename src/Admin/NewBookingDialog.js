@@ -6,6 +6,7 @@ import {
   Button,
   Checkbox,
   CircularProgress,
+  DialogActions,
   Divider,
   FormControlLabel,
   Grid,
@@ -194,18 +195,18 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
 
-  PriceLabelPaid:{
+  PriceLabelPaid: {
     color: theme.palette.primary.main,
     fontWeight: "600"
   },
 
-  PriceLabelNotPaid:{
+  PriceLabelNotPaid: {
     color: theme.palette.secondary.main,
     fontWeight: "600"
   },
 
   BoxDisabled: {
-    width : "100%",
+    width: "100%",
     padding: "10px",
     borderRadius: "8px",
     border: "1px solid",
@@ -219,7 +220,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   BoxGynae: {
-    width : "100%",
+    width: "100%",
     padding: "10px",
     borderRadius: "8px",
     border: "1px solid",
@@ -234,11 +235,11 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: CalendarColors.GYNAE_COLOR,
       color: "#fff"
     }
-  
+
   },
 
   BoxGP: {
-    width : "100%",
+    width: "100%",
     padding: "10px",
     borderRadius: "8px",
     border: "1px solid",
@@ -256,7 +257,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   BoxSTD: {
-    width : "100%",
+    width: "100%",
     padding: "10px",
     borderRadius: "8px",
     border: "1px solid",
@@ -274,7 +275,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   BoxBlood: {
-    width : "100%",
+    width: "100%",
     padding: "10px",
     borderRadius: "8px",
     border: "1px solid",
@@ -291,8 +292,27 @@ const useStyles = makeStyles((theme) => ({
     }
   },
 
+  BoxScreening: {
+    width: "100%",
+    padding: "10px",
+    borderRadius: "8px",
+    border: "1px solid",
+    fontSize: "1.2rem",
+    fontWeight: "500",
+    textAlign: "center",
+    cursor: "pointer",
+    borderColor: CalendarColors.SCREENING_COLOR,
+    color: CalendarColors.SCREENING_COLOR,
+    transition: "all 0.2s ease",
+    "&:hover": {
+      backgroundColor: CalendarColors.SCREENING_COLOR,
+      color: "#fff"
+    }
+  },
+
+
   BoxDerma: {
-    width : "100%",
+    width: "100%",
     padding: "10px",
     borderRadius: "8px",
     border: "1px solid",
@@ -410,18 +430,16 @@ export default function NewBookingDialog(props) {
 
   const [state, setState] = React.useContext(GlobalState);
 
-  const handleClose = () => {    
+  const handleClose = () => {
     props.handleClose();
   };
 
 
-  const timeDisabled = () =>
-  {
-    return props.time.indexOf(':15') > 0 || props.time.indexOf(':45') > 0 || props.time.indexOf('09') >= 0 
+  const timeDisabled = () => {
+    return props.time.indexOf(':15') > 0 || props.time.indexOf(':45') > 0 || props.time.indexOf('09') >= 0
   }
 
-  const clinicClicked = (clinic) =>
-  {
+  const clinicClicked = (clinic) => {
     props.clinicClicked(clinic)
   }
 
@@ -503,7 +521,7 @@ export default function NewBookingDialog(props) {
                     </div>
                   </Grid>
                   <Grid item xs={12}>
-                    <div className={timeDisabled() ? classes.BoxDisabled : classes.BoxGP}  onClick={() => !timeDisabled() ? clinicClicked("gp") : null}>
+                    <div className={timeDisabled() ? classes.BoxDisabled : classes.BoxGP} onClick={() => !timeDisabled() ? clinicClicked("gp") : null}>
                       GP
                     </div>
                   </Grid>
@@ -520,6 +538,13 @@ export default function NewBookingDialog(props) {
                   </Grid>
 
                   <Grid item xs={12}>
+                    <div className={classes.BoxScreening} onClick={() => clinicClicked("screening")}>
+                      SCREENING
+                    </div>
+                  </Grid>
+
+
+                  <Grid item xs={12}>
                     <div className={classes.BoxDerma} onClick={() => clinicClicked("derma")}>
                       DERMATOLOGY
                     </div>
@@ -529,34 +554,29 @@ export default function NewBookingDialog(props) {
 
                 </Grid>
 
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: "20px",
-                    right: "20px",
-                  }}
-                >
-                  <Grid
-                    container
-                    direction="row"
-                    justify="flex-end"
-                    alignItems="center"
-                    spacing={1}
-                  >
-                    <Grid item>
-                      <Button
-                        onClick={handleClose}
-                        style={{ width: "100px" }}
-                      >
-                        close
-                      </Button>
-                    </Grid>
-                   
-                  </Grid>
-                </div>
               </div>
 
             </DialogContent>
+            <DialogActions>
+              <Grid
+                container
+                direction="row"
+                justify="flex-end"
+                alignItems="center"
+                spacing={1}
+              >
+                <Grid item>
+                  <Button
+                    onClick={handleClose}
+                    style={{ width: "100px" }}
+                  >
+                    close
+                  </Button>
+                </Grid>
+
+              </Grid>
+
+            </DialogActions>
           </Dialog>
         </React.Fragment>
       )}

@@ -72,6 +72,7 @@ import { corporates } from "./Corporates";
 
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import BloodReportDialog from "../Blood/BloodReportDialog";
+import { CalendarColors } from "./calendar-admin/colors";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -222,34 +223,47 @@ const useStyles = makeStyles((theme) => ({
   },
 
   PCRLabel: {
-    color: "#4faef7",
+    color: CalendarColors.PCR_COLOR,
     fontWeight: "600",
     fontSize: "0.95rem",
   },
 
   GynaeLabel: {
-    color: "#e83caf",
+    color: CalendarColors.GYNAE_COLOR,
     fontWeight: "600",
     fontSize: "0.95rem",
   },
 
   GPLabel: {
-    color: "#ff4f14",
+    color: CalendarColors.GP_COLOR,
     fontWeight: "600",
     fontSize: "0.95rem",
   },
 
   STDLabel: {
-    color: "#d6733a",
+    color: CalendarColors.STD_COLOR,
     fontWeight: "600",
     fontSize: "0.95rem",
   },
 
   BloodLabel: {
-    color: "#dc2626",
+    color: CalendarColors.BLOOD_COLOR,
     fontWeight: "600",
     fontSize: "0.95rem",
   },
+
+  DermaLabel: {
+    color: CalendarColors.DermaLabel,
+    fontWeight: "600",
+    fontSize: "0.95rem",
+  },
+
+  ScreeningLabel: {
+    color: CalendarColors.SCREENING_COLOR,
+    fontWeight: "600",
+    fontSize: "0.95rem",
+  },
+
 
   DefaultLabel: {
     color: "#dc2626",
@@ -332,6 +346,11 @@ export default function SearchBookingTable(props) {
         return classes.STDLabel;
       case "blood":
         return classes.BloodLabel;
+      case "derma":
+        return classes.DermaLabel;
+        case "screening":
+      return classes.ScreeningLabel;
+        
       default:
         return classes.DefaultLabel;
     }

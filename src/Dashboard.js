@@ -341,7 +341,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   appsScreeningLabel: {
-    color: "#d94f00",
+    color: "#006b8f",
     fontWeight: "600",
     fontSize: "0.95rem",
     marginTop: "-10px",
@@ -506,7 +506,7 @@ export default function Dashboard() {
             //   src={getGlobalPath("/images/payment-logo.png")}
             //   className={classes.appsLogo}
             // />
-            <AirplayIcon className={classes.appsLogo} style={{color:"#d94f00", fontSize:"2rem", padding:"16px"}}/>
+            <AirplayIcon className={classes.appsLogo} style={{color:"#006b8f", fontSize:"2rem", padding:"16px"}}/>
           );
   
 

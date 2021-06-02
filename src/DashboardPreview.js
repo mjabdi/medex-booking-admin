@@ -17,7 +17,7 @@ import { useLocation, useHistory } from "react-router-dom";
 import { getGlobalPath } from "./GlobalPath";
 import { getMenuId, getMenuIndex } from "./MenuList";
 import NewBloodResultsBookingView from "./NewBloodResultsBookingView";
-
+import NewScreeningBookingView from "./NewScreeningBookingView"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   fixedHeight: {
-    height: 350,
+    height: 380,
   },
   fixedHeightSmall: {
     height: 200,
@@ -77,6 +77,15 @@ export default function DashboardPreview() {
     history.push(getGlobalPath(`/${getMenuId(role, getMenuIndex(role,'deletedBookings'))}`));
   }
 
+  const gotoScreening = () =>
+  {
+    const role = 'screening'
+    setRole(role);
+    setState((state) => ({ ...state, role: role }));
+    history.push(getGlobalPath(`/${getMenuId(role, getMenuIndex(role,'pendingBookings'))}`));
+  }
+
+
   
 
   return (
@@ -106,6 +115,16 @@ export default function DashboardPreview() {
              <NewBloodResultsBookingView />
           </Paper>
         </Grid>
+        <Grid item xs={12} md={6}>
+          <Paper className={fixedHeightPaperSmall} onClick={gotoScreening}>
+             <NewScreeningBookingView />
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+        </Grid>
+
+
 
         {/* <Grid item xs={12} md={4}>
         </Grid>

@@ -12,6 +12,7 @@ import GPBookService from "./GP/services/BookService";
 import STDBookService from "./STD/services/BookService";
 import BloodBookService from "./Blood/services/BookService";
 import DermaBookService from "./Derma/services/BookService";
+import ScreeningBookService from "./Screening/services/BookService"
 
 
 
@@ -40,6 +41,8 @@ export default function TotalBookingView() {
       const res4 = await STDBookService.getAllBookingsCountAll()
       const res5 = await BloodBookService.getAllBookingsCountAll()
       const res6 = await DermaBookService.getAllBookingsCountAll()
+      const res7 = await ScreeningBookService.getAllBookingsCountAll()
+
       
       const pcr =  parseInt(res1.data.count)
       const gynae = parseInt(res2.data.count)
@@ -47,6 +50,8 @@ export default function TotalBookingView() {
       const std = parseInt(res4.data.count)
       const blood = parseInt(res5.data.count)
       const derma = parseInt(res6.data.count)
+      const screening = parseInt(res7.data.count)
+
 
       const _data = [
         {clinic: "PCR", count: pcr},
@@ -55,8 +60,9 @@ export default function TotalBookingView() {
         {clinic: "STD", count: std},
         {clinic: "Blood", count: blood},
         {clinic: "Dermatology", count: derma},
+        {clinic: "Screening", count: screening},
 
-        {clinic: "Total", count: pcr+gynae+gp+std+blood+derma}
+        {clinic: "Total", count: pcr+gynae+gp+std+blood+derma+screening}
       ]
 
       setData(_data)

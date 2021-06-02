@@ -16,6 +16,8 @@ import NewGynaeDialog from "../../Gynae/NewBookingDialog";
 import NewSTDDialog from "../../STD/NewBookingDialog";
 import NewBloodDialog from "../../Blood/NewBookingDialog";
 import NewDermaDialog from "../../Derma/NewBookingDialog";
+import NewScreeningDialog from "../../Screening/NewBookingDialog";
+
 
 const useStyles = makeStyles((theme) => ({
   Container: {
@@ -201,6 +203,31 @@ const useStyles = makeStyles((theme) => ({
     borderColor: CalendarColors.DERMA_COLOR,
   },
 
+  BookingBorderScreening: {
+    border: "4px solid",
+    borderColor: CalendarColors.SCREENING_COLOR,
+  },
+
+  bookingBoxPending: {
+    display: "flex",
+    marginRight: "10px",
+    marginTop: "5px",
+    padding: "10px",
+    maxWidth: "150px",
+    overflowX: "hidden",
+    fontSize: "12px",
+    fontWeight: "500",
+    cursor: "pointer",
+    backgroundColor: "#ddd",
+    color: "#777",
+    boxShadow: "2px 4px #fafafa",
+
+    "&:hover": {
+      background: "#eee",
+      color: "#333",
+    },
+  },
+
 
 }));
 
@@ -224,6 +251,7 @@ const DayViewCell = ({ key, date, time }) => {
   const [openDialogSTD, setOpenDialogSTD] = React.useState(false);
   const [openDialogBlood, setOpenDialogBlood] = React.useState(false);
   const [openDialogDerma, setOpenDialogDerma] = React.useState(false);
+  const [openDialogScreening, setOpenDialogScreening] = React.useState(false);
 
 
   const handleCloseDialogGP = () => {
@@ -250,6 +278,12 @@ const DayViewCell = ({ key, date, time }) => {
     setOpenDialogDerma(false);
     setOpenDialogAddNew(false)
   };
+
+  const handleCloseDialogScreening = () => {
+    setOpenDialogScreening(false);
+    setOpenDialogAddNew(false)
+  };
+
 
 
   useEffect(() => {
@@ -357,7 +391,13 @@ const DayViewCell = ({ key, date, time }) => {
     setOpenDialog(true);
   };
 
-  const getBookingClass = (status) => {
+  const getBookingClass = ({status, confirmed, clinic}) => {
+
+    if (clinic === "screening" && !confirmed)
+    {
+      return classes.bookingBoxPending
+    }
+
     switch (status) {
       case "sample_taken":
       case "patient_attended":
@@ -391,7 +431,9 @@ const DayViewCell = ({ key, date, time }) => {
         return classes.BookingBorderBlood;
       case "derma":
         return classes.BookingBorderDerma;
-
+      case "screening":
+        return classes.BookingBorderScreening;
+  
 
       default:
         return null;
@@ -416,7 +458,7 @@ const DayViewCell = ({ key, date, time }) => {
                 <div
                   style={booking.tr ? { borderTop: "5px solid #d00fd6" } : {}}
                   className={clsx(
-                    getBookingClass(booking.status),
+                    getBookingClass(booking),
                     getBookingBorderClass(booking.clinic)
                   )}
                   onClick={(event) => bookingCliked(event, booking)}
@@ -463,6 +505,11 @@ const DayViewCell = ({ key, date, time }) => {
       case "derma":
         setOpenDialogDerma(true);
         break;
+      case "screening":
+        setOpenDialogScreening(true);
+        break;
+  
+
 
       default:
         break;
@@ -523,6 +570,14 @@ const DayViewCell = ({ key, date, time }) => {
         open={openDialogDerma}
         handleClose={handleCloseDialogDerma}
       />
+
+      <NewScreeningDialog
+        date={date}
+        time={time}
+        open={openDialogScreening}
+        handleClose={handleCloseDialogScreening}
+      />
+
 
 
     </React.Fragment>
