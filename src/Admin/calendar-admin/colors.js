@@ -6,5 +6,7 @@ export const CalendarColors = {
     GP_COLOR :  "#ff4f14",
     STD_COLOR : "#d6733a",
     BLOOD_COLOR: "#dc2626",
-    DERMA_COLOR: "#323e9a"
+    DERMA_COLOR: "#323e9a",
+    SCREENING_COLOR: "#d94f00",
+
 }

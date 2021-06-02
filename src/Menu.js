@@ -20,6 +20,8 @@ import { border, borderBottom } from "@material-ui/system";
 import { getGlobalPath } from "./GlobalPath";
 
 import GyaneBookService from "./Gynae/services/BookService"
+import ScreeningBookService from "./Screening/services/BookService"
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -90,10 +92,27 @@ export default function MyMenu() {
     }
   }
 
+  const updateHSPendingBookingsCount = async () =>
+  {
+    try{
+      const res = await ScreeningBookService.getPendingBookings()
+      if (res && res.data)
+      {
+        setState(state => ({...state, hsPendingBookingsCount: res.data.length}))
+      }
+    }
+    catch(ex)
+    {
+      console.error(ex)
+    }
+  }
+
+
   useEffect(() => {
     setSelectedIndex(state.currentMenuIndex);
     updateShouldRefundsCount()
-  }, [state.currentMenuIndex]);
+    updateHSPendingBookingsCount()
+  }, [state.currentMenuIndex, state.bookingDialogDataChanged]);
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -143,6 +162,11 @@ export default function MyMenu() {
                       {state.role === "gynae" && item.id === "deletedBookings" && state.shouldRefunsCount > 0 && (
                         <span className={classes.Badge}> {state.shouldRefunsCount} </span>
                       )}
+
+                      {state.role === "screening" && item.id === "pendingBookings" && state.hsPendingBookingsCount > 0 && (
+                        <span className={classes.Badge}> {state.hsPendingBookingsCount} </span>
+                      )}
+
 
                     </Grid>
                   </div>

@@ -24,7 +24,7 @@ import SendIcon from '@material-ui/icons/Send';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import MoneyOffIcon from '@material-ui/icons/MoneyOff';
-
+import AddAlertIcon from '@material-ui/icons/AddAlert';
 
 /// PCR ------------------
 import FindByRef from "./PCR/FindByRef";
@@ -74,6 +74,14 @@ import DermaDashboardPreview from "./Derma/DashboardPreview";
 import DermaFindByRef from "./Derma/FindByRef";
 import DermaCalendarView from "./Derma/calendar-admin/CalendarView";
 //----------------------------
+
+/// Screening -------------------
+import ScreeningBookingTable from "./Screening/BookingTable";
+import ScreeningDashboardPreview from "./Screening/DashboardPreview";
+import ScreeningFindByRef from "./Screening/FindByRef";
+import ScreeningCalendarView from "./Screening/calendar-admin/CalendarView";
+//----------------------------
+
 
 
 // Admin ----------------
@@ -554,6 +562,58 @@ export const MenuList_Derma = [
 
 ];
 
+export const MenuList_Screening = [
+  { index: 0, id: `dashboard`, title: `Dashboard`, icon: <DashboardIcon /> },
+  { index: 1, id: `pendingBookings`, title: `Pending Bookings`, icon: <AddAlertIcon /> },
+
+  {
+    index: 2,
+    id: `recentBookings`,
+    title: `Recent Bookings`,
+    icon: <AutorenewIcon />,
+  },
+  {
+    index: 3,
+    id: `todayBookings`,
+    title: `Today's Bookings`,
+    icon: <NewReleasesIcon />,
+  },
+  {
+    index: 4,
+    id: `oldBookings`,
+    title: `Old Bookings`,
+    icon: <HistoryIcon />,
+  },
+  {
+    index: 5,
+    id: `futureBookings`,
+    title: `Future Bookings`,
+    icon: <TimelineIcon />,
+  },
+  {
+    index: 6,
+    id: `allBookings`,
+    title: `All Bookings`,
+    icon: <DescriptionIcon />,
+  },
+  {
+    index: 7,
+    id: `deletedBookings`,
+    title: `Deleted Records`,
+    icon: <DeleteIcon />,
+  },
+  {
+    index: 8,
+    id: `calendarView`,
+    title: `Calendar View`,
+    icon: <DateRangeIcon />,
+  },
+  { index: 9, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 10, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+
+];
+
+
 
 export const MenuList_PCRLAB = [
   {
@@ -826,9 +886,35 @@ export const getMenuContent = (role, index) => {
       default:
         return `Page Not Found!`;
     }
+  } else if (role === "screening") {
+    switch (index) {
+      case 0:
+        return <ScreeningDashboardPreview />;
+      case 1:
+        return <ScreeningBookingTable date="pending" />;  
+      case 2:
+        return <ScreeningBookingTable date="recent" />;
+      case 3:
+        return <ScreeningBookingTable date="today" />;
+      case 4:
+        return <ScreeningBookingTable date="old" />;
+      case 5:
+        return <ScreeningBookingTable date="future" />;
+      case 6:
+        return <ScreeningBookingTable date="all" />;
+      case 7:
+        return <ScreeningBookingTable date="deleted" />;
+      case 8:
+        return <ScreeningCalendarView />;
+      case 9:
+        return <ScreeningFindByRef />;
+      case 10:
+        return <SearchBookingTable />;
 
 
-
+      default:
+        return `Page Not Found!`;
+    }
   }
   else {
     return `Page Not Found!`;
@@ -856,6 +942,8 @@ export const getMenuRole = (role) => {
       return MenuList_Derma;
     case "payment":
       return MenuList_Payment;
+    case "screening":
+      return MenuList_Screening;
 
 
 

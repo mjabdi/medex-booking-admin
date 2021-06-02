@@ -30,6 +30,7 @@ import dateformat from "dateformat";
 import { getRole, setRole, clearRole } from "./Role";
 import { getGlobalPath, getMenuIdFromGlobalPath } from "./GlobalPath";
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import AirplayIcon from '@material-ui/icons/Airplay';
 
 const drawerWidth = 240;
 
@@ -339,6 +340,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-10px",
   },
 
+  appsScreeningLabel: {
+    color: "#d94f00",
+    fontWeight: "600",
+    fontSize: "0.95rem",
+    marginTop: "-10px",
+  },
+
+
 
 
 
@@ -487,8 +496,19 @@ export default function Dashboard() {
           //   src={getGlobalPath("/images/payment-logo.png")}
           //   className={classes.appsLogo}
           // />
-          <MonetizationOnIcon className={classes.appsLogo} style={{color:"#008c77", fontSize:"2rem", padding:"12px"}}/>
+          <MonetizationOnIcon className={classes.appsLogo} style={{color:"#008c77", fontSize:"2rem", padding:"15px"}}/>
         );
+
+
+        case "screening":
+          return (
+            // <img
+            //   src={getGlobalPath("/images/payment-logo.png")}
+            //   className={classes.appsLogo}
+            // />
+            <AirplayIcon className={classes.appsLogo} style={{color:"#d94f00", fontSize:"2rem", padding:"16px"}}/>
+          );
+  
 
 
 
@@ -515,8 +535,9 @@ export default function Dashboard() {
         return <div className={classes.appsDermaLabel}> {"Dermatology"} </div>;
       case "payment":
         return <div className={classes.appsPaymentLabel}> {"Payments"} </div>;
-
-
+      case "screening":
+        return <div className={classes.appsScreeningLabel}> {"Screening"} </div>;
+  
 
       default:
         return null;
@@ -798,6 +819,25 @@ export default function Dashboard() {
                     justify="center"
                     alignItems="center"
                     className={
+                      state.role === "screening"
+                        ? classes.appsBoxSelected
+                        : classes.appsBox
+                    }
+                    onClick={() => appsClicked("screening")}
+                  >
+                    <Grid item>{getAppsLogo("screening")}</Grid>
+                    <Grid item>{getAppsLabel("screening")}</Grid>
+                  </Grid>
+                </Grid>
+
+
+                <Grid item>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                    className={
                       state.role === "derma"
                         ? classes.appsBoxSelected
                         : classes.appsBox
@@ -808,6 +848,9 @@ export default function Dashboard() {
                     <Grid item>{getAppsLabel("derma")}</Grid>
                   </Grid>
                 </Grid>
+
+
+
 
                 <Grid item>
                   <Grid
@@ -826,6 +869,8 @@ export default function Dashboard() {
                     <Grid item>{getAppsLabel("payment")}</Grid>
                   </Grid>
                 </Grid>
+
+
 
 
 
