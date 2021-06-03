@@ -463,6 +463,9 @@ export default function BookingDialog(props) {
 
   const [openTimeStampDialog, setOpenTimeStampDialog] = React.useState(false);
 
+  const [covidVaccine, setCovidVaccine] = React.useState("");
+
+
   const handleCloseTimeStampDialog = () => {
     setOpenTimeStampDialog(false);
     setSelectedBooking(null);
@@ -499,7 +502,8 @@ export default function BookingDialog(props) {
         passport !== booking.passportNumber ||
         passport2 !== booking.passportNumber2 ||
         certificate !== booking.certificate ||
-        antiBodyTest !== booking.antiBodyTest;
+        antiBodyTest !== booking.antiBodyTest ||
+        covidVaccine !== booking.covidVaccine
 
       setRecordChanged(isChanged);
     }
@@ -591,6 +595,12 @@ export default function BookingDialog(props) {
     setAntiBodyTest(event.target.checked);
     setFieldChanged(!fieldChanged);
   };
+
+  const covidVaccineChanged = (event) => {
+    setCovidVaccine(event.target.value);
+    setFieldChanged(!fieldChanged);
+  };
+
 
   const getStatusLabel = (status) => {
     if (status === "booked") {
@@ -704,6 +714,7 @@ export default function BookingDialog(props) {
 
       setCertificate(person.certificate);
       setAntiBodyTest(person.antiBodyTest);
+      setCovidVaccine(person.covidVaccine)
 
       setEditMode({ edit: edit, person: person });
     } else if (!edit && !person) {
@@ -729,6 +740,7 @@ export default function BookingDialog(props) {
       booking.bookingDate = RevertFormatDateFromString(bookingDate);
       booking.bookingTime = bookingTime;
       booking.bookingRef = person.bookingRef;
+      booking.covidVaccine = covidVaccine;
 
       if (validateBooking(booking)) {
         updateBooking({ bookingId: bookingId, person: booking });
@@ -2045,6 +2057,44 @@ export default function BookingDialog(props) {
                           </Grid>
                         </Grid>
                       </li>
+
+                      <li style={{ paddingTop: "10px", paddingBottom:"10px" }}>
+                      <span className={classes.infoTitle}>
+                                COVID VACCINE
+                              </span>
+                              <span
+                                hidden={
+                                  editMode.edit &&
+                                  editMode.person._id === booking._id
+                                }
+                                className={classes.infoData}
+                              >
+                                {booking.covidVaccine}
+                              </span>
+                              <span
+                                hidden={
+                                  !(
+                                    editMode.edit &&
+                                    editMode.person._id === booking._id
+                                  )
+                                }
+                                className={classes.infoData}
+                              >
+                                <TextField
+                                  fullWidth
+                                  className={classes.TextBox}
+                                  value={covidVaccine}
+                                  onChange={covidVaccineChanged}
+                                  inputProps={{
+                                    style: {
+                                      padding: 0,
+                                    },
+                                  }}
+                                ></TextField>
+                              </span>
+
+                      </li>          
+
                       <li className={classes.li} style={{ paddingTop: "10px" }}>
                         <span className={classes.infoTitle}>STATUS</span>{" "}
                         {getStatusLabel(booking.status)}
