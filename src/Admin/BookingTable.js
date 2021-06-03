@@ -69,6 +69,7 @@ import LocalAtmIcon from "@material-ui/icons/LocalAtm";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import PriceCalculator from "./PriceCalculator";
 import { corporates } from "./Corporates";
+import { CalendarColors } from "./calendar-admin/colors";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -219,40 +220,47 @@ const useStyles = makeStyles((theme) => ({
   },
 
   PCRLabel: {
-    color: "#4faef7",
+    color: CalendarColors.PCR_COLOR,
     fontWeight: "600",
     fontSize: "0.95rem",
   },
 
   GynaeLabel: {
-    color: "#e83caf",
+    color: CalendarColors.GYNAE_COLOR,
     fontWeight: "600",
     fontSize: "0.95rem",
   },
 
   GPLabel: {
-    color: "#ff4f14",
+    color: CalendarColors.GP_COLOR,
     fontWeight: "600",
     fontSize: "0.95rem",
   },
 
   STDLabel: {
-    color: "#d6733a",
+    color: CalendarColors.STD_COLOR,
     fontWeight: "600",
     fontSize: "0.95rem",
   },
 
   BloodLabel: {
-    color: "#dc2626",
+    color: CalendarColors.BLOOD_COLOR,
     fontWeight: "600",
     fontSize: "0.95rem",
   },
 
   DermaLabel: {
-    color: "#323e9a",
+    color: CalendarColors.DERMA_COLOR,
     fontWeight: "600",
     fontSize: "0.95rem",
   },
+
+  ScreeningLabel: {
+    color: CalendarColors.SCREENING_COLOR,
+    fontWeight: "600",
+    fontSize: "0.95rem",
+  },
+
 
 }));
 
@@ -332,6 +340,9 @@ export default function BookingTable(props) {
         return classes.BloodLabel;
       case "derma":
         return classes.DermaLabel;
+      case "screening":
+          return classes.ScreeningLabel;
+     
       
 
       default:
