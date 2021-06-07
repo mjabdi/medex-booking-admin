@@ -37,13 +37,13 @@ export default function DashboardPreview() {
 
 <           Grid container spacing={3}>
                     {/* Chart */}
-                    <Grid item xs={12} md={4} lg={6}>
+                    <Grid item xs={12} md={4} lg={5}>
                     <Paper className={fixedHeightPaper}>
                         <Chart />
                     </Paper>
                     </Grid>
                     {/* Tests Summary */}
-                    <Grid item xs={12} md={4} lg={3}>
+                    <Grid item xs={12} md={4} lg={4}>
                      <Paper className={fixedHeightPaper}>
                         <ResultsTimeReport />
                     </Paper>

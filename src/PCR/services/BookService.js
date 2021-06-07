@@ -22,6 +22,24 @@ export default class BookService {
       return API.get(`/api/book/getteststimereport`);
    }
 
+   static getTestsTimeReportLast7 = () =>
+   {
+      axiosRetry( API, { retries: 3,  retryDelay: (retryCount) => {
+         return retryCount * 1000;
+       } });
+      return API.get(`/api/book/getteststimereportlast7`);
+   }
+
+   static getTestsTimeReportLast30 = () =>
+   {
+      axiosRetry( API, { retries: 3,  retryDelay: (retryCount) => {
+         return retryCount * 1000;
+       } });
+      return API.get(`/api/book/getteststimereportlast30`);
+   }
+
+
+
    static getBookingsStatsByDateStr = (dateStr) =>
    {
       return API.get(`/api/book/getbookingsstatsbydatestr?date=${dateStr}`);
