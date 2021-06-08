@@ -6,6 +6,7 @@ import {
   Button,
   Checkbox,
   CircularProgress,
+  DialogActions,
   Divider,
   FormControlLabel,
   Grid,
@@ -48,6 +49,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { validate } from "email-validator";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import { CalendarColors } from "../Admin/calendar-admin/colors";
+import DateField from "../Blood/DateField";
 
 var interval;
 
@@ -328,6 +330,16 @@ export default function NewBookingDialog(props) {
 
   const [serviceError, setServiceError] = React.useState(false);
 
+  const [birthDate, setBirthDate] = React.useState(null);
+  const [birthDateError, setBirthDateError] = React.useState(false);
+
+  const birthDateChanged = (dateStr) =>
+  {
+      setBirthDate(dateStr);
+      setBirthDateError(false)
+  }  
+
+
   
   const fullnameChanged = (event) => {
     setFullname(event.target.value);
@@ -362,6 +374,7 @@ export default function NewBookingDialog(props) {
     setEmail("");
     setNotes("");
     setService("");
+    setBirthDate(null)
     setServiceError(false)
     
     props.handleClose();
@@ -373,6 +386,12 @@ export default function NewBookingDialog(props) {
     if (!fullname || fullname.trim().length < 1) {
       setFullnameError(true);
       error = true;
+    }
+
+    if (birthDate && birthDate.length !== 10)
+    {
+      setBirthDateError(true)
+      error = true
     }
 
     if (!service)
@@ -398,7 +417,8 @@ export default function NewBookingDialog(props) {
         phone: phone,
         email: email,
         notes: notes,
-        service: service
+        service: service,
+        birthDate: birthDate
       });
       setSaving(false);
       setState((state) => ({
@@ -461,14 +481,14 @@ export default function NewBookingDialog(props) {
             <DialogContent>
               <div
                 style={{
-                  height: "450px",
+                  height: "500px",
                 }}
               >
                 <Grid
                   container
                   direction="row"
                   justify="stretch"
-                  spacing={2}
+                  spacing={1}
                   alignItems="center"
                 >
                   <Grid item xs={12}>
@@ -549,6 +569,18 @@ export default function NewBookingDialog(props) {
                     </FormControl>
                   </Grid>
 
+                  <Grid item xs={12} md={12}>
+                    <DateField
+                      error={birthDateError}
+                      title="Date of Birth"
+                      value={birthDate}
+                      dateChanged={birthDateChanged}
+                    >
+
+                    </DateField>
+                  </Grid>
+
+
 
 
                   <Grid item xs={12}>
@@ -565,14 +597,14 @@ export default function NewBookingDialog(props) {
 
                 </Grid>
 
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: "20px",
-                    right: "20px",
-                  }}
-                >
-                  <Grid
+              </div>
+
+              <Backdrop className={classes.backdrop} open={saving}>
+                <CircularProgress color="inherit" />
+              </Backdrop>
+            </DialogContent>
+            <DialogActions>
+            <Grid
                     container
                     direction="row"
                     justify="flex-end"
@@ -600,13 +632,8 @@ export default function NewBookingDialog(props) {
                       </Button>
                     </Grid>
                   </Grid>
-                </div>
-              </div>
 
-              <Backdrop className={classes.backdrop} open={saving}>
-                <CircularProgress color="inherit" />
-              </Backdrop>
-            </DialogContent>
+            </DialogActions>
           </Dialog>
         </React.Fragment>
       )}
