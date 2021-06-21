@@ -15,6 +15,7 @@ import DateRangeIcon from "@material-ui/icons/DateRange";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 import AirplanemodeActiveIcon from "@material-ui/icons/AirplanemodeActive";
 import ArchiveIcon from '@material-ui/icons/Archive';
+import CallIcon from '@material-ui/icons/Call';
 
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
@@ -565,51 +566,52 @@ export const MenuList_Derma = [
 export const MenuList_Screening = [
   { index: 0, id: `dashboard`, title: `Dashboard`, icon: <DashboardIcon /> },
   { index: 1, id: `pendingBookings`, title: `Pending Bookings`, icon: <AddAlertIcon /> },
+  { index: 2, id: `tbcBookings`, title: `Patients TBC`, icon: <CallIcon /> },
 
   {
-    index: 2,
+    index: 3,
     id: `recentBookings`,
     title: `Recent Bookings`,
     icon: <AutorenewIcon />,
   },
   {
-    index: 3,
+    index: 4,
     id: `todayBookings`,
     title: `Today's Bookings`,
     icon: <NewReleasesIcon />,
   },
   {
-    index: 4,
+    index: 5,
     id: `oldBookings`,
     title: `Old Bookings`,
     icon: <HistoryIcon />,
   },
   {
-    index: 5,
+    index: 6,
     id: `futureBookings`,
     title: `Future Bookings`,
     icon: <TimelineIcon />,
   },
   {
-    index: 6,
+    index: 7,
     id: `allBookings`,
     title: `All Bookings`,
     icon: <DescriptionIcon />,
   },
   {
-    index: 7,
+    index: 8,
     id: `deletedBookings`,
     title: `Deleted Records`,
     icon: <DeleteIcon />,
   },
   {
-    index: 8,
+    index: 9,
     id: `calendarView`,
     title: `Calendar View`,
     icon: <DateRangeIcon />,
   },
-  { index: 9, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
-  { index: 10, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+  { index: 10, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 11, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
 
 ];
 
@@ -893,22 +895,24 @@ export const getMenuContent = (role, index) => {
       case 1:
         return <ScreeningBookingTable date="pending" />;  
       case 2:
-        return <ScreeningBookingTable date="recent" />;
+        return <ScreeningBookingTable date="tbc" />;  
       case 3:
-        return <ScreeningBookingTable date="today" />;
+        return <ScreeningBookingTable date="recent" />;
       case 4:
-        return <ScreeningBookingTable date="old" />;
+        return <ScreeningBookingTable date="today" />;
       case 5:
-        return <ScreeningBookingTable date="future" />;
+        return <ScreeningBookingTable date="old" />;
       case 6:
-        return <ScreeningBookingTable date="all" />;
+        return <ScreeningBookingTable date="future" />;
       case 7:
-        return <ScreeningBookingTable date="deleted" />;
+        return <ScreeningBookingTable date="all" />;
       case 8:
-        return <ScreeningCalendarView />;
+        return <ScreeningBookingTable date="deleted" />;
       case 9:
-        return <ScreeningFindByRef />;
+        return <ScreeningCalendarView />;
       case 10:
+        return <ScreeningFindByRef />;
+      case 11:
         return <SearchBookingTable />;
 
 

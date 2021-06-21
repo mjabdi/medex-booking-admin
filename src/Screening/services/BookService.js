@@ -107,16 +107,29 @@ export default class BookService {
       return API.post(`/api/screening/book/deletebookappointment?id=${id}`);
    } 
 
+   static unDeleteBooking = (id) =>
+   {
+      return API.post(`/api/screening/book/undeletebookappointment?id=${id}`);
+   } 
+
+
+   static moveTBCFolder = (id) =>
+   {
+      return API.post(`/api/screening/book/movetbcfolder?id=${id}`);
+   } 
+
+   static undoMoveTBCFolder = (id) =>
+   {
+      return API.post(`/api/screening/book/undomovetbcfolder?id=${id}`);
+   } 
+
+
    static confirmBooking = (id) =>
    {
       return API.post(`/api/screening/book/confirmbookappointment?bookingId=${id}`);
    } 
 
 
-   static unDeleteBooking = (id) =>
-   {
-      return API.post(`/api/screening/book/undeletebookappointment?id=${id}`);
-   } 
    
     static getBookingsByRef = (ref) =>
     {
@@ -139,6 +152,13 @@ export default class BookService {
       if (!limit) limit = 25 
        return API.get(`/api/screening/book/getdeletedbookings?limit=${limit}`);
     }
+
+    static getTBCFolderBookings= (limit) =>
+    {
+      if (!limit) limit = 25 
+       return API.get(`/api/screening/book/gettbcfolderbookings?limit=${limit}`);
+    }
+
 
     static getTodayBookings= () =>
     {

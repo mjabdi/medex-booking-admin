@@ -27,6 +27,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import Draggable from 'react-draggable';
 import AddAlertIcon from '@material-ui/icons/AddAlert';
+import CallIcon from '@material-ui/icons/Call';
 
 import * as dateformat from 'dateformat';
 
@@ -226,6 +227,9 @@ const getTableTitle = (str) =>{
   }else if (str === 'pending')
   {
     return `Pending Bookings`;
+  }else if (str === 'tbc')
+  {
+    return `Patients TBC`;
   }
   else
   {
@@ -266,6 +270,9 @@ const getTableIcon = (str) =>{
   }else if (str === 'pending')
   {
     return <AddAlertIcon style={{fontSize:"2.2rem"}} />;
+  }else if (str === 'tbc')
+  {
+    return <CallIcon style={{fontSize:"2.2rem"}} />;
   }
   
   else
@@ -786,6 +793,11 @@ export default function BookingTable(props) {
     {
       api = BookService.getPendingBookings;
     }
+    else if (props.date === 'tbc')
+    {
+      api = BookService.getTBCFolderBookings;
+    }
+
 
      
     setData({bookings: [], cachedBookings: [], isFetching: true});

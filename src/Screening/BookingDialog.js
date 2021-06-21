@@ -395,6 +395,7 @@ export default function BookingDialog(props) {
   const [openRefundDialog, setOpenRefundDialog] = React.useState(false);
 
   const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
+  const [openTBCDialog, setOpenTBCDialog] = React.useState(false);
 
 
   const [openInvoiceDialog, setOpenInvoiceDialog] = React.useState(false);
@@ -517,6 +518,12 @@ export default function BookingDialog(props) {
     setOpenConfirmDialog(false);
     setSelectedBooking(null);
   };
+
+  const handleCloseTBCDialog = () => {
+    setOpenTBCDialog(false);
+    setSelectedBooking(null);
+  };
+
 
 
   const handleCloseInvoiceDialog = (refresh) => {
@@ -896,9 +903,43 @@ export default function BookingDialog(props) {
     } catch (err) {
       console.error(err);
       setSaving(false);
-      setOpenRefundDialog(false);
+      setOpenConfirmDialog(false);
     }
   };
+
+  const moveTBCFolderClicked = async () => {
+    setSaving(true);
+    try {
+      await BookService.moveTBCFolder(booking._id);
+      setSaving(false);
+      setOpenTBCDialog(false);
+      setRefreshData(!refreshData);
+      onClose();
+      
+    } catch (err) {
+      console.error(err);
+      setSaving(false);
+      setOpenTBCDialog(false);
+    }
+  };
+
+  const undoMoveTBCFolderClicked = async () => {
+    setSaving(true);
+    try {
+      await BookService.undoMoveTBCFolder(booking._id);
+      setSaving(false);
+      setOpenTBCDialog(false);
+      setRefreshData(!refreshData);
+      onClose();
+      
+    } catch (err) {
+      console.error(err);
+      setSaving(false);
+      setOpenTBCDialog(false);
+    }
+  };
+
+
 
 
   const updateShouldRefundsCount = async () => {
@@ -1141,6 +1182,44 @@ export default function BookingDialog(props) {
                             >
                               Confirm Booking
 
+                            </Button>
+
+                        </li>
+                      )}
+
+                    {!booking.confirmed && !booking.tbcFolder && (
+                        <li style={{margin:"20px 0px"}}>
+                            <Button
+                              style={{height:"50px"}}
+                              color="secondary"
+                              fullWidth
+                              variant="contained"
+                              onClick={()=> {
+                                setSelectedBooking(booking)
+                                setOpenTBCDialog(true)
+                              }}
+                            >
+                              Move To Patients TBC 
+
+                            </Button>
+
+                        </li>
+                      )}
+
+                    {!booking.confirmed && booking.tbcFolder && (
+                        <li style={{margin:"20px 0px"}}>
+                            <Button
+                              style={{height:"50px"}}
+                              color="secondary"
+                              fullWidth
+                              variant="contained"
+                              onClick={()=> {
+                                setSelectedBooking(booking)
+                                setOpenTBCDialog(true)
+                              }}
+                            >
+                              Move Back To Pending Bookings 
+                              
                             </Button>
 
                         </li>
@@ -2117,6 +2196,53 @@ export default function BookingDialog(props) {
           </Backdrop>
 
           </Dialog>
+
+          <Dialog
+            open={openTBCDialog}
+            onClose={handleCloseTBCDialog}
+            aria-labelledby="tbc-dialog-title"
+            aria-describedby="tbc-dialog-description"
+          >
+            <DialogTitle style={{ color: "#f68529" }} id="tbc-dialog-title">
+              {!booking.tbcFolder ?  "Move To Patients TBC" : "Move Back To Pending Bookings"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText
+                style={{ color: "#333", fontWeight: "400" }}
+                id="alert-dialog-description"
+              >
+                <span style={{fontWeight:"500"}}>
+                {!booking.tbcFolder ?  `Are you sure you want to move this record to "Patients TBC"?` : `Are you sure you want to move this record to "Pending Bookings"?`}
+
+                   
+                </span>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseTBCDialog} color="default">
+                Back
+              </Button>
+              <Button
+                onClick={!booking.tbcFolder ? moveTBCFolderClicked : undoMoveTBCFolderClicked}
+                color="secondary"
+                variant="contained"
+                autoFocus
+              >
+                {!booking.tbcFolder ?  "Yes, move to Patients TBC" : "Yes, move to Pending Bookings"}
+
+                
+              </Button>
+            </DialogActions>
+            <Backdrop
+                className={classes.backdrop}
+                open={saving || deleting || restoring}
+              >
+                <CircularProgress color="inherit" />
+          </Backdrop>
+
+          </Dialog>
+
+
 
 
 
