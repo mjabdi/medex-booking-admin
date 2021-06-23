@@ -43,7 +43,7 @@ export default function DashboardPreview() {
 
   const history = useHistory();
 
-  const role="museumadmin"
+  const role="payment"
 
   const gotoLatePayments = () =>
   {

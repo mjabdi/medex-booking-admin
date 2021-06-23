@@ -31,6 +31,8 @@ import { getRole, setRole, clearRole } from "./Role";
 import { getGlobalPath, getMenuIdFromGlobalPath } from "./GlobalPath";
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import AirplayIcon from '@material-ui/icons/Airplay';
+import PollIcon from '@material-ui/icons/InsertChart';
+
 
 const drawerWidth = 240;
 
@@ -64,8 +66,8 @@ const StyledMenuApps = withStyles((theme) => ({
   paper: {
     marginTop: "5px",
     // marginRight: "5px",
-    width: "280px",
-    height: "340px",
+    width: "290px",
+    height: "450px",
     border: `1px solid #ddd`,
     borderRadius: "10px",
     padding: "10px",
@@ -347,6 +349,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-10px",
   },
 
+  appsReportsLabel: {
+    color: "#008c34",
+    fontWeight: "600",
+    fontSize: "0.95rem",
+    marginTop: "-10px",
+  },
+
 
 
 
@@ -508,6 +517,16 @@ export default function Dashboard() {
             // />
             <AirplayIcon className={classes.appsLogo} style={{color:"#006b8f", fontSize:"2rem", padding:"16px"}}/>
           );
+
+          case "reports":
+            return (
+              // <img
+              //   src={getGlobalPath("/images/payment-logo.png")}
+              //   className={classes.appsLogo}
+              // />
+              <PollIcon className={classes.appsLogo} style={{color:"#008c34", fontSize:"2rem", padding:"13px"}}/>
+            );
+    
   
 
 
@@ -532,12 +551,14 @@ export default function Dashboard() {
       case "blood":
         return <div className={classes.appsBloodLabel}> {"Blood"} </div>;
       case "derma":
-        return <div className={classes.appsDermaLabel}> {"Dermatology"} </div>;
+        return <div className={classes.appsDermaLabel}> {"Derma"} </div>;
       case "payment":
         return <div className={classes.appsPaymentLabel}> {"Payments"} </div>;
       case "screening":
         return <div className={classes.appsScreeningLabel}> {"Screening"} </div>;
-  
+      case "reports":
+          return <div className={classes.appsReportsLabel}> {"Reports"} </div>;
+    
 
       default:
         return null;
@@ -703,7 +724,7 @@ export default function Dashboard() {
               open={Boolean(anchorApps)}
               onClose={handleAppsClose}
             >
-              <Grid container spacing={1}>
+              <Grid container justify="center" alignItems="center" spacing={1}>
                 <Grid item>
                   <Grid
                     container
@@ -869,6 +890,28 @@ export default function Dashboard() {
                     <Grid item>{getAppsLabel("payment")}</Grid>
                   </Grid>
                 </Grid>
+
+                <Grid item>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                    className={
+                      state.role === "reports"
+                        ? classes.appsBoxSelected
+                        : classes.appsBox
+                    }
+                    onClick={() => appsClicked("reports")}
+                  >
+                    <Grid item>{getAppsLogo("reports")}</Grid>
+                    <Grid item>{getAppsLabel("reports")}</Grid>
+                  </Grid>
+                </Grid>
+
+                <Grid item style={{width:"85px"}}></Grid>
+                <Grid item style={{width:"85px"}}></Grid>
+
 
 
 

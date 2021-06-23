@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   fixedHeight: {
-    height: 380,
+    height: 400,
   },
   fixedHeightSmall: {
     height: 200,
