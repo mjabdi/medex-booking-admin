@@ -99,7 +99,40 @@ import PaymentsDashboard from "./Payment/DashboardPreview"
 
 //---------------
 
+// Reports ----------------
+import SearchInvoices from "./Reports/SearchInvoices"
+
+//---------------
+
+
+
 import LinkIcon from '@material-ui/icons/Link';
+
+export const MenuList_Reports = [
+  {
+    index: 0,
+    id: `dashboard`,
+    title: `Dashboard`,
+    icon: <DashboardIcon />,
+  },
+  {
+    index: 1,
+    id: `periodicReport`,
+    title: `Periodic Report`,
+    icon: <EventNoteIcon />,
+  },
+  {
+    index: 2,
+    id: `searchInvoices`,
+    title: `Search Invoices`,
+    icon: <SearchIcon />,
+  },
+
+]
+
+
+//---------------
+
 
 export const MenuList_Payment = [
   {
@@ -919,6 +952,17 @@ export const getMenuContent = (role, index) => {
       default:
         return `Page Not Found!`;
     }
+  }else if (role === "reports") {
+    switch (index) {
+      case 0:
+        return null;
+      case 1:
+        return  null;  
+      case 2:
+        return <SearchInvoices />;  
+      default:
+        return `Page Not Found!`;
+    }
   }
   else {
     return `Page Not Found!`;
@@ -948,7 +992,9 @@ export const getMenuRole = (role) => {
       return MenuList_Payment;
     case "screening":
       return MenuList_Screening;
-
+    case "reports":
+        return MenuList_Reports;
+  
 
 
     default:
