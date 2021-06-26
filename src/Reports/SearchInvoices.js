@@ -73,6 +73,7 @@ import { corporates } from "../Admin/Corporates";
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import BloodReportDialog from "../Blood/BloodReportDialog";
 import { CalendarColors } from "../Admin/calendar-admin/colors";
+import ViewInvoiceDialog from "./ViewInvoiceDialog";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -652,15 +653,7 @@ export default function SearchInvoices(props) {
   const openDetailsDialog = (event, id, clinic) => {
     const booking = data.bookings.find((element) => element._id === id);
     setSelectedBooking(booking);
-    if (clinic === "Blood Result") {
-      setSeeDetailsDialogOpenBloodReport(true);
-
-    }
-    else {
-      setSeeDetailsDialogOpen(true);
-
-    }
-
+    setSeeDetailsDialogOpen(true);
   };
 
   const refreshClicked = (event) => {
@@ -809,10 +802,11 @@ export default function SearchInvoices(props) {
         </div>
       )}
 
-      <BookingDialog
+      <ViewInvoiceDialog
         booking={selectedBooking}
+        invoice={selectedBooking}
         open={seeDetailsDialogOpen}
-        onClose={handleCloseSeeDetaisDialog}
+        handleClose={handleCloseSeeDetaisDialog}
       />
 
       {data.bookings && data.bookings.length > 0 && (
@@ -1170,11 +1164,6 @@ export default function SearchInvoices(props) {
 
       )}
 
-      <BloodReportDialog
-        booking={selectedBooking}
-        open={seeDetailsDialogOpenBloodReport}
-        onClose={handleCloseSeeDetaisDialog}
-      />
     </React.Fragment>
   );
 }
