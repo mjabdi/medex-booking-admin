@@ -291,6 +291,14 @@ export default function BookingTable(props) {
     new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
   );
   const handleFromDateChange = (date) => {
+
+    if (!date || date.toString() === "Invalid Date")
+    {
+      setFromDate(null)
+      setFromDateStr('')
+      return
+    }
+    
     setFromDate(date);
     setFromDateStr(dateformat(date, "yyyy-mm-dd"));
   };
@@ -299,6 +307,14 @@ export default function BookingTable(props) {
     new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
   );
   const handleUntilDateChange = (date) => {
+
+    if (!date || date.toString() === "Invalid Date")
+    {
+      setUntilDate(null)
+      seUntilDateStr('');
+      return
+    }
+
     setUntilDate(date);
     seUntilDateStr(dateformat(date, "yyyy-mm-dd"));
   };
@@ -1215,7 +1231,7 @@ export default function BookingTable(props) {
                         format="dd/MM/yyyy"
                         margin="normal"
                         id="date-picker-until"
-                        label="Until"
+                        label="From"
                         value={fromDate}
                         onChange={handleFromDateChange}
                         KeyboardButtonProps={{

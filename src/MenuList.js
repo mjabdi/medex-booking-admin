@@ -107,6 +107,7 @@ import SearchInvoices from "./Reports/SearchInvoices"
 
 
 import LinkIcon from '@material-ui/icons/Link';
+import PeriodicReport from "./Reports/PeriodicReport";
 
 export const MenuList_Reports = [
   {
@@ -957,7 +958,7 @@ export const getMenuContent = (role, index) => {
       case 0:
         return null;
       case 1:
-        return  null;  
+        return  <PeriodicReport/>;  
       case 2:
         return <SearchInvoices />;  
       default:

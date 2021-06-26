@@ -8,6 +8,14 @@ export default class BookService {
       return API.post(`/api/medex/invoice/searchallinvoicesbyname`, {search: {name: name}});
    }
 
+   static searchAllInvoicesByDate = (search) => // search is an object {from: ..., until: ...}
+   {
+      return API.post(`/api/medex/invoice/searchallinvoicesbydate`, {search});
+   }
+
+
+   
+
 
    static addNewBooking = (payload) =>
    {
