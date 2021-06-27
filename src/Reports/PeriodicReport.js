@@ -75,6 +75,9 @@ import BloodReportDialog from "../Blood/BloodReportDialog";
 import { CalendarColors } from "../Admin/calendar-admin/colors";
 import ViewInvoiceDialog from "./ViewInvoiceDialog";
 
+import ExcelJS from "exceljs/dist/es5/exceljs.browser";
+import saveAs from "file-saver";
+
 const useStyles = makeStyles((theme) => ({
   title: {
     marginTop: theme.spacing(0),
@@ -491,6 +494,25 @@ export default function PeriodicReport(props) {
     return name
   }
 
+  const formatPayment = (payment) => {
+    if (!payment)
+    {
+      return "NONE";
+    }
+
+    switch(payment)
+    {
+      case "credit card":
+        return "C/CARD";
+      case "cash": 
+        return "CASH";
+      case "corporate":
+          return "CORP";
+      default :
+        return "OTHERS"        
+    }
+  }
+
   var columns = [];
 
   columns = [
@@ -516,9 +538,23 @@ export default function PeriodicReport(props) {
         );
       },
     },
+
+    {
+      field: "timeStamp",
+      headerName: "Date",
+      width: 100,
+      renderCell: (params) => {
+        return (
+          <span style={{ fontSize: "0.8rem", fontWeight: "500" }}>
+            {formatTimeStamp(params.value)}
+          </span>
+        )
+      },
+    },
+
     {
       field: "grandTotal",
-      headerName: "Amount",
+      headerName: "Fee",
       align: "center",
       width: 140,
       renderCell: (params) => {
@@ -534,6 +570,19 @@ export default function PeriodicReport(props) {
         );
       },
     },
+
+    {
+      field: "name", headerName: "Patient Name", width: 200, renderCell: (params) => {
+
+        return (
+          <span style={{ fontSize: "0.8rem", fontWeight: "500" }}>
+            {removeTitle(params.value)}
+          </span>
+        )
+
+      }
+    },
+
     {
       field: "clinic",
       headerName: "Clinic",
@@ -549,31 +598,35 @@ export default function PeriodicReport(props) {
     },
 
     {
-      field: "name", headerName: "Fullname", width: 200, renderCell: (params) => {
-
-        return (
-          <span style={{ fontSize: "0.8rem", fontWeight: "500" }}>
-            {removeTitle(params.value)}
-          </span>
-        )
-
-      }
-    },
-
-
-    {
-      field: "timeStamp",
-      headerName: "Invoice Date",
-      width: 250,
+      field: "booking.paidBy",
+      headerName: "Payment",
+      align: "center",
+      width: 110,
       renderCell: (params) => {
         return (
-          <span style={{ fontSize: "0.8rem", fontWeight: "500" }}>
-            {formatTimeStamp(params.value)}
+          <span style={{ fontSize: "0.8rem" }}>
+            {formatPayment(params.getValue('booking').paidBy)}
           </span>
-        )
+        );
+      },
+    },
+
+    {
+      field: "booking.corporate",
+      headerName: "Corporate",
+      align: "center",
+      width: 150,
+      renderCell: (params) => {
+        return (
+          <span style={{ fontSize: "0.8rem" }}>
+            {params.getValue('booking').corporate || ''}
+          </span>
+        );
       },
     },
   ];
+
+  const [exportingToExcel, setExportingToExcel] = React.useState(false)
 
 
   const [state, setState] = React.useContext(GlobalState);
@@ -601,13 +654,14 @@ export default function PeriodicReport(props) {
   const lastPromise = useRef();
 
   const formatTimeStamp = (timeStamp) => {
-    const todayStr = dateformat(new Date(), "yyyy-mm-dd");
-    const timeStampStr = dateformat(timeStamp, "yyyy-mm-dd");
-    if (todayStr === timeStampStr) {
-      return dateformat(timeStamp, "'Today', h:MM:ss TT");
-    } else {
-      return dateformat(timeStamp, "mmmm dS yyyy, h:MM:ss TT");
-    }
+    // const todayStr = dateformat(new Date(), "yyyy-mm-dd");
+    // const timeStampStr = dateformat(timeStamp, "yyyy-mm-dd");
+    // if (todayStr === timeStampStr) {
+    //   return dateformat(timeStamp, "'Today', h:MM:ss TT");
+    // } else {
+    //   return dateformat(timeStamp, "mmmm dS yyyy, h:MM:ss TT");
+    // }
+    return dateformat(timeStamp, "dd-mm-yyyy");
   };
 
   const loadData = () => {
@@ -619,7 +673,8 @@ export default function PeriodicReport(props) {
     const search = {
       from: fromDate,
       until: untilDate,
-      clinic: clinic
+      clinic: clinic,
+      corporate: justCorporate ? corporate : null
     }
 
     const currentPromise = api(search)
@@ -688,7 +743,7 @@ export default function PeriodicReport(props) {
   const [page, setPage] = React.useState(1);
 
   const handleExcelButtonClicked = (event) => {
-    setOpenDialogExcel(true);
+   ExportToExcel();
   };
 
   const isTopSelectHidden = (date) => {
@@ -731,6 +786,99 @@ export default function PeriodicReport(props) {
     })
 
     return amount
+  }
+
+  const ExportToExcel = async () => {
+    try{
+      setExportingToExcel(true)  
+      const wb = new ExcelJS.Workbook()
+
+      const worksheet = wb.addWorksheet()
+
+      worksheet.properties.defaultRowHeight = 15;
+      worksheet.properties.defaultColWidth = 15;
+  
+      const row1 = worksheet.getRow(1)
+      row1.getCell(1).value = `MEDICAL EXPRESS CLINIC PERIODIC REPORT : ${fromDateStr} | ${untilDateStr}`
+     
+      const row2 = worksheet.getRow(2)
+      row2.getCell(1).value =  `TOTAL RECORDS :`
+      row2.getCell(2).value =  `${data.bookings.length}`
+      row2.getCell(2).font = { name: 'Calibri', family: 4, size: 14, bold: true };
+
+  
+      const row3 = worksheet.getRow(3)
+      row3.getCell(1).value = `TOTAL FEE :`
+
+      row3.getCell(2).value = `${parseFloat(
+        calcTotalAmount(data.bookings)
+      ).toLocaleString("en-GB", {
+        style: "currency",
+        currency: "GBP",
+      })}`
+      row3.getCell(2).font = { name: 'Calibri', family: 4, size: 14, bold: true };
+
+
+
+      const row4 = worksheet.getRow(5)
+      row4.height = 25
+      const columns = ["Invoice #", "Date", "Fee" , "Patient Name", "Clinic", "Payment", "Corporate"]
+      
+      columns.forEach((col, index) =>
+          {
+              row4.getCell(index+1).value = col;
+              row4.getCell(index+1).font = { name: 'Calibri', family: 4, size: 10, bold: true };
+          })
+  
+      const offset = 6
+
+      if (data.bookings && data.bookings.length > 0)
+      {
+          data.bookings.forEach((invoice, index) => {
+              worksheet.getRow(offset + index).height = 30
+  
+              worksheet.getRow(offset + index).getCell(1).value = invoice.invoiceNumber
+              worksheet.getRow(offset + index).getCell(1).font = { name: 'Calibri', family: 4, size: 12, bold: false };
+
+              worksheet.getRow(offset + index).getCell(2).value = dateformat(invoice.timeStamp,'dd/mm/yyyy')
+              worksheet.getRow(offset + index).getCell(2).font = { name: 'Calibri', family: 4, size: 12, bold: false };
+
+              worksheet.getRow(offset + index).getCell(3).value = `${parseFloat(
+                invoice.grandTotal
+              ).toLocaleString("en-GB", {
+                style: "currency",
+                currency: "GBP",
+              })}`
+              worksheet.getRow(offset + index).getCell(3).font = { name: 'Calibri', family: 4, size: 12, bold: false };
+
+              worksheet.getRow(offset + index).getCell(4).value = removeTitle(invoice.name).toUpperCase()
+              worksheet.getRow(offset + index).getCell(4).font = { name: 'Calibri', family: 4, size: 12, bold: false };
+
+              worksheet.getRow(offset + index).getCell(5).value = invoice.clinic.toUpperCase()
+              worksheet.getRow(offset + index).getCell(5).font = { name: 'Calibri', family: 4, size: 12, bold: false };
+
+              worksheet.getRow(offset + index).getCell(6).value = formatPayment(invoice.booking.paidBy).toUpperCase()
+              worksheet.getRow(offset + index).getCell(6).font = { name: 'Calibri', family: 4, size: 12, bold: false };
+
+              worksheet.getRow(offset + index).getCell(7).value = invoice.booking.corporate
+              worksheet.getRow(offset + index).getCell(7).font = { name: 'Calibri', family: 4, size: 12, bold: false };              
+          })
+      }
+  
+
+
+
+      const buf = await wb.xlsx.writeBuffer()
+
+      saveAs(new Blob([buf]), `MEDEX-REPORT-${clinic.toUpperCase()}-${fromDateStr}-${untilDateStr}.xlsx`)
+
+      setExportingToExcel(false)  
+    }catch(err)
+    {
+      console.log(err)
+      setExportingToExcel(false)  
+    }
+
   }
 
   return (
@@ -845,13 +993,36 @@ export default function PeriodicReport(props) {
               </Button>
             </Grid>
 
-            <Grid item>
-              {data.isFetching && (
+            {data.isFetching && (
+              <Grid item>
                 <div style={{ width: "100%", paddingTop: "0px" }}>
                   <CircularProgress color="primary" />
                 </div>
-              )}
-            </Grid>
+              </Grid>
+            )}
+
+            {!data.isFetching && data.bookings && data.bookings.length > 0 && (
+              <Grid item xs={3}>
+                <div>
+                  <Button
+                    disabled={exportingToExcel}
+                    className={classes.ExportToExcelButton}
+                    variant="outlined"
+                    color="default"
+                    onClick={handleExcelButtonClicked}
+                    startIcon={
+                      <FontAwesomeIcon
+                        style={{ color: "#009900" }}
+                        icon={faFileExcel}
+                      />
+                    }
+                  >
+                    Save as Excel file
+                  </Button>
+                </div>
+              </Grid>
+            )}
+
 
 
 
@@ -867,7 +1038,7 @@ export default function PeriodicReport(props) {
                 <span>{data.bookings?.length}</span>
               </Grid>
               <Grid item>
-                <span style={{ width: "115px", display: "inline-block", color: "#eee" }}>Total Amount :</span>
+                <span style={{ width: "115px", display: "inline-block", color: "#eee" }}>Total FEE :</span>
                 <span style={{ fontWeight: "700" }}>{parseFloat(
                   calcTotalAmount(data.bookings)
                 ).toLocaleString("en-GB", {

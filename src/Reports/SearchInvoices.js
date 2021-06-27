@@ -483,6 +483,26 @@ export default function SearchInvoices(props) {
     return name
   }
 
+  const formatPayment = (payment) => {
+    if (!payment)
+    {
+      return "NONE";
+    }
+
+    switch(payment)
+    {
+      case "credit card":
+        return "C/CARD";
+      case "cash": 
+        return "CASH";
+      case "corporate":
+          return "CORP";
+      default :
+        return "OTHERS"        
+    }
+  }
+
+
   var columns = [];
 
   columns = [
@@ -498,7 +518,7 @@ export default function SearchInvoices(props) {
             style={{ cursor: "pointer" }}
             onClick={(event) => openDetailsDialog(event, params.value, params.getValue("clinic"))}
           >
-            <span style={{ minWidth: "60px", color: "#00a1c5", display:"inline-block" }}>{params.getValue("invoiceNumber")}</span>
+            <span style={{ minWidth: "60px", color: "#00a1c5", display: "inline-block" }}>{params.getValue("invoiceNumber")}</span>
             <IconButton
               color="primary"
             >
@@ -508,14 +528,28 @@ export default function SearchInvoices(props) {
         );
       },
     },
+
+    {
+      field: "timeStamp",
+      headerName: "Date",
+      width: 100,
+      renderCell: (params) => {
+        return (
+          <span style={{ fontSize: "0.8rem", fontWeight: "500" }}>
+            {formatTimeStamp(params.value)}
+          </span>
+        )
+      },
+    },
+
     {
       field: "grandTotal",
-      headerName: "Amount",
+      headerName: "Fee",
       align: "center",
       width: 140,
       renderCell: (params) => {
         return (
-          <span style={{fontSize:"1rem", fontWeight:"500",color: "#067500"}}>
+          <span style={{ fontSize: "1rem", fontWeight: "500", color: "#067500" }}>
             {parseFloat(
               params.value
             ).toLocaleString("en-GB", {
@@ -526,6 +560,19 @@ export default function SearchInvoices(props) {
         );
       },
     },
+
+    {
+      field: "name", headerName: "Patient Name", width: 200, renderCell: (params) => {
+
+        return (
+          <span style={{ fontSize: "0.8rem", fontWeight: "500" }}>
+            {removeTitle(params.value)}
+          </span>
+        )
+
+      }
+    },
+
     {
       field: "clinic",
       headerName: "Clinic",
@@ -533,7 +580,7 @@ export default function SearchInvoices(props) {
       width: 90,
       renderCell: (params) => {
         return (
-          <span className={getClassforClinic(params.value)} style={{fontSize:"0.8rem"}}>
+          <span className={getClassforClinic(params.value)} style={{ fontSize: "0.8rem" }}>
             {params.value ? params.value.toUpperCase() : "N/A"}
           </span>
         );
@@ -541,28 +588,30 @@ export default function SearchInvoices(props) {
     },
 
     {
-      field: "name", headerName: "Fullname", width: 200, renderCell: (params) => {
-         
-        return (
-          <span style={{fontSize:"0.8rem", fontWeight:"500"}}>
-            {removeTitle(params.value)}
-          </span>  
-        )
-
-      }
-    },
-
-
-    {
-      field: "timeStamp",
-      headerName: "Invoice Date",
-      width: 250,
+      field: "booking.paidBy",
+      headerName: "Payment",
+      align: "center",
+      width: 110,
       renderCell: (params) => {
         return (
-          <span style={{fontSize:"0.8rem", fontWeight:"500"}}>
-            {formatTimeStamp(params.value)}
-          </span>  
-        )
+          <span style={{ fontSize: "0.8rem" }}>
+            {formatPayment(params.getValue('booking').paidBy)}
+          </span>
+        );
+      },
+    },
+
+    {
+      field: "booking.corporate",
+      headerName: "Corporate",
+      align: "center",
+      width: 150,
+      renderCell: (params) => {
+        return (
+          <span style={{ fontSize: "0.8rem" }}>
+            {params.getValue('booking').corporate || ''}
+          </span>
+        );
       },
     },
   ];
@@ -773,7 +822,7 @@ export default function SearchInvoices(props) {
               <span>{data.bookings?.length}</span>
             </Grid>
             <Grid item>
-              <span style={{width:"115px", display:"inline-block", color:"#eee"}}>Total Amount :</span>
+              <span style={{width:"115px", display:"inline-block", color:"#eee"}}>Total FEE :</span>
               <span>{parseFloat(
                 calcTotalAmount(data.bookings)
               ).toLocaleString("en-GB", {

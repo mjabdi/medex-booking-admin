@@ -27,6 +27,7 @@
     "dateformat": "^4.5.0",
     "email-validator": "^2.0.4",
     "emoji-mart": "^3.0.0",
+    "exceljs": "^4.2.1",
     "file-saver": "^2.0.5",
     "js-cookie": "^2.2.1",
     "jss-rtl": "^0.3.0",
