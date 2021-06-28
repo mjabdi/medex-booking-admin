@@ -26,6 +26,7 @@ import DoneAllIcon from '@material-ui/icons/DoneAll';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import AddAlertIcon from '@material-ui/icons/AddAlert';
+import BusinessIcon from '@material-ui/icons/Business';
 
 /// PCR ------------------
 import FindByRef from "./PCR/FindByRef";
@@ -108,6 +109,7 @@ import SearchInvoices from "./Reports/SearchInvoices"
 
 import LinkIcon from '@material-ui/icons/Link';
 import PeriodicReport from "./Reports/PeriodicReport";
+import CorporatesList from "./Reports/CorporatesList";
 
 export const MenuList_Reports = [
   {
@@ -128,6 +130,13 @@ export const MenuList_Reports = [
     title: `Search Invoices`,
     icon: <SearchIcon />,
   },
+  {
+    index: 3,
+    id: `corporates`,
+    title: `Corporates List`,
+    icon: <BusinessIcon />,
+  },
+
 
 ]
 
@@ -960,7 +969,10 @@ export const getMenuContent = (role, index) => {
       case 1:
         return  <PeriodicReport/>;  
       case 2:
-        return <SearchInvoices />;  
+        return <SearchInvoices />; 
+      case 3:
+        return <CorporatesList />;  
+   
       default:
         return `Page Not Found!`;
     }

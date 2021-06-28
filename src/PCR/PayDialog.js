@@ -25,7 +25,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-import { corporates } from './Corporates';
+import { getCorporates } from '../Corporates';
 
 var interval;
 
@@ -224,8 +224,26 @@ export default function PayDialog(props) {
 
   const [state, setState] = React.useContext(GlobalState);  
   const [paymentMethod, setPaymentMethod] = useState('credit card');
-  const [corporate, setCorporate] = useState(corporates[0]);
+  const [corporate, setCorporate] = useState('');
   const [saving, setSaving] = useState(false);
+
+  const [corporates, setCorporates] = React.useState([])
+  React.useEffect( () => {
+    loadCorporates()
+  }, [])
+  const loadCorporates = async () =>
+  {
+    try{
+      const _corps = await getCorporates()
+      setCorporates(_corps)
+      setCorporate(_corps[0])
+    }catch(err)
+    {
+      console.error(err)
+    }
+  }
+
+
 
   const paymentMethodChanged = (event) =>
   {

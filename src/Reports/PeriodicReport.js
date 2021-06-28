@@ -68,7 +68,6 @@ import LocalAtmIcon from "@material-ui/icons/LocalAtm";
 
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import PriceCalculator from "../Admin/PriceCalculator";
-import { corporates } from "../Admin/Corporates";
 
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import BloodReportDialog from "../Blood/BloodReportDialog";
@@ -77,6 +76,7 @@ import ViewInvoiceDialog from "./ViewInvoiceDialog";
 
 import ExcelJS from "exceljs/dist/es5/exceljs.browser";
 import saveAs from "file-saver";
+import { getCorporates } from "../Corporates";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -349,6 +349,22 @@ function PaperComponent(props) {
 
 export default function PeriodicReport(props) {
   const classes = useStyles();
+
+  const [corporates, setCorporates] = React.useState([])
+  React.useEffect( () => {
+    loadCorporates()
+  }, [])
+  const loadCorporates = async () =>
+  {
+    try{
+      const _corps = await getCorporates()
+      setCorporates(_corps)
+      setCorporate(_corps[0])
+    }catch(err)
+    {
+      console.error(err)
+    }
+  }
 
   const getClassforClinic = (clinic) => {
     switch (clinic) {
