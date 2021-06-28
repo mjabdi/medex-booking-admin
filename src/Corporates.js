@@ -18,7 +18,7 @@ export const getCorporates = async () => {
             }
         }
 
-        return corporates
+        return corporates.sort();
 
     }catch(err)
     {
