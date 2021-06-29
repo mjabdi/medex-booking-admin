@@ -13,9 +13,10 @@ export default class BookService {
       return API.post(`/api/medex/invoice/searchallinvoicesbydate`, {search});
    }
 
-
-   
-
+   static getInvoiceReports = () =>
+   {
+      return API.get(`/api/medex/invoice/getinvoicereports`);
+   }
 
    static addNewBooking = (payload) =>
    {

@@ -102,14 +102,15 @@ import PaymentsDashboard from "./Payment/DashboardPreview"
 
 // Reports ----------------
 import SearchInvoices from "./Reports/SearchInvoices"
+import PeriodicReport from "./Reports/PeriodicReport";
+import CorporatesList from "./Reports/CorporatesList";
+import ReportsDashboard from "./Reports/DashboardPreview"
 
 //---------------
 
 
 
 import LinkIcon from '@material-ui/icons/Link';
-import PeriodicReport from "./Reports/PeriodicReport";
-import CorporatesList from "./Reports/CorporatesList";
 
 export const MenuList_Reports = [
   {
@@ -965,7 +966,7 @@ export const getMenuContent = (role, index) => {
   }else if (role === "reports") {
     switch (index) {
       case 0:
-        return null;
+        return <ReportsDashboard/>;
       case 1:
         return  <PeriodicReport/>;  
       case 2:
