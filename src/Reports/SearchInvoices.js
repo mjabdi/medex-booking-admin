@@ -642,13 +642,14 @@ export default function SearchInvoices(props) {
   const lastPromise = useRef();
 
   const formatTimeStamp = (timeStamp) => {
-    const todayStr = dateformat(new Date(), "yyyy-mm-dd");
-    const timeStampStr = dateformat(timeStamp, "yyyy-mm-dd");
-    if (todayStr === timeStampStr) {
-      return dateformat(timeStamp, "'Today', h:MM:ss TT");
-    } else {
-      return dateformat(timeStamp, "mmmm dS yyyy, h:MM:ss TT");
-    }
+    // const todayStr = dateformat(new Date(), "yyyy-mm-dd");
+    // const timeStampStr = dateformat(timeStamp, "yyyy-mm-dd");
+    // if (todayStr === timeStampStr) {
+    //   return dateformat(timeStamp, "'Today', h:MM:ss TT");
+    // } else {
+    //   return dateformat(timeStamp, "mmmm dS yyyy, h:MM:ss TT");
+    // }
+    return dateformat(timeStamp, "dd-mm-yyyy");
   };
 
   const loadData = () => {
