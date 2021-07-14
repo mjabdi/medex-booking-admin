@@ -55,6 +55,8 @@ import InvoiceDialog from "../InvoiceDialog";
 import SearchIcon from '@material-ui/icons/Search';
 import BloodReportDialog from "./BloodReportDialog";
 
+import TimeStampDialog from "./TimeStampDialog"
+
 const useStyles = makeStyles((theme) => ({
   box: {
     backgroundColor: "#373737",
@@ -1772,6 +1774,25 @@ export default function BookingDialog(props) {
                         </Button>
                       </li>
 
+                      <li>
+                        <Button
+                          startIcon={<HistoryIcon />}
+                          type="button"
+                          fullWidth
+                          variant="outlined"
+                          color="secondary"
+                          onClick={() => {
+                            setSelectedBooking(booking);
+                            setOpenTimeStampDialog(true);
+                          }}
+                          // onTouchTap = {() => {downloadForm1(person._id)}}
+                          className={classes.DownloadForm}
+                        >
+                          Show Audit Trail
+                        </Button>
+                      </li>
+
+
                       <Divider />
 
                       <li className={classes.li} style={{ marginTop: "20px" }}>
@@ -2046,6 +2067,16 @@ export default function BookingDialog(props) {
             </DialogActions>
 
           </Dialog>
+
+
+          <TimeStampDialog
+              booking={selectedBooking}
+              open={openTimeStampDialog}
+              bloodReports={bloodReports}
+              handleClose={handleCloseTimeStampDialog}
+            />
+
+
         </React.Fragment>
       )}
     </React.Fragment>
