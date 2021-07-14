@@ -2005,6 +2005,13 @@ export default function BookingDialog(props) {
               onClose={handleClodeBloodReportDialog}
             />
 
+            <TimeStampDialog
+              booking={selectedBooking}
+              open={openTimeStampDialog}
+              bloodReports={bloodReports}
+              handleClose={handleCloseTimeStampDialog}
+            />
+
 
           </Dialog>
 
@@ -2069,12 +2076,6 @@ export default function BookingDialog(props) {
           </Dialog>
 
 
-          <TimeStampDialog
-              booking={selectedBooking}
-              open={openTimeStampDialog}
-              bloodReports={bloodReports}
-              handleClose={handleCloseTimeStampDialog}
-            />
 
 
         </React.Fragment>
