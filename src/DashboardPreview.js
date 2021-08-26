@@ -18,6 +18,7 @@ import { getGlobalPath } from "./GlobalPath";
 import { getMenuId, getMenuIndex } from "./MenuList";
 import NewBloodResultsBookingView from "./NewBloodResultsBookingView";
 import NewScreeningBookingView from "./NewScreeningBookingView"
+import ShouldRefundBookingScreeningView from "./ShouldRefundBookingScreeningView";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -85,6 +86,15 @@ export default function DashboardPreview() {
     history.push(getGlobalPath(`/${getMenuId(role, getMenuIndex(role,'pendingBookings'))}`));
   }
 
+  const gotoScreeningRefunds = () =>
+  {
+    const role = 'screening'
+    setRole(role);
+    setState((state) => ({ ...state, role: role }));
+    history.push(getGlobalPath(`/${getMenuId(role, getMenuIndex(role,'deletedBookings'))}`));
+  }
+
+
 
   
 
@@ -122,14 +132,15 @@ export default function DashboardPreview() {
         </Grid>
 
         <Grid item xs={12} md={6}>
+          <Paper className={fixedHeightPaperSmall} onClick={gotoScreeningRefunds}>
+             <ShouldRefundBookingScreeningView />
+          </Paper>
         </Grid>
 
 
-
-        {/* <Grid item xs={12} md={4}>
-        </Grid>
-        <Grid item xs={12} md={4}>
+        {/* <Grid item xs={12} md={6}>
         </Grid> */}
+
 
 
         <Grid item xs={12} md={4}>

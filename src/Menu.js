@@ -92,6 +92,22 @@ export default function MyMenu() {
     }
   }
 
+  const updateShouldRefundsCountScreening = async () =>
+  {
+    try{
+      const res = await ScreeningBookService.getShouldRefundsCount()
+      if (res && res.data && res.data.status === "OK")
+      {
+        setState(state => ({...state, shouldRefunsCountScreening: res.data.count}))
+      }
+    }
+    catch(ex)
+    {
+      console.error(ex)
+    }
+  }
+
+
   const updateHSPendingBookingsCount = async () =>
   {
     try{
@@ -111,6 +127,8 @@ export default function MyMenu() {
   useEffect(() => {
     setSelectedIndex(state.currentMenuIndex);
     updateShouldRefundsCount()
+    updateShouldRefundsCountScreening()
+
     updateHSPendingBookingsCount()
   }, [state.currentMenuIndex, state.bookingDialogDataChanged]);
 
@@ -166,6 +184,11 @@ export default function MyMenu() {
                       {state.role === "screening" && item.id === "pendingBookings" && state.hsPendingBookingsCount > 0 && (
                         <span className={classes.Badge}> {state.hsPendingBookingsCount} </span>
                       )}
+
+                      {state.role === "screening" && item.id === "deletedBookings" && state.shouldRefunsCountScreening > 0 && (
+                        <span className={classes.Badge}> {state.shouldRefunsCountScreening} </span>
+                      )}
+
 
 
                     </Grid>

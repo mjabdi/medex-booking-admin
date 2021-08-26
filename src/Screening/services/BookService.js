@@ -4,9 +4,16 @@ import axiosRetry from 'axios-retry';
 export default class BookService {
 
 
+
+
+
    static getBloodReportsByBookingId = (bookingId) =>
    {
       return API.get(`/api/blood/book/getbloodreportsbybookingid?id=${bookingId}`);
+   }
+
+   static changeDepositBooking = (bookingId, deposit) => {
+      return API.post(`/api/screening/book/changedepositbooking?id=${bookingId}&deposit=${deposit}`);
    }
 
    static addNewBooking = (payload) =>
@@ -14,6 +21,10 @@ export default class BookService {
       return API.post(`/api/screening/book/addnewbooking`, payload);
    }
 
+   static manualRefundBooking = (bookingId) =>
+   {
+      return API.post(`/api/screening/payment/manualrefundpayment`, {bookingId: bookingId});
+   }
 
    static sendRegFormEmail = (bookingId) =>
    {

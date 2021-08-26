@@ -12,6 +12,7 @@ import {
   IconButton,
   TextField,
   Tooltip,
+  Switch,
 } from "@material-ui/core";
 import PDFService from "./services/PDFService";
 
@@ -479,6 +480,22 @@ export default function BookingDialog(props) {
       console.error(err)
     }
   }
+
+
+  const depositChanged = async (event) => {
+    const checked = event.target.checked;
+    const deposit = checked ? 100 : 0;
+    setSaving(true);
+    try {
+      await BookService.changeDepositBooking(booking._id, deposit);
+      setSaving(false);
+      setRefreshData(!refreshData);
+    } catch (err) {
+      console.error(err);
+      setSaving(false);
+    }
+  };
+
   const handleClodeBloodReportDialog = () => {
     setBloodReportDialogOpen(false)
     setSelectedBloodReport(null)
@@ -885,6 +902,20 @@ export default function BookingDialog(props) {
       setSaving(false);
       updateShouldRefundsCount();
       setOpenRefundDialog(false);
+      setRefreshData(!refreshData);
+    } catch (err) {
+      console.error(err);
+      setSaving(false);
+      setOpenRefundDialog(false);
+    }
+  };
+
+  const manualRefund = async () => {
+    setSaving(true);
+    try {
+      await BookService.manualRefundBooking(booking._id);
+      setSaving(false);
+      updateShouldRefundsCount();
       setRefreshData(!refreshData);
     } catch (err) {
       console.error(err);
@@ -1959,7 +1990,186 @@ export default function BookingDialog(props) {
                           )}
                       </li>
 
-                      <li className={classes.li} style={{ marginTop: "20px" }}>
+                      <li className={classes.li}>
+                        <div
+                          style={{
+                            borderTop: "1px solid #ddd",
+                            paddingTop: "20px",
+                          }}
+                        >
+                          <span className={classes.infoTitle}>
+                            {booking.paymentInfo ? "ONLINE" : "PHONE"} DEPOSIT
+                          </span>{" "}
+                          <span
+                            className={
+                              !booking.deposit || booking.deposit === 0
+                                ? classes.infoDataChargesHigher
+                                : classes.infoDataCharges
+                            }
+                          >{`£${booking.deposit.toLocaleString(
+                            "en-GB"
+                          )}`}</span>
+                          {!(
+                            editMode.edit && editMode.person._id === booking._id
+                          ) &&
+                            !booking.paid &&
+                            booking.deleted &&
+                            booking.deposit > 0 &&
+                            booking.paymentInfo && (
+                              <Button
+                                variant="outlined"
+                                color="secondary"
+                                className={classes.PayButton}
+                                onClick={(event) => setOpenRefundDialog(true)}
+                              >
+                                Refund Deposit
+                              </Button>
+                            )}
+                          {!(
+                            editMode.edit && editMode.person._id === booking._id
+                          ) &&
+                            !booking.paid &&
+                            booking.deleted &&
+                            booking.deposit > 0 &&
+                            !booking.paymentInfo && (
+                              <Button
+                                variant="outlined"
+                                color="primary"
+                                className={classes.PayButton}
+                                onClick={(event) => manualRefund()}
+                              >
+                                <span style={{ textTransform: "capitalize" }}>
+                                  I made the refund manually
+                                </span>
+                              </Button>
+                            )}
+                          {!(
+                            editMode.edit && editMode.person._id === booking._id
+                          ) &&
+                            // !booking.paid &&
+                            !booking.deleted &&
+                            // booking.deposit > 0 &&
+                            !booking.paymentInfo && (
+                              <FormControlLabel
+                                style={{ marginLeft: "90px" }}
+                                control={
+                                  <Switch
+                                    color="primary"
+                                    checked={booking.deposit > 0}
+                                    onChange={depositChanged}
+                                    name="deposit"
+                                  />
+                                }
+                                label={
+                                  booking.deposit > 0 ? (
+                                    <span className={classes.PriceLabelPaid}>
+                                      £100 Deposit Paid
+                                    </span>
+                                  ) : (
+                                    <span className={classes.PriceLabelNotPaid}>
+                                      £100 Deposit Not Paid
+                                    </span>
+                                  )
+                                }
+                              />
+                            )}
+                          {!(
+                            editMode.edit && editMode.person._id === booking._id
+                          ) &&
+                            booking.refund && (
+                              <React.Fragment>
+                                <span className={classes.PayLabel}>
+                                  {" "}
+                                  <CheckIcon
+                                    className={classes.checkIconSmall}
+                                  />{" "}
+                                  Refund Done
+                                  {booking.paidBy === "corporate"
+                                    ? ` "${booking.corporate}" `
+                                    : ""}
+                                </span>
+                              </React.Fragment>
+                            )}
+                        </div>
+                      </li>
+
+                      <li className={classes.li}>
+                        <span className={classes.infoTitle}>OTC CHARGES</span>{" "}
+                        <span
+                          style={{ paddingLeft: "15px" }}
+                          className={
+                            !booking.OTCCharges || booking.OTCCharges === 0
+                              ? classes.infoDataChargesHigher
+                              : classes.infoDataCharges
+                          }
+                        >{`£${booking.OTCCharges.toLocaleString(
+                          "en-GB"
+                        )}`}</span>
+                        {!(
+                          editMode.edit && editMode.person._id === booking._id
+                        ) &&
+                          !booking.paid &&
+                          !booking.deleted && (
+                            <Button
+                              variant="outlined"
+                              color="secondary"
+                              className={classes.PayButton}
+                              onClick={(event) => Pay(event, booking._id)}
+                            >
+                              Pay
+                            </Button>
+                          )}
+                        {!(
+                          editMode.edit && editMode.person._id === booking._id
+                        ) &&
+                          booking.paid && (
+                            <React.Fragment>
+                              <span className={classes.PayLabel}>
+                                {" "}
+                                <CheckIcon
+                                  className={classes.checkIconSmall}
+                                />{" "}
+                                Paid by {booking.paidBy}
+                                {booking.paidBy === "corporate"
+                                  ? ` "${booking.corporate}" `
+                                  : ""}
+                              </span>
+
+                              <Tooltip title="Undo Payment">
+                                <IconButton
+                                  onClick={() => setOpenUndoPayDialog(true)}
+                                >
+                                  <UndoIcon style={{ color: "red" }} />
+                                </IconButton>
+                              </Tooltip>
+                            </React.Fragment>
+                          )}
+                      </li>
+
+                      <li className={classes.li}>
+                        <div
+                          style={{
+                            borderTop: "1px solid #ddd",
+                            paddingTop: "10px",
+                          }}
+                        >
+                          <span className={classes.infoTitle}>
+                            TOTAL CHARGES
+                          </span>{" "}
+                          <span
+                            className={
+                              !booking.OTCCharges || booking.OTCCharges === 0
+                                ? classes.infoDataChargesHigher
+                                : classes.infoDataCharges
+                            }
+                          >{`£${(
+                            booking.deposit + booking.OTCCharges
+                          ).toLocaleString("en-GB")}`}</span>
+                        </div>
+                      </li>
+
+
+                      {/* <li className={classes.li} style={{ marginTop: "20px" }}>
                         <span className={classes.infoTitle}>TOTAL CHARGES</span>{" "}
                         <span
                           style={{ paddingLeft: "15px" }}
@@ -2011,7 +2221,7 @@ export default function BookingDialog(props) {
                             </React.Fragment>
                           )}
                       </li>
-
+ */}
                       {/* <li className={classes.li}>
                         <div
                           style={{
@@ -2085,6 +2295,14 @@ export default function BookingDialog(props) {
               onClose={handleClodeBloodReportDialog}
             />
 
+            <Backdrop
+                className={classes.backdrop}
+                open={saving || deleting || restoring}
+              >
+                <CircularProgress color="inherit" />
+          </Backdrop>
+
+
           </Dialog>
 
           <Dialog
@@ -2151,6 +2369,14 @@ export default function BookingDialog(props) {
                 Yes, Refund Payment
               </Button>
             </DialogActions>
+
+            <Backdrop
+                className={classes.backdrop}
+                open={saving || deleting || restoring}
+              >
+                <CircularProgress color="inherit" />
+          </Backdrop>
+
           </Dialog>
 
           <Dialog
