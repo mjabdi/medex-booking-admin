@@ -414,7 +414,9 @@ export default function BookingTable(props) {
                         onClick = {event => openDetailsDialog(event, params.value)}
                 > 
             
-            <SearchIcon/> 
+            <SearchIcon
+                  style={parseInt(params.getValue('deposit')) > 0 ? { color: "green" } : {}}
+                />
             
             </Button>
 
@@ -534,7 +536,9 @@ export default function BookingTable(props) {
                         onClick = {event => openDetailsDialog(event, params.value)}
                 > 
             
-            <SearchIcon/> 
+            <SearchIcon
+                  style={parseInt(params.getValue('deposit')) > 0 ? { color: "green" } : {}}
+                />
             
             </Button>
 
@@ -623,8 +627,10 @@ export default function BookingTable(props) {
                         onClick = {event => openDetailsDialog(event, params.value)}
                 > 
             
-            <SearchIcon/> 
-            
+                <SearchIcon
+                  style={parseInt(params.getValue('deposit')) > 0 ? { color: "green" } : {}}
+                />
+
             </Button>
 
            </React.Fragment>
@@ -656,15 +662,39 @@ export default function BookingTable(props) {
                {
                   if (params.getValue('paidBy') === 'credit card')
                   {
-                    return ( <CreditCardIcon className={classes.checkIcon}/> );
+                    return ( 
+                      <React.Fragment>
+                        <CreditCardIcon className={classes.checkIcon} />
+
+                        {parseInt(params.getValue('deposit')) > 0 && props.date === 'deleted' && (
+                          <span className={classes.notifyIcon}>&nbsp;</span>
+                        )}
+
+                      </React.Fragment>
+                    );
                   }
-                  else if (params.getValue('paidBy') === 'cash')
-                  {
-                    return ( <LocalAtmIcon className={classes.checkIcon}/> );
+                  else if (params.getValue('paidBy') === 'cash') {
+                    return (
+                      <React.Fragment>
+                        <LocalAtmIcon className={classes.checkIcon} />
+                        {parseInt(params.getValue('deposit')) > 0 && props.date === 'deleted' && (
+                          <span className={classes.notifyIcon}>&nbsp;</span>
+                        )}
+
+
+                      </React.Fragment>
+                    );
                   }
-                  else if (params.getValue('paidBy') === 'corporate')
-                  {
-                    return ( <BusinessIcon className={classes.checkIcon}/> );
+                  else if (params.getValue('paidBy') === 'corporate') {
+                    return (
+                      <React.Fragment>
+                        <BusinessIcon className={classes.checkIcon} />
+                        {parseInt(params.getValue('deposit')) > 0 && props.date === 'deleted' && (
+                          <span className={classes.notifyIcon}>&nbsp;</span>
+                        )}
+
+                      </React.Fragment>
+                    );
                   }
                   else
                   {
