@@ -65,6 +65,7 @@ import { Document, Page } from 'react-pdf';
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 
 import BookingDialog from '../Admin/BookingDialog'
+import dateformat from 'dateformat'
 
 
 
@@ -1050,9 +1051,22 @@ export default function BloodReportDialog(props) {
                 }}
                 hidden={!booking.emailSent}
               >
-                <Tooltip style={{ fontSize: "20px" }} title="Email has been sent">
-                  <SendRoundedIcon style={{ fontSize: "25px", color: "#009634" }} />
-                </Tooltip>
+                <Grid container spacing={1} justify="center">
+                  <Grid item>
+                    <Tooltip style={{ fontSize: "20px" }} title="Email has been sent">
+                      <SendRoundedIcon style={{ fontSize: "25px", color: "#009634" }} />
+                    </Tooltip>
+
+                  </Grid>
+                  <Grid item>
+                    <div style={{ fontSize: "16px", color: "#009634", paddingBottom:"3px" }}>
+                      {dateformat(booking.emailSentTimeStamp, "yyyy-mm-dd, h:MM:ss TT")}
+                    </div>
+
+                  </Grid>
+
+                </Grid>
+
 
               </div>
 
