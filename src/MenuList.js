@@ -16,6 +16,7 @@ import EventNoteIcon from "@material-ui/icons/EventNote";
 import AirplanemodeActiveIcon from "@material-ui/icons/AirplanemodeActive";
 import ArchiveIcon from '@material-ui/icons/Archive';
 import CallIcon from '@material-ui/icons/Call';
+import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
@@ -92,6 +93,7 @@ import AdminFindByRef from "./Admin/FindByRef";
 import AdminBookingTable from "./Admin/BookingTable";
 import AdminCalendarView from "./Admin/calendar-admin/CalendarView";
 import SearchBookingTable from "./Admin/SearchBookingTable";
+import InvoiceCodes from "./Admin/InvoiceCodes"
 
 
 // Payment ----------------
@@ -244,6 +246,7 @@ export const MenuList_Admin = [
 
   { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
   { index: 9, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+  { index: 10, id: `systemCodes`, title: `System Codes`, icon: <FormatListBulletedIcon /> },
 
 ];
 
@@ -881,7 +884,9 @@ export const getMenuContent = (role, index) => {
         return <AdminFindByRef />;
       case 9:
         return <SearchBookingTable />;
-
+      case 10:
+          return <InvoiceCodes />;
+  
       default:
         return `Page Not Found!`;
     }

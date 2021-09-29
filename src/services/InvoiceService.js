@@ -37,6 +37,11 @@ export default class InvoiceService{
         return API.get(`/api/medex/invoice/getallcodes`)
     }
 
+    static updateCode = (id, newCode) =>
+    {
+        return API.post(`/api/medex/invoice/updatecode`, {id: id, newCode: newCode})
+    }
+
     static downloadInvoice = (id) =>
     {
        return API.get(`/api/pdf/downloadinvoice?id=${id}`, {
