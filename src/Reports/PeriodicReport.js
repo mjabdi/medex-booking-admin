@@ -269,6 +269,13 @@ const useStyles = makeStyles((theme) => ({
   },
 
 
+  CorporateLabel: {
+    color: CalendarColors.CORPORATE_COLOR,
+    fontWeight: "600",
+    fontSize: "0.95rem",
+  },
+
+
   DefaultLabel: {
     color: "#dc2626",
     fontWeight: "600",
@@ -382,7 +389,9 @@ export default function PeriodicReport(props) {
         return classes.DermaLabel;
       case "screening":
         return classes.ScreeningLabel;
-
+      case "corporate":
+          return classes.CorporateLabel;
+  
       default:
         return classes.DefaultLabel;
     }
@@ -962,6 +971,7 @@ export default function PeriodicReport(props) {
                   <MenuItem value={'std'}>STD</MenuItem>
                   <MenuItem value={'blood'}>Blood</MenuItem>
                   <MenuItem value={'screening'}>Screening</MenuItem>
+                  <MenuItem value={'corporate'}>Corporate</MenuItem>
                   <MenuItem value={'derma'}>Derma</MenuItem>
 
                 </Select>

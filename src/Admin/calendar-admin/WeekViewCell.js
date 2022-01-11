@@ -144,6 +144,25 @@ const useStyles = makeStyles((theme) => ({
         height: "90%",
       },
 
+      ScreeningGauge: {
+        position: "absolute",
+        bottom: "15px",
+        left: "96px",
+        width: "15px",
+        height: "90%",
+      },
+
+      CorporateGauge: {
+        position: "absolute",
+        bottom: "15px",
+        left: "112px",
+        width: "15px",
+        height: "90%",
+      },
+
+
+
+
 
     
 
@@ -539,6 +558,114 @@ const WeekViewCell = ({key, date, time, dayClicked}) => {
     };
 
 
+    const getScreeningClinicBar = (count) => {
+      let width = (count / MAX_BOOKING_COUNT_GYNAE) * 100 + 5;
+      if (width > 100) width = 100;
+  
+      if (width < 30) width = 30;
+  
+      if (count === 0) {
+        width = minHeight;
+      }
+  
+      const percent = 100 - width;
+  
+      return (
+        <div className={classes.ScreeningGauge}>
+          <div
+            style={{
+              padding: "0",
+              margin: "0",
+              width: "100%",
+              height: "100%",
+              backgroundColor: CalendarColors.SCREENING_COLOR,
+              position: "relative",
+            }}
+          >
+            <div
+               style={{
+                  position: "absolute",
+                  bottom: "0px",
+                  color: "#fff",
+                  fontWeight: "500",
+                  fontSize:"0.8rem",
+                  textAlign: "center",
+                  width: "100%",
+                }}
+            >
+              {count > 0 && count}
+            </div>
+  
+            <div
+              style={{
+                padding: "0",
+                margin: "0",
+                width: "100%",
+                height: `${percent}%`,
+                backgroundColor: "#fafafa",
+              }}
+            ></div>
+          </div>
+        </div>
+      );
+    };
+
+
+    const getCorporateClinicBar = (count) => {
+      let width = (count / MAX_BOOKING_COUNT_GYNAE) * 100 + 5;
+      if (width > 100) width = 100;
+  
+      if (width < 30) width = 30;
+  
+      if (count === 0) {
+        width = minHeight;
+      }
+  
+      const percent = 100 - width;
+  
+      return (
+        <div className={classes.CorporateGauge}>
+          <div
+            style={{
+              padding: "0",
+              margin: "0",
+              width: "100%",
+              height: "100%",
+              backgroundColor: CalendarColors.CORPORATE_COLOR,
+              position: "relative",
+            }}
+          >
+            <div
+               style={{
+                  position: "absolute",
+                  bottom: "0px",
+                  color: "#fff",
+                  fontWeight: "500",
+                  fontSize:"0.8rem",
+                  textAlign: "center",
+                  width: "100%",
+                }}
+            >
+              {count > 0 && count}
+            </div>
+  
+            <div
+              style={{
+                padding: "0",
+                margin: "0",
+                width: "100%",
+                height: `${percent}%`,
+                backgroundColor: "#fafafa",
+              }}
+            ></div>
+          </div>
+        </div>
+      );
+    };
+
+
+
+
   
   
     const getBookingsCountLabel = (_bookingsCount) => {
@@ -588,6 +715,13 @@ const WeekViewCell = ({key, date, time, dayClicked}) => {
             {clinic === "derma" &&
               state.selectedClinics.findIndex((e) => e === "DERMA") >= 0 &&
               getDermaClinicBar(count)}
+            {clinic === "screening" &&
+              state.selectedClinics.findIndex((e) => e === "SCREENING") >= 0 &&
+              getScreeningClinicBar(count)}
+
+            {/* {clinic === "corporate" &&
+              state.selectedClinics.findIndex((e) => e === "CORPORATE") >= 0 &&
+              getCorporateClinicBar(count)}    */}
    
 
           </React.Fragment>

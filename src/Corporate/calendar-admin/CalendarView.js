@@ -13,19 +13,8 @@ import DayView from './DayView';
 import GlobalState from '../../GlobalState';
 
 import CloseIcon from '@material-ui/icons/Close';
-import { CalendarColors } from './colors';
 
-const Clinics = [
-    {clinic: "PCR", color: CalendarColors.PCR_COLOR},
-    {clinic: "GYNAE", color: CalendarColors.GYNAE_COLOR},
-    {clinic: "GP", color: CalendarColors.GP_COLOR},
-    {clinic: "STD", color: CalendarColors.STD_COLOR},
-    {clinic: "BLOOD", color: CalendarColors.BLOOD_COLOR},
-    {clinic: "DERMA", color: CalendarColors.DERMA_COLOR},
-    {clinic: "SCREENING", color: CalendarColors.SCREENING_COLOR},
-    {clinic: "CORPORATE", color: CalendarColors.CORPORATE_COLOR},
 
-]
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -78,7 +67,6 @@ export default function CalendarView() {
         const firstdayofweek = new Date(today.getTime() - ( dayofWeek * 86400000));
         setFirstDayofWeek(firstdayofweek);
         setState(state => ({...state, AdminCalendarCache : []}));
-        setState(state => ({...state, selectedClinics : ["PCR", "GP", "GYNAE", "STD", "BLOOD","DERMA","SCREENING", "CORPORATE"]}));
 
         return () =>
         {
@@ -276,42 +264,8 @@ export default function CalendarView() {
         return `Next ${mode}`;
     }
 
-    const clinicClicked = (clinic) =>
-    {
-        if (state.selectedClinics?.findIndex(e => e === clinic) >= 0 )
-        {
-            setState(state => ({...state, selectedClinics :state.selectedClinics.filter(e => e !== clinic)}));
-        }else
-        {
-            setState(state => ({...state, selectedClinics : [...state.selectedClinics, clinic]}));
-        }
-    }
-
-    const getClinicGuide = () =>
-    {
-        return (
-            <div>
-               <Grid container spacing={1}>
-                   {Clinics.map( item => (
-                       <Grid item>
-                           <div 
-                                style={state.selectedClinics?.findIndex(e => e === item.clinic) >= 0 ? {border:`1px solid ${item.color}`, backgroundColor:`${item.color}`, color:"#fff" ,fontSize:"0.95rem", fontWeight:"500", padding:"5px", minWidth:"70px", textAlign:"center", cursor:"pointer"}   : {border:`1px solid ${item.color}`, color:`${item.color}`, fontSize:"0.95rem", fontWeight:"500", padding:"5px", minWidth:"70px", textAlign:"center", cursor:"pointer"}}
-                                onClick= {() => clinicClicked(item.clinic)}   
-                                > 
-                               {item.clinic}
-                           </div>
-                        </Grid>
-                   ))
-                   }
-               </Grid>
-            </div>
-        )
-    }
-
     return (
         <React.Fragment>
-
-            {getClinicGuide()}
 
           <Grid
             container

@@ -86,6 +86,14 @@ import ScreeningCalendarView from "./Screening/calendar-admin/CalendarView";
 //----------------------------
 
 
+/// Corporate -------------------
+import CorporateBookingTable from "./Corporate/BookingTable";
+import CorporateDashboardPreview from "./Corporate/DashboardPreview";
+import CorporateFindByRef from "./Corporate/FindByRef";
+import CorporateCalendarView from "./Corporate/calendar-admin/CalendarView";
+//----------------------------
+
+
 
 // Admin ----------------
 import AdminDashBoardPreview from "./DashboardPreview";
@@ -397,6 +405,8 @@ export const MenuList_STD = [
 
 ];
 
+
+
 export const MenuList_Blood = [
   { index: 0, id: `dashboard`, title: `Dashboard`, icon: <DashboardIcon /> },
   {
@@ -663,6 +673,57 @@ export const MenuList_Screening = [
 ];
 
 
+export const MenuList_Corporate = [
+  { index: 0, id: `dashboard`, title: `Dashboard`, icon: <DashboardIcon /> },
+  {
+    index: 1,
+    id: `recentBookings`,
+    title: `Recent Bookings`,
+    icon: <AutorenewIcon />,
+  },
+  {
+    index: 2,
+    id: `todayBookings`,
+    title: `Today's Bookings`,
+    icon: <NewReleasesIcon />,
+  },
+  {
+    index: 3,
+    id: `oldBookings`,
+    title: `Old Bookings`,
+    icon: <HistoryIcon />,
+  },
+  {
+    index: 4,
+    id: `futureBookings`,
+    title: `Future Bookings`,
+    icon: <TimelineIcon />,
+  },
+  {
+    index: 5,
+    id: `allBookings`,
+    title: `All Bookings`,
+    icon: <DescriptionIcon />,
+  },
+  {
+    index: 6,
+    id: `deletedBookings`,
+    title: `Deleted Records`,
+    icon: <DeleteIcon />,
+  },
+  {
+    index: 7,
+    id: `calendarView`,
+    title: `Calendar View`,
+    icon: <DateRangeIcon />,
+  },
+  { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 9, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+
+];
+
+
+
 
 export const MenuList_PCRLAB = [
   {
@@ -885,8 +946,8 @@ export const getMenuContent = (role, index) => {
       case 9:
         return <SearchBookingTable />;
       case 10:
-          return <InvoiceCodes />;
-  
+        return <InvoiceCodes />;
+
       default:
         return `Page Not Found!`;
     }
@@ -942,9 +1003,9 @@ export const getMenuContent = (role, index) => {
       case 0:
         return <ScreeningDashboardPreview />;
       case 1:
-        return <ScreeningBookingTable date="pending" />;  
+        return <ScreeningBookingTable date="pending" />;
       case 2:
-        return <ScreeningBookingTable date="tbc" />;  
+        return <ScreeningBookingTable date="tbc" />;
       case 3:
         return <ScreeningBookingTable date="recent" />;
       case 4:
@@ -968,17 +1029,46 @@ export const getMenuContent = (role, index) => {
       default:
         return `Page Not Found!`;
     }
-  }else if (role === "reports") {
+  } else if (role === "corporate") {
     switch (index) {
       case 0:
-        return <ReportsDashboard/>;
+        return <CorporateDashboardPreview />;
       case 1:
-        return  <PeriodicReport/>;  
+        return <CorporateBookingTable date="recent" />;
       case 2:
-        return <SearchInvoices />; 
+        return <CorporateBookingTable date="today" />;
       case 3:
-        return <CorporatesList />;  
-   
+        return <CorporateBookingTable date="old" />;
+      case 4:
+        return <CorporateBookingTable date="future" />;
+      case 5:
+        return <CorporateBookingTable date="all" />;
+      case 6:
+        return <CorporateBookingTable date="deleted" />;
+      case 7:
+        return <CorporateCalendarView />;
+      case 8:
+        return <CorporateFindByRef />;
+      case 9:
+        return <SearchBookingTable />;
+
+      default:
+        return `Page Not Found!`;
+    }
+  }
+
+
+  else if (role === "reports") {
+    switch (index) {
+      case 0:
+        return <ReportsDashboard />;
+      case 1:
+        return <PeriodicReport />;
+      case 2:
+        return <SearchInvoices />;
+      case 3:
+        return <CorporatesList />;
+
       default:
         return `Page Not Found!`;
     }
@@ -1011,9 +1101,11 @@ export const getMenuRole = (role) => {
       return MenuList_Payment;
     case "screening":
       return MenuList_Screening;
+    case "corporate":
+      return MenuList_Corporate;
     case "reports":
-        return MenuList_Reports;
-  
+      return MenuList_Reports;
+
 
 
     default:

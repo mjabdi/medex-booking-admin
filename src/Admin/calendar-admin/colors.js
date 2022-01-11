@@ -8,5 +8,6 @@ export const CalendarColors = {
     BLOOD_COLOR: "#dc2626",
     DERMA_COLOR: "#323e9a",
     SCREENING_COLOR: "#006b8f",
+    CORPORATE_COLOR: "#009188"
 
 }

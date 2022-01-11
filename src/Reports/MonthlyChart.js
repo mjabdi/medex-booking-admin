@@ -87,7 +87,7 @@ export default function MonthlyChart(props) {
   }, [month, data]);
 
   const loadChart = () => {
-    const currentData = data[getMonthIndex()] ? data[getMonthIndex()].data : {pcr:0,gynae:0,gp:0,std:0,blood:0,screening:0,derma:0}
+    const currentData = data[getMonthIndex()] ? data[getMonthIndex()].data : {pcr:0,gynae:0,gp:0,std:0,blood:0,screening:0,corporate:0, derma: 0}
     let _chartData = []
     _chartData.push({
       name: "PCR",
@@ -113,6 +113,13 @@ export default function MonthlyChart(props) {
       name: "SCREENING",
       Income: currentData.screening
     })
+
+    _chartData.push({
+      name: "CORPORATE",
+      Income: currentData.corporate
+    })
+
+
     _chartData.push({
       name: "DERMA",
       Income: currentData.derma
@@ -169,6 +176,8 @@ export default function MonthlyChart(props) {
       case 5:
         return CalendarColors.SCREENING_COLOR;
       case 6:
+          return CalendarColors.CORPORATE_COLOR;     
+      case 7:
         return CalendarColors.DERMA_COLOR;
 
       default:

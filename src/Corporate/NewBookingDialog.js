@@ -48,7 +48,8 @@ import NumberFormat from "react-number-format";
 import AddIcon from "@material-ui/icons/Add";
 import { validate } from "email-validator";
 import DateRangeIcon from "@material-ui/icons/DateRange";
-import { CalendarColors } from "./calendar-admin/colors";
+import { CalendarColors } from "../Admin/calendar-admin/colors";
+import DateField from "../Blood/DateField";
 
 var interval;
 
@@ -195,175 +196,23 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
 
-  PriceLabelPaid: {
+  PriceLabelPaid:{
     color: theme.palette.primary.main,
     fontWeight: "600"
   },
 
-  PriceLabelNotPaid: {
+  PriceLabelNotPaid:{
     color: theme.palette.secondary.main,
     fontWeight: "600"
   },
-
-  BoxDisabled: {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "8px",
-    border: "1px solid",
-    fontSize: "1.2rem",
-    fontWeight: "500",
-    textAlign: "center",
-    borderColor: "#ddd",
-    cursor: "not-allowed",
-    color: "#ddd",
-    transition: "all 0.2s ease",
-  },
-
-  BoxGynae: {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "8px",
-    border: "1px solid",
-    fontSize: "1.2rem",
-    fontWeight: "500",
-    textAlign: "center",
-    cursor: "pointer",
-    borderColor: CalendarColors.GYNAE_COLOR,
-    color: CalendarColors.GYNAE_COLOR,
-    transition: "all 0.2s ease",
-    "&:hover": {
-      backgroundColor: CalendarColors.GYNAE_COLOR,
-      color: "#fff"
-    }
-
-  },
-
-  BoxGP: {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "8px",
-    border: "1px solid",
-    fontSize: "1.2rem",
-    fontWeight: "500",
-    textAlign: "center",
-    cursor: "pointer",
-    borderColor: CalendarColors.GP_COLOR,
-    color: CalendarColors.GP_COLOR,
-    transition: "all 0.2s ease",
-    "&:hover": {
-      backgroundColor: CalendarColors.GP_COLOR,
-      color: "#fff"
-    }
-  },
-
-  BoxSTD: {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "8px",
-    border: "1px solid",
-    fontSize: "1.2rem",
-    fontWeight: "500",
-    textAlign: "center",
-    cursor: "pointer",
-    borderColor: CalendarColors.STD_COLOR,
-    color: CalendarColors.STD_COLOR,
-    transition: "all 0.2s ease",
-    "&:hover": {
-      backgroundColor: CalendarColors.STD_COLOR,
-      color: "#fff"
-    }
-  },
-
-  BoxBlood: {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "8px",
-    border: "1px solid",
-    fontSize: "1.2rem",
-    fontWeight: "500",
-    textAlign: "center",
-    cursor: "pointer",
-    borderColor: CalendarColors.BLOOD_COLOR,
-    color: CalendarColors.BLOOD_COLOR,
-    transition: "all 0.2s ease",
-    "&:hover": {
-      backgroundColor: CalendarColors.BLOOD_COLOR,
-      color: "#fff"
-    }
-  },
-
-  BoxScreening: {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "8px",
-    border: "1px solid",
-    fontSize: "1.2rem",
-    fontWeight: "500",
-    textAlign: "center",
-    cursor: "pointer",
-    borderColor: CalendarColors.SCREENING_COLOR,
-    color: CalendarColors.SCREENING_COLOR,
-    transition: "all 0.2s ease",
-    "&:hover": {
-      backgroundColor: CalendarColors.SCREENING_COLOR,
-      color: "#fff"
-    }
-  },
-
-  BoxCorporate: {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "8px",
-    border: "1px solid",
-    fontSize: "1.2rem",
-    fontWeight: "500",
-    textAlign: "center",
-    cursor: "pointer",
-    borderColor: CalendarColors.CORPORATE_COLOR,
-    color: CalendarColors.CORPORATE_COLOR,
-    transition: "all 0.2s ease",
-    "&:hover": {
-      backgroundColor: CalendarColors.CORPORATE_COLOR,
-      color: "#fff"
-    }
-  },
-
-
-  BoxDerma: {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "8px",
-    border: "1px solid",
-    fontSize: "1.2rem",
-    fontWeight: "500",
-    textAlign: "center",
-    cursor: "pointer",
-    borderColor: CalendarColors.DERMA_COLOR,
-    color: CalendarColors.DERMA_COLOR,
-    transition: "all 0.2s ease",
-    "&:hover": {
-      backgroundColor: CalendarColors.DERMA_COLOR,
-      color: "#fff"
-    }
-  },
-
-
-
-
 
 
 }));
 
 const Packages = [
-  { packageName: "Consultation with Consultant Gynaecologist" },
-  { packageName: `Coil Fitting/Coil Removal` },
-  { packageName: `Well Woman Check` },
-  { packageName: `Sexual Health Screening` },
-  { packageName: `Pre-pregnancy/Fertility check` },
-  { packageName: `Gynaecological Ultrasound` },
-  { packageName: `HPV Vaccination` },
-  { packageName: `Cervical / Pap Smear` },
-  { packageName: `HPV Treatment / Wart Cryo-Therapy` },
+  { packageName: "BLOODS ONLY" },
+  { packageName: "HEALTH SURVEILLANCE" },
+  
 ];
 
 function NumberFormatCustom(props) {
@@ -447,26 +296,129 @@ export default function NewBookingDialog(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useContext(GlobalState);
+  const [saving, setSaving] = useState(false);
 
-  const handleClose = () => {
-    props.handleClose();
+  const [fullname, setFullname] = React.useState("");
+  const [fullnameError, setFullnameError] = React.useState(false);
+
+  const [phone, setPhone] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [notes, setNotes] = React.useState("");
+
+  const [service, setService] = React.useState("");
+
+  const [serviceError, setServiceError] = React.useState(false);
+
+  const [birthDate, setBirthDate] = React.useState(null);
+  const [birthDateError, setBirthDateError] = React.useState(false);
+
+  const birthDateChanged = (dateStr) =>
+  {
+      setBirthDate(dateStr);
+      setBirthDateError(false)
+  }  
+
+
+  
+  const fullnameChanged = (event) => {
+    setFullname(event.target.value);
+    setFullnameError(false);
+  };
+
+  const phoneChanged = (event) => {
+    setPhone(event.target.value);
+  };
+
+  const emailChanged = (event) => {
+    setEmail(event.target.value);
   };
 
 
-  const timeDisabled = () => {
-    return props.time.indexOf(':15') > 0 || props.time.indexOf(':45') > 0 || props.time.indexOf('09') >= 0
-  }
+  const notesChanged = (event) => {
+    setNotes(event.target.value);
+  };
 
-  const clinicClicked = (clinic) => {
-    props.clinicClicked(clinic)
-  }
+  const serviceChanged = (event) => {
+    setService(event.target.value);
+    setServiceError(false)
+  };
+
+
+  const handleClose = () => {
+    if (saving) return;
+
+    setFullname("");
+    setFullnameError(false);
+    setPhone("");
+    setEmail("");
+    setNotes("");
+    setService("");
+    setBirthDate(null)
+    setServiceError(false)
+    
+    props.handleClose();
+    setSaving(false);
+  };
+
+  const validateBooking = () => {
+    let error = false;
+    if (!fullname || fullname.trim().length < 1) {
+      setFullnameError(true);
+      error = true;
+    }
+
+    if (birthDate && birthDate.length !== 10)
+    {
+      setBirthDateError(true)
+      error = true
+    }
+
+    if (!service)
+    {
+      setServiceError(true)
+    }
+
+    return !error;
+  };
+
+  const saveClicked = async () => {
+    if (!validateBooking()) {
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+      await BookService.addNewBooking({
+        bookingDate: props.date,
+        bookingTime: props.time,
+        fullname: fullname,
+        phone: phone,
+        email: email,
+        notes: notes,
+        service: service,
+        birthDate: birthDate
+      });
+      setSaving(false);
+      setState((state) => ({
+        ...state,
+        bookingDialogDataChanged: !state.bookingDialogDataChanged
+          ? true
+          : false,
+      }));
+      handleClose();
+    } catch (err) {
+      console.error(err);
+      setSaving(false);
+    }
+  };
 
   return (
     <React.Fragment>
       {props.date && props.time && (
         <React.Fragment>
           <Dialog
-            maxWidth="xs"
+            maxWidth="sm"
             open={props.open}
             onClose={handleClose}
             PaperComponent={PaperComponent}
@@ -498,19 +450,24 @@ export default function NewBookingDialog(props) {
                 </Grid>
               </Grid>
 
+              <div style={{position:"absolute", top: "5px", right: "5px", backgroundColor:CalendarColors.CORPORATE_COLOR, color:"#fff", padding: "0px 5px", borderRadius:"10px", fontSize:"1rem"}}>
+                    Corporate
+              </div>
+
+
               <Divider />
             </DialogTitle>
             <DialogContent>
               <div
                 style={{
-                  height: "420px",
+                  height: "500px",
                 }}
               >
                 <Grid
                   container
                   direction="row"
                   justify="stretch"
-                  spacing={2}
+                  spacing={1}
                   alignItems="center"
                 >
                   <Grid item xs={12}>
@@ -532,74 +489,128 @@ export default function NewBookingDialog(props) {
                     </Grid>
                   </Grid>
 
-
                   <Grid item xs={12}>
-                    <div className={timeDisabled() ? classes.BoxDisabled : classes.BoxGynae} onClick={() => !timeDisabled() ? clinicClicked("gynae") : null}>
-                      GYNAE
-                    </div>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <div className={timeDisabled() ? classes.BoxDisabled : classes.BoxGP} onClick={() => !timeDisabled() ? clinicClicked("gp") : null}>
-                      GP
-                    </div>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <div className={classes.BoxSTD} onClick={() => clinicClicked("std")}>
-                      STD
-                    </div>
+                    <TextField
+                      fullWidth
+                      autoFocus
+                      error={fullnameError}
+                      label="Full Name"
+                      value={fullname}
+                      required
+                      onChange={fullnameChanged}
+                      name="fullname"
+                      id="fullname-id"
+                      autoComplete="none"
+                    />
                   </Grid>
 
                   <Grid item xs={12}>
-                    <div className={classes.BoxBlood} onClick={() => clinicClicked("blood")}>
-                      BLOOD
-                    </div>
+                    <TextField
+                      fullWidth
+                      label="Telephone"
+                      value={phone}
+                      onChange={phoneChanged}
+                      name="phone"
+                      id="phone-id"
+                      autoComplete="none"
+                    />
                   </Grid>
 
                   <Grid item xs={12}>
-                    <div className={classes.BoxCorporate} onClick={() => clinicClicked("screening")}>
-                      SCREENING
-                    </div>
+                    <TextField
+                      fullWidth
+                      label="Email"
+                      value={email}
+                      onChange={emailChanged}
+                      name="email"
+                      id="email-id"
+                      autoComplete="none"
+                    />
                   </Grid>
+
+                  <Grid item xs={12} md={12}>
+                    <FormControl className={classes.formControl} fullWidth>
+                      <InputLabel id="service-label-id">Package</InputLabel>
+                      <Select
+                        fullWidth
+                        labelId="service-label-id"
+                        id="service-id"
+                        value={service}
+                        onChange={serviceChanged}
+                        error={serviceError}
+                      >
+                        {Packages.map((item) => (
+                          <MenuItem value={item.packageName}>
+                            {item.packageName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={12} md={12}>
+                    <DateField
+                      error={birthDateError}
+                      title="Date of Birth"
+                      value={birthDate}
+                      dateChanged={birthDateChanged}
+                    >
+
+                    </DateField>
+                  </Grid>
+
+
+
 
                   <Grid item xs={12}>
-                    <div className={classes.BoxScreening} onClick={() => clinicClicked("corporate")}>
-                      CORPORATE
-                    </div>
+                    <TextField
+                      fullWidth
+                      label="Notes"
+                      value={notes}
+                      onChange={notesChanged}
+                      name="notes"
+                      id="notes-id"
+                      autoComplete="none"
+                    />
                   </Grid>
-
-
-
-                  <Grid item xs={12}>
-                    <div className={classes.BoxDerma} onClick={() => clinicClicked("derma")}>
-                      DERMATOLOGY
-                    </div>
-                  </Grid>
-
-
 
                 </Grid>
 
               </div>
 
+              <Backdrop className={classes.backdrop} open={saving}>
+                <CircularProgress color="inherit" />
+              </Backdrop>
             </DialogContent>
             <DialogActions>
-              <Grid
-                container
-                direction="row"
-                justify="flex-end"
-                alignItems="center"
-                spacing={1}
-              >
-                <Grid item>
-                  <Button
-                    onClick={handleClose}
-                    style={{ width: "100px" }}
+            <Grid
+                    container
+                    direction="row"
+                    justify="flex-end"
+                    alignItems="center"
+                    spacing={1}
                   >
-                    close
-                  </Button>
-                </Grid>
-
-              </Grid>
+                    <Grid item>
+                      <Button
+                        onClick={handleClose}
+                        style={{ width: "100px" }}
+                        disabled={saving}
+                      >
+                        back
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        onClick={saveClicked}
+                        variant="contained"
+                        color="secondary"
+                        style={{ width: "100px" }}
+                        disabled={saving}
+                      >
+                        Save
+                      </Button>
+                    </Grid>
+                  </Grid>
 
             </DialogActions>
           </Dialog>

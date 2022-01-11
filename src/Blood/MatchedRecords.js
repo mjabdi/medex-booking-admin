@@ -241,6 +241,13 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "0.85rem",
   },
 
+  CorporateLabel: {
+    color: CalendarColors.CORPORATE_COLOR,
+    fontWeight: "600",
+    fontSize: "0.85rem",
+  },
+
+
 
 }));
 
@@ -307,7 +314,9 @@ export default function MatchedRecords() {
         return classes.BloodLabel;
       case "screening":
           return classes.ScreeningLabel;
-    
+      case "corporate":
+          return classes.CorporateLabel;
+      
 
 
       default:

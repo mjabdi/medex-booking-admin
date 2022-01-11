@@ -349,6 +349,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-10px",
   },
 
+  appsCorporateLabel: {
+    color: "#009188",
+    fontWeight: "600",
+    fontSize: "0.95rem",
+    marginTop: "-10px",
+  },
+
+
   appsReportsLabel: {
     color: "#008c34",
     fontWeight: "600",
@@ -518,14 +526,20 @@ export default function Dashboard() {
             <AirplayIcon className={classes.appsLogo} style={{color:"#006b8f", fontSize:"2rem", padding:"16px"}}/>
           );
 
+          case "corporate":
+            return (
+              <img
+              src={getGlobalPath("/images/corporate.png")}
+              style={{padding:"10px"}}
+              className={classes.appsLogo}
+              />
+            );
+  
+
           case "reports":
             return (
-              // <img
-              //   src={getGlobalPath("/images/payment-logo.png")}
-              //   className={classes.appsLogo}
-              // />
               <PollIcon className={classes.appsLogo} style={{color:"#008c34", fontSize:"2rem", padding:"13px"}}/>
-            );
+              );
     
   
 
@@ -556,6 +570,8 @@ export default function Dashboard() {
         return <div className={classes.appsPaymentLabel}> {"Payments"} </div>;
       case "screening":
         return <div className={classes.appsScreeningLabel}> {"Screening"} </div>;
+      case "corporate":
+        return <div className={classes.appsCorporateLabel}> {"Corporate"} </div>;     
       case "reports":
           return <div className={classes.appsReportsLabel}> {"Reports"} </div>;
     
@@ -870,6 +886,25 @@ export default function Dashboard() {
                   </Grid>
                 </Grid>
 
+                <Grid item>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                    className={
+                      state.role === "corporate"
+                        ? classes.appsBoxSelected
+                        : classes.appsBox
+                    }
+                    onClick={() => appsClicked("corporate")}
+                  >
+                    <Grid item>{getAppsLogo("corporate")}</Grid>
+                    <Grid item>{getAppsLabel("corporate")}</Grid>
+                  </Grid>
+                </Grid>
+
+
 
 
 
@@ -909,7 +944,6 @@ export default function Dashboard() {
                   </Grid>
                 </Grid>
 
-                <Grid item style={{width:"85px"}}></Grid>
                 <Grid item style={{width:"85px"}}></Grid>
 
 

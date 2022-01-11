@@ -17,6 +17,7 @@ import NewSTDDialog from "../../STD/NewBookingDialog";
 import NewBloodDialog from "../../Blood/NewBookingDialog";
 import NewDermaDialog from "../../Derma/NewBookingDialog";
 import NewScreeningDialog from "../../Screening/NewBookingDialog";
+import NewCorporateDialog from "../../Corporate/NewBookingDialog";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -208,6 +209,11 @@ const useStyles = makeStyles((theme) => ({
     borderColor: CalendarColors.SCREENING_COLOR,
   },
 
+  BookingBorderCorporate: {
+    border: "4px solid",
+    borderColor: CalendarColors.CORPORATE_COLOR,
+  },
+
   bookingBoxPending: {
     display: "flex",
     marginRight: "10px",
@@ -252,6 +258,7 @@ const DayViewCell = ({ key, date, time }) => {
   const [openDialogBlood, setOpenDialogBlood] = React.useState(false);
   const [openDialogDerma, setOpenDialogDerma] = React.useState(false);
   const [openDialogScreening, setOpenDialogScreening] = React.useState(false);
+  const [openDialogCorporate, setOpenDialogCorporate] = React.useState(false);
 
 
   const handleCloseDialogGP = () => {
@@ -281,6 +288,11 @@ const DayViewCell = ({ key, date, time }) => {
 
   const handleCloseDialogScreening = () => {
     setOpenDialogScreening(false);
+    setOpenDialogAddNew(false)
+  };
+
+  const handleCloseDialogCorporate = () => {
+    setOpenDialogCorporate(false);
     setOpenDialogAddNew(false)
   };
 
@@ -433,7 +445,9 @@ const DayViewCell = ({ key, date, time }) => {
         return classes.BookingBorderDerma;
       case "screening":
         return classes.BookingBorderScreening;
-  
+      case "corporate":
+          return classes.BookingBorderCorporate;
+    
 
       default:
         return null;
@@ -508,6 +522,9 @@ const DayViewCell = ({ key, date, time }) => {
       case "screening":
         setOpenDialogScreening(true);
         break;
+      case "corporate":
+        setOpenDialogCorporate(true);
+        break; 
   
 
 
@@ -576,6 +593,13 @@ const DayViewCell = ({ key, date, time }) => {
         time={time}
         open={openDialogScreening}
         handleClose={handleCloseDialogScreening}
+      />
+
+      <NewCorporateDialog
+        date={date}
+        time={time}
+        open={openDialogCorporate}
+        handleClose={handleCloseDialogCorporate}
       />
 
 
