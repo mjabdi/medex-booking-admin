@@ -486,6 +486,12 @@ export default function BookingTable(props) {
               <span  className={classes.PatientAttendedLabel}> PA </span>
             );
           }
+          else if (params.value === 'report_sent')
+          {
+            return (
+              <span  className={classes.ReportSentLabel}> RS </span>
+            );
+          }
           else{
             return 'Unknown';
           }
@@ -575,6 +581,12 @@ export default function BookingTable(props) {
           {
             return (
               <span  className={classes.PatientAttendedLabel}> PA </span>
+            );
+          }
+          else if (params.value === 'report_sent')
+          {
+            return (
+              <span  className={classes.ReportSentLabel}> RS </span>
             );
           }
           else{
@@ -723,6 +735,12 @@ export default function BookingTable(props) {
           <span  className={classes.PatientAttendedLabel}> PA </span>
         );
       }
+      else if (params.value === 'report_sent')
+      {
+        return (
+          <span  className={classes.ReportSentLabel}> RS </span>
+        );
+      }
       else{
         return 'Unknown';
       }
@@ -827,6 +845,15 @@ export default function BookingTable(props) {
     {
       api = BookService.getTBCFolderBookings;
     }
+    else if (props.date === 'live')
+    {
+      api = BookService.getLiveBookings;
+    }
+    else if (props.date === 'completed')
+    {
+      api = BookService.getCompletedBookings;
+    }
+
 
 
      

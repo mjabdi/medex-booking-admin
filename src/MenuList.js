@@ -372,36 +372,49 @@ export const MenuList_STD = [
   },
   {
     index: 3,
+    id: `liveBookings`,
+    title: `Live Bookings`,
+    icon: <LiveTvIcon />,
+  },
+  {
+    index: 4,
+    id: `completedBookings`,
+    title: `Completed Bookings`,
+    icon: <PlaylistAddCheckIcon />,
+  },
+
+  {
+    index: 5,
     id: `oldBookings`,
     title: `Old Bookings`,
     icon: <HistoryIcon />,
   },
   {
-    index: 4,
+    index: 6,
     id: `futureBookings`,
     title: `Future Bookings`,
     icon: <TimelineIcon />,
   },
   {
-    index: 5,
+    index: 7,
     id: `allBookings`,
     title: `All Bookings`,
     icon: <DescriptionIcon />,
   },
   {
-    index: 6,
+    index: 8,
     id: `deletedBookings`,
     title: `Deleted Records`,
     icon: <DeleteIcon />,
   },
   {
-    index: 7,
+    index: 9,
     id: `calendarView`,
     title: `Calendar View`,
     icon: <DateRangeIcon />,
   },
-  { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
-  { index: 9, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+  { index: 10, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 11, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
 
 ];
 
@@ -423,65 +436,74 @@ export const MenuList_Blood = [
   },
   {
     index: 3,
+    id: `liveBookings`,
+    title: `Live Bookings`,
+    icon: <LiveTvIcon />,
+  },
+  {
+    index: 4,
+    id: `completedBookings`,
+    title: `Completed Bookings`,
+    icon: <PlaylistAddCheckIcon />,
+  },
+  {
+    index: 5,
     id: `oldBookings`,
     title: `Old Bookings`,
     icon: <HistoryIcon />,
   },
   {
-    index: 4,
+    index: 6,
     id: `futureBookings`,
     title: `Future Bookings`,
     icon: <TimelineIcon />,
   },
   {
-    index: 5,
+    index: 7,
     id: `allBookings`,
     title: `All Bookings`,
     icon: <DescriptionIcon />,
   },
   {
-    index: 6,
+    index: 8,
     id: `deletedBookings`,
     title: `Deleted Records`,
     icon: <DeleteIcon />,
   },
   {
-    index: 7,
+    index: 9,
     id: `bloodMatchedRecords`,
     title: `Matched Results`,
     icon: <DoneOutlineIcon />,
   },
   {
-    index: 8,
+    index: 10,
     id: `bloodUnatchedRecords`,
     title: `Unmatched Results`,
     icon: <WarningIcon />,
   },
 
   {
-    index: 9,
+    index: 11,
     id: `bloodArchived`,
     title: `Archived Results`,
     icon: <ArchiveIcon />,
   },
 
   {
-    index: 10,
+    index: 12,
     id: `bloodSent`,
     title: `Sent Results`,
     icon: <SendRoundedIcon />,
   },
-
-
-
   {
-    index: 11,
+    index: 13,
     id: `calendarView`,
     title: `Calendar View`,
     icon: <DateRangeIcon />,
   },
-  { index: 12, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
-  { index: 13, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+  { index: 14, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 15, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
 
 ];
 
@@ -639,36 +661,48 @@ export const MenuList_Screening = [
   },
   {
     index: 5,
+    id: `liveBookings`,
+    title: `Live Bookings`,
+    icon: <LiveTvIcon />,
+  },
+  {
+    index: 6,
+    id: `completedBookings`,
+    title: `Completed Bookings`,
+    icon: <PlaylistAddCheckIcon />,
+  },
+  {
+    index: 7,
     id: `oldBookings`,
     title: `Old Bookings`,
     icon: <HistoryIcon />,
   },
   {
-    index: 6,
+    index: 8,
     id: `futureBookings`,
     title: `Future Bookings`,
     icon: <TimelineIcon />,
   },
   {
-    index: 7,
+    index: 9,
     id: `allBookings`,
     title: `All Bookings`,
     icon: <DescriptionIcon />,
   },
   {
-    index: 8,
+    index: 10,
     id: `deletedBookings`,
     title: `Deleted Records`,
     icon: <DeleteIcon />,
   },
   {
-    index: 9,
+    index: 11,
     id: `calendarView`,
     title: `Calendar View`,
     icon: <DateRangeIcon />,
   },
-  { index: 10, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
-  { index: 11, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+  { index: 12, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
+  { index: 13, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
 
 ];
 
@@ -869,18 +903,22 @@ export const getMenuContent = (role, index) => {
       case 2:
         return <STDBookingTable date="today" />;
       case 3:
-        return <STDBookingTable date="old" />;
+        return <STDBookingTable date="live" />;
       case 4:
-        return <STDBookingTable date="future" />;
+        return <STDBookingTable date="completed" />;      
       case 5:
-        return <STDBookingTable date="all" />;
+        return <STDBookingTable date="old" />;
       case 6:
-        return <STDBookingTable date="deleted" />;
+        return <STDBookingTable date="future" />;
       case 7:
-        return <STDCalendarView />;
+        return <STDBookingTable date="all" />;
       case 8:
-        return <STDFindByRef />;
+        return <STDBookingTable date="deleted" />;
       case 9:
+        return <STDCalendarView />;
+      case 10:
+        return <STDFindByRef />;
+      case 11:
         return <SearchBookingTable />;
 
       default:
@@ -895,29 +933,30 @@ export const getMenuContent = (role, index) => {
       case 2:
         return <BloodBookingTable date="today" />;
       case 3:
-        return <BloodBookingTable date="old" />;
+        return <BloodBookingTable date="live" />;
       case 4:
-        return <BloodBookingTable date="future" />;
+        return <BloodBookingTable date="completed" />;      
       case 5:
-        return <BloodBookingTable date="all" />;
+        return <BloodBookingTable date="old" />;
       case 6:
-        return <BloodBookingTable date="deleted" />;
+        return <BloodBookingTable date="future" />;
       case 7:
-        return <BloodMatchedRecords />;
-
+        return <BloodBookingTable date="all" />;
       case 8:
-        return <BloodUnmatchedRecords />;
+        return <BloodBookingTable date="deleted" />;
       case 9:
-        return <BloodArchivedRecords />;
-
+        return <BloodMatchedRecords />;
       case 10:
-        return <SentBloodRecords />;
-
+        return <BloodUnmatchedRecords />;
       case 11:
-        return <BloodCalendarView />;
+        return <BloodArchivedRecords />;
       case 12:
-        return <BloodFindByRef />;
+        return <SentBloodRecords />;
       case 13:
+        return <BloodCalendarView />;
+      case 14:
+        return <BloodFindByRef />;
+      case 15:
         return <SearchBookingTable />;
 
       default:
@@ -1011,18 +1050,22 @@ export const getMenuContent = (role, index) => {
       case 4:
         return <ScreeningBookingTable date="today" />;
       case 5:
-        return <ScreeningBookingTable date="old" />;
+        return <ScreeningBookingTable date="live" />;
       case 6:
-        return <ScreeningBookingTable date="future" />;
+        return <ScreeningBookingTable date="completed" />;       
       case 7:
-        return <ScreeningBookingTable date="all" />;
+        return <ScreeningBookingTable date="old" />;
       case 8:
-        return <ScreeningBookingTable date="deleted" />;
+        return <ScreeningBookingTable date="future" />;
       case 9:
-        return <ScreeningCalendarView />;
+        return <ScreeningBookingTable date="all" />;
       case 10:
-        return <ScreeningFindByRef />;
+        return <ScreeningBookingTable date="deleted" />;
       case 11:
+        return <ScreeningCalendarView />;
+      case 12:
+        return <ScreeningFindByRef />;
+      case 13:
         return <SearchBookingTable />;
 
 

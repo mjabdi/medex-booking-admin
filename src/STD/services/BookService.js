@@ -91,6 +91,11 @@ export default class BookService {
       return API.post(`/api/std/book/changetopatientattended?id=${id}`);
    }
 
+   static changeToCompleted = (id) =>
+   {
+      return API.post(`/api/std/book/changetocompleted?id=${id}`);
+   }
+
    static updateBooking = (payload) =>
    {
       return API.post(`/api/std/book/updatebookappointment`, payload);
@@ -136,6 +141,16 @@ export default class BookService {
     static getTodayBookings= () =>
     {
        return API.get(`/api/std/book/gettodaybookings`);
+    }
+
+    static getLiveBookings= () =>
+    {
+       return API.get(`/api/std/book/getlivebookings`);
+    }
+
+    static getCompletedBookings= (limit) =>
+    {
+       return API.get(`/api/std/book/getcompletedbookings?limit=${limit}`);
     }
 
     static getOldBookings= (limit) =>

@@ -206,6 +206,8 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "800",
     borderLeft: "5px solid",
     borderColor: "#009900",
+    width: "150px",
+    display: "inline-block",
   },
 
   ReportCertSentLabel: {
@@ -513,7 +515,12 @@ export default function BookingDialog(props) {
       return (
         <div className={classes.PatientAttendedLabel}> Patient Attended </div>
       );
-    } else {
+    }else if (status === "report_sent") {
+      return (
+        <div className={classes.ReportSentLabel}> Report Sent </div>
+      );
+    } 
+    else {
       return "Unknown";
     }
   };
@@ -715,6 +722,19 @@ export default function BookingDialog(props) {
   const changeToPatientAttended = (event, id) => {
     setSaving(true);
     BookService.changeToPatientAttended(id)
+      .then((res) => {
+        setSaving(false);
+        setRefreshData(!refreshData);
+      })
+      .catch((err) => {
+        console.log(err);
+        setSaving(false);
+      });
+  };
+
+  const changeToCompleted = (event, id) => {
+    setSaving(true);
+    BookService.changeToCompleted(id)
       .then((res) => {
         setSaving(false);
         setRefreshData(!refreshData);
@@ -1584,17 +1604,32 @@ export default function BookingDialog(props) {
                             editMode.edit && editMode.person._id === booking._id
                           ) &&
                           !booking.deleted && (
-                            <Button
-                              variant="outlined"
-                              color="primary"
-                              disabled={saving}
-                              style={{ width: "300px" }}
-                              onClick={(event) =>
-                                changeBackToBookingMade(event, booking._id)
-                              }
-                            >
-                              Change Back To Booking Made
-                            </Button>
+                            <div style={{display:"flex", gap:"10px", width:"100%", paddingTop:"10px"}}>
+                              <Button
+                                variant="outlined"
+                                color="primary"
+                                disabled={saving}
+                                style={{ width: "300px" }}
+                                onClick={(event) =>
+                                  changeBackToBookingMade(event, booking._id)
+                                }
+                              >
+                                Change Back To Booking Made
+                              </Button>
+
+                              <Button
+                                variant="contained"
+                                color="secondary"
+                                disabled={saving}
+                                style={{ width: "200px" , margin:"0"}}
+                                className={classes.EditButton}
+                                onClick={(event) =>
+                                  changeToCompleted(event, booking._id)
+                                }
+                              >
+                                Change To Completed
+                              </Button>
+                            </div>
                           )}
                         {booking.status === "booked" &&
                           !(
@@ -1611,6 +1646,24 @@ export default function BookingDialog(props) {
                               }
                             >
                               Change To Patient Attended
+                            </Button>
+                          )}
+
+                        {booking.status === "report_sent" &&
+                          !(
+                            editMode.edit && editMode.person._id === booking._id
+                          ) &&
+                          !booking.deleted && (
+                            <Button
+                              variant="outlined"
+                              color="secondary"
+                              disabled={saving}
+                              style={{ width: "300px" }}
+                              onClick={(event) =>
+                                changeToPatientAttended(event, booking._id)
+                              }
+                            >
+                              Change Back To Patient Attended
                             </Button>
                           )}
                       </li>
