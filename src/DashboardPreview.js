@@ -19,6 +19,7 @@ import { getMenuId, getMenuIndex } from "./MenuList";
 import NewBloodResultsBookingView from "./NewBloodResultsBookingView";
 import NewScreeningBookingView from "./NewScreeningBookingView"
 import ShouldRefundBookingScreeningView from "./ShouldRefundBookingScreeningView";
+import LiveBookingView from "./LiveBookingView";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -102,6 +103,12 @@ export default function DashboardPreview() {
     <React.Fragment>
       <Grid container spacing={2}>       
        
+        <Grid item xs={12} md={12}>
+          <Paper style={{background: "linear-gradient(0deg, rgba(230,249,255,1) 0%, rgba(255,255,255,1) 100%)"}}>
+              <LiveBookingView/>
+          </Paper>
+        </Grid>
+
         <Grid item xs={12} md={6}>
           <Paper className={fixedHeightPaperSmall} onClick={gotoLateBookings}>
              <LateBookingView />
