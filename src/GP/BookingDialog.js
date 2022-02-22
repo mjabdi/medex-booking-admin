@@ -921,6 +921,17 @@ export default function BookingDialog(props) {
     props.onClose();
   };
 
+  const getTotalPrice = (items) => {
+    let sum = 0
+  
+    items.forEach(item => {
+      sum += item.price
+    })
+  
+    return sum
+  
+  }
+
   return (
     <React.Fragment>
       {booking && (
@@ -1789,6 +1800,23 @@ export default function BookingDialog(props) {
                             </React.Fragment>
                           )}
                       </li>
+
+                      {invoice &&
+                        <li style={{lineHeight:"0.5rem", border:"1px dashed #999", padding:"0px 10px", marginBottom:"10px", marginTop:"-10px"}}>
+                          {invoice.items.map(item => (
+                            <p>
+                              <span style={{width:"125px", display:"inline-block"}}> {item.code} </span>
+                              <span> £{item.price}</span>
+                            </p>  
+                          ))}
+
+                            <p>
+                              <span style={{width:"125px", display:"inline-block", fontWeight:"500"}}> TOTAL </span>
+                              <span style={{fontWeight:"600", color:"green"}}> £{ getTotalPrice(invoice.items)}</span>
+                            </p>  
+
+                        </li>
+                      }
 
                       {/* <li className={classes.li}>
                         <div
