@@ -990,7 +990,7 @@ const getTotalPrice = (items) => {
   let sum = 0
 
   items.forEach(item => {
-    sum += item.price
+    sum += parseFloat(item.price)
   })
 
   return sum

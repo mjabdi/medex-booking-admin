@@ -925,7 +925,7 @@ export default function BookingDialog(props) {
     let sum = 0
   
     items.forEach(item => {
-      sum += item.price
+      sum += parseFloat(item.price)
     })
   
     return sum
