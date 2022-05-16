@@ -2159,6 +2159,30 @@ export default function BookingDialog(props) {
                         </div>
                       </li>
 
+                      {booking.paymentInfo && (
+                        <li>
+                          <div style={{position:"relative", border:"1px dashed #84b076", borderRadius:"8px" , padding:"10px", marginBottom:"10px"}}>
+                            <div style={{position:"absolute", top:"-10px", fontSize:"0.85em", background:"#fff", fontWeight:"600", color:"#32701d", padding:"0px 5px"}}>
+                              Payment Details
+                            </div>
+                            <Grid container spacing={4} justify="space-around" alignItems="center">
+                              <Grid item>
+                                cardBrand: <strong>{JSON.parse(booking.paymentInfo).cardDetails.card.cardBrand}</strong>  
+                              </Grid>
+                              <Grid item>
+                                expDate: <strong>{JSON.parse(booking.paymentInfo).cardDetails.card.expMonth}/{JSON.parse(booking.paymentInfo).cardDetails.card.expYear}</strong>  
+                              </Grid>
+                              <Grid item>
+                                last4: <strong>{JSON.parse(booking.paymentInfo).cardDetails.card.last4}</strong>  
+                              </Grid>
+                              <Grid item>
+                                timeStamp: <strong>{JSON.parse(booking.paymentInfo).createdAt}</strong>  
+                              </Grid>
+                            </Grid>
+                          </div>
+                        </li>
+                      )}
+
                       <li className={classes.li}>
                         <span className={classes.infoTitle}>OTC CHARGES</span>{" "}
                         <span
