@@ -41,6 +41,9 @@ import {
 import PayDialog from "./PayDialog";
 
 import PrintIcon from "@material-ui/icons/Print";
+
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+
 import UndoIcon from "@material-ui/icons/Undo";
 
 import SendIcon from "@material-ui/icons/Send";
@@ -1784,6 +1787,49 @@ const getTotalPrice = (items) => {
                           {booking.estimatedPrice}
                         </span>
                       </li>
+
+                      <li hidden={booking.deleted || editMode.edit}>
+                        <Button
+                          disabled={booking.printStatus === 'printing' || booking.printStatus === 'preparing'}
+                          startIcon={<PrintIcon />}
+                          endIcon={booking.printStatus === "printed" ? <DoneOutlineIcon style={{color:"green"}} />  : null}
+                          type="button"
+                          fullWidth
+                          variant="outlined"
+                          color="primary"
+                          onClick={() => {
+                            BookService.sendForPrint(booking._id);
+                            setTimeout(async () => {
+                              const _booking = await BookService.getBookingById(booking._id)
+                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                            }, 500);
+                            setTimeout(async () => {
+                              const _booking = await BookService.getBookingById(booking._id)
+                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                            }, 1500);
+                            setTimeout(async () => {
+                              const _booking = await BookService.getBookingById(booking._id)
+                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                            }, 3000);
+                            setTimeout(async () => {
+                              const _booking = await BookService.getBookingById(booking._id)
+                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                            }, 5000);
+                            setTimeout(async () => {
+                              const _booking = await BookService.getBookingById(booking._id)
+                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                            }, 10000);
+                          }}
+                          className={classes.DownloadForm}
+                        >
+                          {!booking.printStatus && 'Print LAB Label' }
+                          {(booking.printStatus === 'printed') && 'Print LAB Label Again'}
+                          {(booking.printStatus === 'printing') && 'Printing'}
+                          {(booking.printStatus === 'preparing') && 'Preparing for print'}
+
+                        </Button>
+                      </li>
+
 
                       <li hidden={booking.deleted || editMode.edit}>
                         <Button
