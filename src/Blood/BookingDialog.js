@@ -1819,6 +1819,14 @@ const getTotalPrice = (items) => {
                               const _booking = await BookService.getBookingById(booking._id)
                               setBooking({...booking, printStatus: _booking?.data.printStatus})
                             }, 10000);
+                            setTimeout(async () => {
+                              const _booking = await BookService.getBookingById(booking._id)
+                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                            }, 15000);
+                            setTimeout(async () => {
+                              const _booking = await BookService.getBookingById(booking._id)
+                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                            }, 20000);
                           }}
                           className={classes.DownloadForm}
                         >
