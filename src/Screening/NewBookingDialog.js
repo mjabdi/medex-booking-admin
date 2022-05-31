@@ -333,12 +333,19 @@ export default function NewBookingDialog(props) {
   const [birthDate, setBirthDate] = React.useState(null);
   const [birthDateError, setBirthDateError] = React.useState(false);
 
+  const [gender, setGender] = React.useState("");
+  const [genderError, setGenderError] = React.useState(false);
+
   const birthDateChanged = (dateStr) =>
   {
       setBirthDate(dateStr);
       setBirthDateError(false)
   }  
 
+  const genderChanged = (event) => {
+    setGender(event.target.value);
+    setGenderError(false);
+  };
 
   
   const fullnameChanged = (event) => {
@@ -376,6 +383,7 @@ export default function NewBookingDialog(props) {
     setService("");
     setBirthDate(null)
     setServiceError(false)
+    setGender(null)
     
     props.handleClose();
     setSaving(false);
@@ -399,6 +407,13 @@ export default function NewBookingDialog(props) {
       setServiceError(true)
     }
 
+    if (!gender)
+    {
+      setGenderError(true)
+      error = true
+    }
+
+
     return !error;
   };
 
@@ -418,7 +433,8 @@ export default function NewBookingDialog(props) {
         email: email,
         notes: notes,
         service: service,
-        birthDate: birthDate
+        birthDate: birthDate,
+        gender: gender
       });
       setSaving(false);
       setState((state) => ({
@@ -547,6 +563,23 @@ export default function NewBookingDialog(props) {
                       id="email-id"
                       autoComplete="none"
                     />
+                  </Grid>
+
+                  <Grid item xs={12} md={12}>
+                    <FormControl required fullWidth>
+                      <InputLabel id="gender-label">Gender</InputLabel>
+                      <Select
+                        error={genderError ? true : false}
+                        required
+                        labelId="gender-label"
+                        id="gender-select"
+                        value={gender}
+                        onChange={genderChanged}
+                      >
+                        <MenuItem value={"M"}>{`Male`}</MenuItem>
+                        <MenuItem value={"F"}>{`Female`}</MenuItem>
+                      </Select>
+                    </FormControl>
                   </Grid>
 
                   <Grid item xs={12} md={12}>

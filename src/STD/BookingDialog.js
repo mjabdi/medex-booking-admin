@@ -47,6 +47,9 @@ import SendIcon from "@material-ui/icons/Send";
 
 import HistoryIcon from "@material-ui/icons/History";
 
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+
+
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import { CalendarColors } from "../Admin/calendar-admin/colors";
 import InvoiceService from "../services/InvoiceService";
@@ -410,6 +413,9 @@ export default function BookingDialog(props) {
   const [notes, setNotes] = React.useState("");
   const [service, setService] = React.useState("");
 
+  const [gender, setGender] = React.useState("");
+
+
   const [refreshData, setRefreshData] = React.useState(false);
 
   const [booking, setBooking] = React.useState(null);
@@ -454,6 +460,7 @@ export default function BookingDialog(props) {
         bookingTime !== booking.bookingTime ||
         fullname !== booking.fullname ||
         email !== booking.email ||
+        gender !== booking.gender ||
         tel !== booking.phone ||
         notes !== booking.notes ||
         service !== booking.packageName;
@@ -498,6 +505,12 @@ export default function BookingDialog(props) {
     setFieldChanged(!fieldChanged);
   };
 
+  const genderChanged = (event) => {
+    setGender(event.target.value);
+    setValidationError({ ...validationError, genderError: false });
+    setFieldChanged(!fieldChanged);
+  };
+
   const serviceChanged = (event) => {
     setService(event.target.value);
     setFieldChanged(!fieldChanged);
@@ -532,6 +545,7 @@ export default function BookingDialog(props) {
       setBookingTime(person.bookingTime.toUpperCase());
       setEmail(person.email);
       setTel(person.phone);
+      setGender(person.gender?.toUpperCase() || '')
       setService(person.packageName);
       if (person.notes) {
         setNotes(person.notes);
@@ -552,6 +566,7 @@ export default function BookingDialog(props) {
       booking.bookingDate = RevertFormatDateFromString(bookingDate);
       booking.bookingTime = bookingTime;
       booking.bookingRef = person.bookingRef;
+      booking.gender = gender;
 
       if (validateBooking(booking)) {
         updateBooking({ bookingId: bookingId, person: booking });
@@ -635,6 +650,13 @@ export default function BookingDialog(props) {
       error = true;
       setValidationError({ ...validationError, bookingTimeError: true });
     }
+
+    if (booking.gender && (booking.gender.toUpperCase() !== 'F' && booking.gender.toUpperCase() !== 'M'))
+    {
+      error = true;
+      setValidationError({ ...validationError, genderError: true });
+    }
+
     return !error;
   };
 
@@ -1574,6 +1596,41 @@ export default function BookingDialog(props) {
                         </Grid>
                       </li>
 
+                      <li style={{marginBottom:"10px"}}>
+                            <span className={classes.infoTitle}>GENDER</span>
+                            <span
+                              hidden={
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              }
+                              className={classes.infoData}
+                            >
+                              {booking.gender?.toUpperCase()}
+                            </span>
+                            <span
+                              hidden={
+                                !(
+                                  editMode.edit &&
+                                  editMode.person._id === booking._id
+                                )
+                              }
+                              className={classes.infoData}
+                            >
+                              <TextField
+                                fullWidth
+                                error={validationError.genderError}
+                                className={classes.TextBox}
+                                value={gender}
+                                onChange={genderChanged}
+                                inputProps={{
+                                  style: {
+                                    padding: 0,
+                                  },
+                                }}
+                              ></TextField>
+                            </span>
+                      </li>
+
                       <li className={classes.li} style={{ paddingTop: "10px" }}>
                         <span className={classes.infoTitle}>Package</span>
                         <span
@@ -1696,6 +1753,56 @@ export default function BookingDialog(props) {
                         >
                           {booking.estimatedPrice}
                         </span>
+                      </li>
+                      
+                      <li hidden={booking.deleted || editMode.edit}>
+                        <Button
+                          disabled={booking.printStatus === 'printing' || booking.printStatus === 'preparing'}
+                          startIcon={<PrintIcon />}
+                          endIcon={booking.printStatus === "printed" ? <DoneOutlineIcon style={{color:"green"}} />  : null}
+                          type="button"
+                          fullWidth
+                          variant="outlined"
+                          color="primary"
+                          onClick={() => {
+                            BookService.sendForPrint(booking._id);
+                            setTimeout(async () => {
+                              const _booking = await BookService.getBookingById(booking._id)
+                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                            }, 500);
+                            setTimeout(async () => {
+                              const _booking = await BookService.getBookingById(booking._id)
+                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                            }, 1500);
+                            setTimeout(async () => {
+                              const _booking = await BookService.getBookingById(booking._id)
+                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                            }, 3000);
+                            setTimeout(async () => {
+                              const _booking = await BookService.getBookingById(booking._id)
+                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                            }, 5000);
+                            setTimeout(async () => {
+                              const _booking = await BookService.getBookingById(booking._id)
+                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                            }, 10000);
+                            setTimeout(async () => {
+                              const _booking = await BookService.getBookingById(booking._id)
+                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                            }, 15000);
+                            setTimeout(async () => {
+                              const _booking = await BookService.getBookingById(booking._id)
+                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                            }, 20000);
+                          }}
+                          className={classes.DownloadForm}
+                        >
+                          {!booking.printStatus && 'Print LAB Label' }
+                          {(booking.printStatus === 'printed') && 'Print LAB Label Again'}
+                          {(booking.printStatus === 'printing') && 'Printing'}
+                          {(booking.printStatus === 'preparing') && 'Preparing for print'}
+
+                        </Button>
                       </li>
 
                       <li hidden={booking.deleted || editMode.edit}>

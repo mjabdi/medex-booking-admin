@@ -412,6 +412,10 @@ export default function BookingDialog(props) {
   const [fullname, setFullname] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [tel, setTel] = React.useState("");
+
+  const [gender, setGender] = React.useState("");
+
+
   const [notes, setNotes] = React.useState("");
   const [service, setService] = React.useState("");
 
@@ -461,6 +465,7 @@ export default function BookingDialog(props) {
         dob !== FormatDateFromString(booking.birthDate) ||
         email !== booking.email ||
         tel !== booking.phone ||
+        gender !== booking.gender ||
         notes !== booking.notes ||
         service !== booking.packageName;
 
@@ -507,6 +512,12 @@ export default function BookingDialog(props) {
     setFieldChanged(!fieldChanged);
   };
 
+  const genderChanged = (event) => {
+    setGender(event.target.value);
+    setValidationError({ ...validationError, genderError: false });
+    setFieldChanged(!fieldChanged);
+  };
+
   const serviceChanged = (event) => {
     setService(event.target.value);
     setFieldChanged(!fieldChanged);
@@ -541,6 +552,7 @@ export default function BookingDialog(props) {
       setBookingTime(person.bookingTime.toUpperCase());
       setEmail(person.email);
       setTel(person.phone);
+      setGender(person.gender?.toUpperCase() || '')
       setDOB(FormatDateFromString(person.birthDate));
       setService(person.packageName);
       if (person.notes) {
@@ -563,6 +575,7 @@ export default function BookingDialog(props) {
       booking.bookingDate = RevertFormatDateFromString(bookingDate);
       booking.bookingTime = bookingTime;
       booking.bookingRef = person.bookingRef;
+      booking.gender = gender;
 
       if (validateBooking(booking)) {
         updateBooking({ bookingId: bookingId, person: booking });
@@ -635,6 +648,9 @@ export default function BookingDialog(props) {
   };
 
   const validateBooking = (booking) => {
+
+    console.log(booking)
+
     var error = false;
 
     if (!validateDate(booking.bookingDate)) {
@@ -651,6 +667,15 @@ export default function BookingDialog(props) {
       error = true;
       setValidationError({ ...validationError, bookingTimeError: true });
     }
+
+    if (booking.gender && (booking.gender.toUpperCase() !== 'F' && booking.gender.toUpperCase() !== 'M'))
+    {
+      error = true;
+      setValidationError({ ...validationError, genderError: true });
+    }
+
+
+
     return !error;
   };
 
@@ -1549,7 +1574,7 @@ const getTotalPrice = (items) => {
                       </li>
                       <li className={classes.li}>
                         <Grid container spacing={2}>
-                          <Grid item xs={6}>
+                          <Grid item xs={4}>
                             <span className={classes.infoTitle}>TEL</span>
                             <span
                               hidden={
@@ -1582,7 +1607,7 @@ const getTotalPrice = (items) => {
                               ></TextField>
                             </span>
                           </Grid>
-                          <Grid item xs={6}>
+                          <Grid item xs={4}>
                           <span className={classes.infoTitle}>D.O.B</span>
                             <span
                               hidden={
@@ -1617,6 +1642,45 @@ const getTotalPrice = (items) => {
                             </span>
 
                           </Grid>
+
+
+
+                          <Grid item xs={4}>
+                            <span className={classes.infoTitle}>GENDER</span>
+                            <span
+                              hidden={
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              }
+                              className={classes.infoData}
+                            >
+                              {booking.gender?.toUpperCase()}
+                            </span>
+                            <span
+                              hidden={
+                                !(
+                                  editMode.edit &&
+                                  editMode.person._id === booking._id
+                                )
+                              }
+                              className={classes.infoData}
+                            >
+                              <TextField
+                                fullWidth
+                                error={validationError.genderError}
+                                className={classes.TextBox}
+                                value={gender}
+                                onChange={genderChanged}
+                                inputProps={{
+                                  style: {
+                                    padding: 0,
+                                  },
+                                }}
+                              ></TextField>
+                            </span>
+                          </Grid>
+
+
                         </Grid>
                       </li>
 

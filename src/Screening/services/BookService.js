@@ -26,6 +26,12 @@ export default class BookService {
       return API.post(`/api/screening/payment/manualrefundpayment`, {bookingId: bookingId});
    }
 
+   static sendForPrint = (bookingId) =>
+   {
+      return API.post(`/api/screening/book/sendforprint?id=${bookingId}`);
+   }
+
+
    static sendRegFormEmail = (bookingId) =>
    {
       return API.post(`/api/screening/book/sendregformemail?id=${bookingId}`);
