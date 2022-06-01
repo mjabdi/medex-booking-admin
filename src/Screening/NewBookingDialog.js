@@ -396,7 +396,7 @@ export default function NewBookingDialog(props) {
       error = true;
     }
 
-    if (birthDate && birthDate.length !== 10)
+    if (!birthDate || birthDate.length !== 10)
     {
       setBirthDateError(true)
       error = true
