@@ -48,6 +48,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { validate } from "email-validator";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import { CalendarColors } from "../Admin/calendar-admin/colors";
+import DateField from "../Blood/DateField";
 
 var interval;
 
@@ -333,6 +334,16 @@ export default function NewBookingDialog(props) {
   const [gender, setGender] = React.useState("");
   const [genderError, setGenderError] = React.useState(false);
 
+  const [birthDate, setBirthDate] = React.useState(null);
+  const [birthDateError, setBirthDateError] = React.useState(false);
+
+  const birthDateChanged = (dateStr) =>
+  {
+      setBirthDate(dateStr);
+      setBirthDateError(false)
+  }  
+
+
   const fullnameChanged = (event) => {
     setFullname(event.target.value);
     setFullnameError(false);
@@ -373,6 +384,7 @@ export default function NewBookingDialog(props) {
     setIndivisualArray([]);
     setComboArray([]);
     setGender(null)
+    setBirthDate(null)
 
     props.handleClose();
     setSaving(false);
@@ -406,6 +418,12 @@ export default function NewBookingDialog(props) {
     if (!gender)
     {
       setGenderError(true)
+      error = true
+    }
+
+    if (!birthDate || birthDate.length !== 10)
+    {
+      setBirthDateError(true)
       error = true
     }
 
@@ -450,7 +468,8 @@ export default function NewBookingDialog(props) {
         email: email,
         packageName: packageName,
         notes: notes,
-        gender: gender
+        gender: gender,
+        birthDate: birthDate
       });
       setSaving(false);
       setState((state) => ({
@@ -539,7 +558,7 @@ export default function NewBookingDialog(props) {
             <DialogContent>
               <div
                 style={{
-                  height: "600px",
+                  height: "650px",
                 }}
               >
                 <Grid
@@ -605,6 +624,17 @@ export default function NewBookingDialog(props) {
                       id="email-id"
                       autoComplete="none"
                     />
+                  </Grid>
+
+                  <Grid item xs={12} md={12}>
+                    <DateField
+                      error={birthDateError}
+                      title="Date of Birth"
+                      value={birthDate}
+                      dateChanged={birthDateChanged}
+                    >
+
+                    </DateField>
                   </Grid>
 
                   <Grid item xs={12} md={12}>
