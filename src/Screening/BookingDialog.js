@@ -431,6 +431,8 @@ export default function BookingDialog(props) {
   const [email, setEmail] = React.useState("");
   const [tel, setTel] = React.useState("");
   const [notes, setNotes] = React.useState("");
+  const [address, setAddress] = React.useState("");
+
   const [service, setService] = React.useState("");
 
   const [gender, setGender] = React.useState("");
@@ -566,6 +568,7 @@ export default function BookingDialog(props) {
         gender !== booking.gender ||
         tel !== booking.phone ||
         notes !== booking.notes ||
+        address !== booking.address ||
         birthDate !== booking.birthDate
 
       setRecordChanged(isChanged);
@@ -631,6 +634,11 @@ export default function BookingDialog(props) {
     setFieldChanged(!fieldChanged);
   };
 
+  const addressChanged = (event) => {
+    setAddress(event.target.value);
+    setFieldChanged(!fieldChanged);
+  };
+
   const getStatusLabel = (status) => {
     if (status === "booked") {
       return <div className={classes.BookedLabel}> Booking Made </div>;
@@ -659,6 +667,9 @@ export default function BookingDialog(props) {
       if (person.notes) {
         setNotes(person.notes);
       }
+      if (person.address) {
+        setAddress(person.address);
+      }
 
       setBirthDate(FormatDateFromString(person.birthDate));
 
@@ -674,6 +685,7 @@ export default function BookingDialog(props) {
       booking.phone = tel;
       booking.fullname = fullname;
       booking.notes = notes;
+      booking.address = address;
       booking.service = person.service;
       booking.bookingDate = RevertFormatDateFromString(bookingDate);
       booking.bookingTime = bookingTime;
@@ -1875,7 +1887,46 @@ export default function BookingDialog(props) {
                               ></TextField>
                             </span>
                           </Grid>
+
+
+                          <Grid item xs={12}>
+                            <span className={classes.infoTitle}>Address</span>
+                            <span
+                              hidden={
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              }
+                              className={classes.infoData}
+                            >
+                              {booking.address}
+                            </span>
+                            <span
+                              hidden={
+                                !(
+                                  editMode.edit &&
+                                  editMode.person._id === booking._id
+                                )
+                              }
+                              className={classes.infoData}
+                            >
+                              <TextField
+                                fullWidth
+                                className={classes.TextBox}
+                                value={address}
+                                onChange={addressChanged}
+                                inputProps={{
+                                  style: {
+                                    padding: 0,
+                                  },
+                                }}
+                              ></TextField>
+                            </span>
+                          </Grid>
+
                         </Grid>
+
+
+                        
                       </li>
 
                       <li style={{marginTop:"20px"}}>
