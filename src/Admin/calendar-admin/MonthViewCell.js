@@ -177,7 +177,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MAX_BOOKING_COUNT_PCR = 50;
+const MAX_BOOKING_COUNT_PCR = 10;
 const MAX_BOOKING_COUNT_GP = 10;
 const MAX_BOOKING_COUNT_STD = 10;
 const MAX_BOOKING_COUNT_GYNAE = 10;
@@ -304,8 +304,8 @@ const MonthViewCell = ({ key, cellIndex, month, daysInMonth, dayClicked }) => {
   const getClinicBar = (clinic, count) => {
     return (
       <React.Fragment>
-        {clinic === "pcr" &&
-          state.selectedClinics.findIndex((e) => e === "PCR") >= 0 &&
+        {clinic === "visa" &&
+          state.selectedClinics.findIndex((e) => e === "VISA") >= 0 &&
           getPCRClinicBar(count)}
         {clinic === "gynae" &&
           state.selectedClinics.findIndex((e) => e === "GYNAE") >= 0 &&

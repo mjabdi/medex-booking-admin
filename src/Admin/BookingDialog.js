@@ -69,6 +69,7 @@ export default function BookingDialog(props) {
             />
           );
           case "screening":
+          case "visa":  
           return (
             <ScreeningBookingDialog
               booking={props.booking}

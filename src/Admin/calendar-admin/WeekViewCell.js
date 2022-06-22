@@ -12,7 +12,7 @@ import axios from 'axios'
 import { Grid } from '@material-ui/core';
 import { CalendarColors } from './colors';
 
-const MAX_BOOKING_COUNT_PCR = 10;
+const MAX_BOOKING_COUNT_PCR = 1;
 const MAX_BOOKING_COUNT_GP = 1;
 const MAX_BOOKING_COUNT_STD = 1;
 const MAX_BOOKING_COUNT_GYNAE = 1;
@@ -697,8 +697,8 @@ const WeekViewCell = ({key, date, time, dayClicked}) => {
     const getClinicBar = (clinic, count) => {
         return (
           <React.Fragment>
-            {clinic === "pcr" &&
-              state.selectedClinics.findIndex((e) => e === "PCR") >= 0 &&
+            {clinic === "visa" &&
+              state.selectedClinics.findIndex((e) => e === "VISA") >= 0 &&
               getPCRClinicBar(count)}
             {clinic === "gynae" &&
               state.selectedClinics.findIndex((e) => e === "GYNAE") >= 0 &&
@@ -719,9 +719,9 @@ const WeekViewCell = ({key, date, time, dayClicked}) => {
               state.selectedClinics.findIndex((e) => e === "SCREENING") >= 0 &&
               getScreeningClinicBar(count)}
 
-            {/* {clinic === "corporate" &&
+            {clinic === "corporate" &&
               state.selectedClinics.findIndex((e) => e === "CORPORATE") >= 0 &&
-              getCorporateClinicBar(count)}    */}
+              getCorporateClinicBar(count)}   
    
 
           </React.Fragment>

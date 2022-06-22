@@ -16,7 +16,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import { CalendarColors } from './colors';
 
 const Clinics = [
-    {clinic: "PCR", color: CalendarColors.PCR_COLOR},
+    // {clinic: "PCR", color: CalendarColors.PCR_COLOR},
+    {clinic: "VISA", color: CalendarColors.PCR_COLOR},
     {clinic: "GYNAE", color: CalendarColors.GYNAE_COLOR},
     {clinic: "GP", color: CalendarColors.GP_COLOR},
     {clinic: "STD", color: CalendarColors.STD_COLOR},
@@ -78,7 +79,7 @@ export default function CalendarView() {
         const firstdayofweek = new Date(today.getTime() - ( dayofWeek * 86400000));
         setFirstDayofWeek(firstdayofweek);
         setState(state => ({...state, AdminCalendarCache : []}));
-        setState(state => ({...state, selectedClinics : ["PCR", "GP", "GYNAE", "STD", "BLOOD","DERMA","SCREENING", "CORPORATE"]}));
+        setState(state => ({...state, selectedClinics : ["VISA", "GP", "GYNAE", "STD", "BLOOD","DERMA","SCREENING", "CORPORATE"]}));
 
         return () =>
         {

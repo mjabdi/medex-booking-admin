@@ -399,13 +399,14 @@ const DayViewCell = ({ key, date, time }) => {
   }, [date, time, state.bookingDialogDataChanged]);
 
   const bookingCliked = (event, booking) => {
+    console.log(booking)
     setSelectedBooking(booking);
     setOpenDialog(true);
   };
 
   const getBookingClass = ({status, confirmed, clinic}) => {
 
-    if (clinic === "screening" && !confirmed)
+    if ((clinic === "screening" || clinic === "visa") && !confirmed)
     {
       return classes.bookingBoxPending
     }
@@ -431,7 +432,7 @@ const DayViewCell = ({ key, date, time }) => {
 
   const getBookingBorderClass = (clinic) => {
     switch (clinic) {
-      case "pcr":
+      case "visa":
         return classes.BookingBorderPCR;
       case "gynae":
         return classes.BookingBorderGynae;
@@ -520,13 +521,12 @@ const DayViewCell = ({ key, date, time }) => {
         setOpenDialogDerma(true);
         break;
       case "screening":
+      case "visa":  
         setOpenDialogScreening(true);
         break;
       case "corporate":
         setOpenDialogCorporate(true);
         break; 
-  
-
 
       default:
         break;
