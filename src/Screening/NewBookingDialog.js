@@ -434,7 +434,8 @@ export default function NewBookingDialog(props) {
         notes: notes,
         service: service,
         birthDate: birthDate,
-        gender: gender
+        gender: gender,
+        smsPush: true,
       });
       setSaving(false);
       setState((state) => ({

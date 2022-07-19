@@ -476,6 +476,7 @@ export default function NewBookingDialog(props) {
         gender: gender,
         indivisualTests: indivisualTests.length === 0 ? null : JSON.stringify(indivisualTests),
         notes: notes,
+        smsPush: true,
       });
       setSaving(false);
       setState((state) => ({

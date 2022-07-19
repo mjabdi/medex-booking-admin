@@ -378,6 +378,7 @@ export default function NewBookingDialog(props) {
         service: service,
         notes: notes,
         deposit: deposit ? 100 : 0,
+        smsPush: true,
       });
       setSaving(false);
       setState((state) => ({
