@@ -14,6 +14,8 @@ import InvoiceService from "../services/InvoiceService";
 import NumberFormat from "react-number-format";
 import PropTypes from "prop-types";
 
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -96,6 +98,8 @@ export default function InvoiceCodes() {
   const [isChanged, setIsChanged] = React.useState(false)
 
   const [changesSaved, setChangesSaved] = useState(false)
+  const [newChangesSaved, setnewChangesSaved] = useState(false)
+
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -115,6 +119,18 @@ export default function InvoiceCodes() {
 
   const [code, setCode] = React.useState(null);
   const [allCodes, setAllCodes] = React.useState([]);
+
+  const [newCode, setnewCode] = React.useState(null);
+  const [newDescription, setnewDescription] = React.useState(null);
+  const [newPrice, setNewPrice] = React.useState(null);
+
+  const [newCodeError, setnewCodeError] = React.useState(false);
+  const [newDescriptionError, setnewDescriptionError] = React.useState(false);
+  const [newPriceError, setNewPriceError] = React.useState(false);
+
+  const [showNewItem, setNewShowItem] = React.useState(false);
+
+
 
 
   const fetchAllCodes = async () => {
@@ -207,6 +223,88 @@ export default function InvoiceCodes() {
     }
     setHidden(event.target.checked)
   }
+
+
+  const newPriceChanged = (event) => {
+    setNewPrice(event.target.value);
+
+    if (event.target.value)
+    {
+      setNewPriceError(false);
+    }
+  };
+
+  const newCodeChanged = (event) => {
+    setnewCode(event.target.value);
+
+    if (event.target.value)
+    {
+      setnewCodeError(false);
+    }
+  };
+
+  const newDescriptionChanged = (event) => {
+
+    setnewDescription(event.target.value);
+
+    if (event.target.value)
+    {
+      setnewDescriptionError(false);
+    }
+  };
+
+  const newSaveChanges = async () => {
+    let error = false
+    if (!newPrice)
+    {
+      error = true
+      setNewPriceError(true)
+    }
+    if (!newDescription)
+    {
+      error = true
+      setnewDescriptionError(true)
+    }
+    if (!newCode)
+    {
+      error = true
+      setnewCodeError(true)
+    }
+
+    if (error)
+    {
+      return
+    }
+
+    try{
+
+      setSaving(true)
+
+      await InvoiceService.addCode(newCode, newDescription, newPrice)
+      fetchAllCodes()
+
+      setSaving(false)
+      setNewPrice(null)
+      setnewDescription(null)
+      setnewCode(null)
+      setnewChangesSaved(true)
+  
+      setTimeout(() => {
+        setNewShowItem(false)
+        setnewChangesSaved(false)
+      }, 3000);
+
+    }catch(err)
+    {
+      console.error(err)
+      setSaving(false)
+    }
+
+
+
+
+  }
+
 
   const saveChanges = async () => {
     if (!validateData())
@@ -388,6 +486,99 @@ export default function InvoiceCodes() {
               )}
             />
           </Grid>
+
+          {!code && !showNewItem && (
+            <div style={{width:"100%", display:"flex", justifyContent: "flex-end", margin:"0px 20px"}}>
+              <Tooltip title="Add New Item">
+                <IconButton aria-label="add" size="large" onClick={() => {setNewShowItem(!showNewItem)}}>
+                  <AddCircleIcon color="primary" fontSize="inherit"/>
+                </IconButton>
+              </Tooltip>
+            </div>
+          )}
+
+          {!code && showNewItem && (
+            <Fragment>
+            <Grid item xs={12} style={{ width: "100%", marginTop: "20px" }}>
+              <Paper elevation={4} style={{position:"relative"}}>
+                <Backdrop className={classes.backdrop} open={saving}>
+                  <CircularProgress color="inherit" />
+                </Backdrop>
+
+                <Grid container direction="row" spacing={2} style={{padding:"20px"}}>
+
+                <Grid item xs={2}>
+                    <TextField
+                      error={newCodeError}
+                      value={newCode}
+                      onChange={newCodeChanged}
+                      fullWidth
+                      label="Code"
+                      name="code"
+                      id="code-id"
+                    />
+                  </Grid>
+
+                  <Grid item xs={8}>
+                    <TextField
+                      error={newDescriptionError}
+                      value={newDescription}
+                      onChange={newDescriptionChanged}
+                      fullWidth
+                      label="Description (Custom)"
+                      name="desc"
+                      helperText="You can enter any description you want to be placed on the invoice"
+                      id="desc-id"
+                    />
+                  </Grid>
+
+                  <Grid item xs={2}>
+                    <TextField
+                      error={newPriceError}
+                      value={newPrice}
+                      onChange={newPriceChanged}
+                      fullWidth
+                      label="Price"
+                      name="price"
+                      id="price-id"
+                      InputProps={{
+                        inputComponent: NumberFormatCustom,
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            £
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+
+                  {newChangesSaved && (
+                    <Grid item xs={12}>
+                      <Alert severity="success" style={{ fontSize: "1rem", fontWeight: "400" }}>Success - New Code Saved.</Alert>
+                    </Grid>
+                  )}
+
+                  <Grid item xs={6} md={4}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      onClick={newSaveChanges}
+                      style={{height:"40px"}}
+                      // disabled={!isChanged}
+                    >
+                      Add New Code
+                    </Button>
+                  </Grid>
+
+                </Grid>
+              </Paper>
+            </Grid>
+          </Fragment>
+
+
+
+          )}
 
           {code && (
             <Fragment>
