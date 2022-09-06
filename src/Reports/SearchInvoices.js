@@ -780,11 +780,11 @@ export default function SearchInvoices(props) {
                   value={filter}
                   onChange={filterChanged}
                   id="filter"
-                  label="Patient's Name"
-                  helperText={`You can search the invoices by patient's name ${filterError ? "- Please Enter at least 3 characters" : ""}`}
+                  label="Patient's Name / Invoice#"
+                  helperText={`You can search the invoices by patient's name or Invoice Number ${filterError ? "- Please Enter at least 3 characters" : ""}`}
                   name="filter"
                   autoComplete="off"
-                  style={{ maxWidth: "300px" }}
+                  style={{ maxWidth: "450px" }}
                   onKeyPress={(event) => {
                     if (event.key === "Enter") {
                       doSearch();
