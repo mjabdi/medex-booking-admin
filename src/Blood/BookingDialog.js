@@ -12,6 +12,7 @@ import {
   IconButton,
   TextField,
   Tooltip,
+  Switch
 } from "@material-ui/core";
 import PDFService from "./services/PDFService";
 
@@ -1024,6 +1025,35 @@ const getTotalPrice = (items) => {
   return sum
 
 }
+
+const depositChanged = async (event) => {
+  const checked = event.target.checked;
+  const deposit = checked ? 50 : 0;
+  setSaving(true);
+  try {
+    await BookService.changeDepositBooking(booking._id, deposit);
+    setSaving(false);
+    setRefreshData(!refreshData);
+  } catch (err) {
+    console.error(err);
+    setSaving(false);
+  }
+}
+
+const manualRefund = async () => {
+  setSaving(true);
+  try {
+    await BookService.manualRefundBooking(booking._id);
+    setSaving(false);
+    updateShouldRefundsCount();
+    setRefreshData(!refreshData);
+  } catch (err) {
+    console.error(err);
+    setSaving(false);
+    setOpenRefundDialog(false);
+  }
+}
+
 
 
   return (
@@ -2075,8 +2105,138 @@ const getTotalPrice = (items) => {
                           )}
                       </li>
 
+
+                      <li className={classes.li}>
+                        <div
+                          style={{
+                            borderTop: "1px solid #ddd",
+                            paddingTop: "20px",
+                          }}
+                        >
+                          <span className={classes.infoTitle}>
+                            {booking.paymentInfo ? "ONLINE" : "PHONE"} DEPOSIT
+                          </span>{" "}
+                          <span
+                            className={
+                              !booking.deposit || booking.deposit === 0
+                                ? classes.infoDataChargesHigher
+                                : classes.infoDataCharges
+                            }
+                          >{`£${booking.deposit.toLocaleString(
+                            "en-GB"
+                          )}`}</span>
+                          {!(
+                            editMode.edit && editMode.person._id === booking._id
+                          ) &&
+                            !booking.paid &&
+                            booking.deleted &&
+                            booking.deposit > 0 &&
+                            booking.paymentInfo && (
+                              <Button
+                                variant="outlined"
+                                color="secondary"
+                                className={classes.PayButton}
+                                onClick={(event) => setOpenRefundDialog(true)}
+                              >
+                                Refund Deposit
+                              </Button>
+                            )}
+                          {!(
+                            editMode.edit && editMode.person._id === booking._id
+                          ) &&
+                            !booking.paid &&
+                            booking.deleted &&
+                            booking.deposit > 0 &&
+                            !booking.paymentInfo && (
+                              <Button
+                                variant="outlined"
+                                color="primary"
+                                className={classes.PayButton}
+                                onClick={(event) => manualRefund()}
+                              >
+                                <span style={{ textTransform: "capitalize" }}>
+                                  I made the refund manually
+                                </span>
+                              </Button>
+                            )}
+                          {!(
+                            editMode.edit && editMode.person._id === booking._id
+                          ) &&
+                            // !booking.paid &&
+                            !booking.deleted &&
+                            // booking.deposit > 0 &&
+                            !booking.paymentInfo && (
+                              <FormControlLabel
+                                style={{ marginLeft: "90px" }}
+                                control={
+                                  <Switch
+                                    color="primary"
+                                    checked={booking.deposit > 0}
+                                    onChange={depositChanged}
+                                    name="deposit"
+                                  />
+                                }
+                                label={
+                                  booking.deposit > 0 ? (
+                                    <span className={classes.PriceLabelPaid}>
+                                      £50 Deposit Paid
+                                    </span>
+                                  ) : (
+                                    <span className={classes.PriceLabelNotPaid}>
+                                      £50 Deposit Not Paid
+                                    </span>
+                                  )
+                                }
+                              />
+                            )}
+                          {!(
+                            editMode.edit && editMode.person._id === booking._id
+                          ) &&
+                            booking.refund && (
+                              <React.Fragment>
+                                <span className={classes.PayLabel}>
+                                  {" "}
+                                  <CheckIcon
+                                    className={classes.checkIconSmall}
+                                  />{" "}
+                                  Refund Done
+                                  {booking.paidBy === "corporate"
+                                    ? ` "${booking.corporate}" `
+                                    : ""}
+                                </span>
+                              </React.Fragment>
+                            )}
+                        </div>
+                      </li>
+
+                      {booking.paymentInfo && (
+                        <li>
+                          <div style={{position:"relative", border:"1px dashed #84b076", borderRadius:"8px" , padding:"10px", marginBottom:"10px"}}>
+                            <div style={{position:"absolute", top:"-10px", fontSize:"0.85em", background:"#fff", fontWeight:"600", color:"#32701d", padding:"0px 5px"}}>
+                              Payment Details
+                            </div>
+                            <Grid container spacing={4} justify="space-around" alignItems="center">
+                              <Grid item>
+                                cardBrand: <strong>{JSON.parse(booking.paymentInfo).cardDetails.card.cardBrand}</strong>  
+                              </Grid>
+                              <Grid item>
+                                expDate: <strong>{JSON.parse(booking.paymentInfo).cardDetails.card.expMonth}/{JSON.parse(booking.paymentInfo).cardDetails.card.expYear}</strong>  
+                              </Grid>
+                              <Grid item>
+                                last4: <strong>{JSON.parse(booking.paymentInfo).cardDetails.card.last4}</strong>  
+                              </Grid>
+                              <Grid item>
+                                timeStamp: <strong>{JSON.parse(booking.paymentInfo).createdAt}</strong>  
+                              </Grid>
+                            </Grid>
+                          </div>
+                        </li>
+                      )}
+
+
+
                       <li className={classes.li} style={{ marginTop: "20px" }}>
-                        <span className={classes.infoTitle}>TOTAL CHARGES</span>{" "}
+                        <span className={classes.infoTitle}>OTC CHARGES</span>{" "}
                         <span
                           style={{ paddingLeft: "15px" }}
                           className={
@@ -2084,7 +2244,7 @@ const getTotalPrice = (items) => {
                               ? classes.infoDataChargesHigher
                               : classes.infoDataCharges
                           }
-                        >{`£${booking.OTCCharges.toLocaleString(
+                        >{`£${(booking.OTCCharges && booking.OTCCharges > 0 ? booking.OTCCharges  : (invoice ? invoice.grandTotal - (booking.deposit || 0) : 0)).toLocaleString(
                           "en-GB"
                         )}`}</span>
                         {!(
@@ -2127,6 +2287,29 @@ const getTotalPrice = (items) => {
                             </React.Fragment>
                           )}
                       </li>
+
+                      <li className={classes.li}>
+                        <div
+                          style={{
+                            borderTop: "1px solid #ddd",
+                            paddingTop: "10px",
+                          }}
+                        >
+                          <span className={classes.infoTitle}>
+                            TOTAL CHARGES
+                          </span>{" "}
+                          <span
+                            className={
+                              !booking.OTCCharges || booking.OTCCharges === 0
+                                ? classes.infoDataChargesHigher
+                                : classes.infoDataCharges
+                            }
+                          >{`£${(
+                            booking.deposit + booking.OTCCharges
+                          ).toLocaleString("en-GB")}`}</span>
+                        </div>
+                      </li>
+
 
                       {invoice &&
                         <li style={{lineHeight:"0.5rem", border:"1px dashed #999", padding:"0px 10px", marginBottom:"10px", marginTop:"-10px"}}>
@@ -2186,7 +2369,7 @@ const getTotalPrice = (items) => {
             <PayDialog
               booking={selectedBooking}
               open={openPayDialog}
-              price={invoice ? invoice.grandTotal : null}
+              price={invoice ? (invoice.grandTotal - (booking.deposit || 0)) : null}
               handleClose={handleClosePayDialog}
             />
 

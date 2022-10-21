@@ -503,7 +503,7 @@ export default function BookingDialog(props) {
       console.error(err);
       setSaving(false);
     }
-  };
+  }
 
   const handleClodeBloodReportDialog = () => {
     setBloodReportDialogOpen(false)
@@ -974,7 +974,7 @@ export default function BookingDialog(props) {
       setSaving(false);
       setOpenRefundDialog(false);
     }
-  };
+  }
 
   const confirmBookingClicked = async () => {
     setSaving(true);
@@ -1133,24 +1133,37 @@ export default function BookingDialog(props) {
                 booking.tr ? { backgroundColor: "#7e0082", color: "#fff" } : {}
               }
             >
-
               <div style={{ position: "absolute", top: "25x", left: "25px" }}>
-
                 {!booking.confirmed && (
-                  <div style={{color:"red", fontSize:"1.1rem", fontWeight:"500", border:"2px solid red", padding:"5px", borderRadius:"8px"}}>
+                  <div
+                    style={{
+                      color: "red",
+                      fontSize: "1.1rem",
+                      fontWeight: "500",
+                      border: "2px solid red",
+                      padding: "5px",
+                      borderRadius: "8px",
+                    }}
+                  >
                     NOT CONFIRMED!
-                  </div>  
+                  </div>
                 )}
-
 
                 {booking.confirmed && (
-                  <div style={{color:"#258200", fontSize:"1.1rem", fontWeight:"500", border:"2px solid #258200", padding:"5px", borderRadius:"8px"}}>
+                  <div
+                    style={{
+                      color: "#258200",
+                      fontSize: "1.1rem",
+                      fontWeight: "500",
+                      border: "2px solid #258200",
+                      padding: "5px",
+                      borderRadius: "8px",
+                    }}
+                  >
                     CONFIRMED
-                  </div>  
+                  </div>
                 )}
-
-              </div>  
-
+              </div>
 
               {/* <div style={{ position: "absolute", top: "25x", left: "25px" }}>
                 <Tooltip title="COPY EDIT LINK TO CLIPBOARD">
@@ -1217,9 +1230,9 @@ export default function BookingDialog(props) {
                     style={
                       booking.deleted
                         ? {
-                          paddingBottom: "5px",
-                          textDecoration: "line-through",
-                        }
+                            paddingBottom: "5px",
+                            textDecoration: "line-through",
+                          }
                         : {}
                     }
                   >
@@ -1234,17 +1247,17 @@ export default function BookingDialog(props) {
                         style={
                           booking.tr
                             ? {
-                              padding: 0,
-                              margin: 0,
-                              color: "#fff",
-                              fontSize: 25,
-                            }
+                                padding: 0,
+                                margin: 0,
+                                color: "#fff",
+                                fontSize: 25,
+                              }
                             : {
-                              padding: 0,
-                              margin: 0,
-                              color: "#333",
-                              fontSize: 25,
-                            }
+                                padding: 0,
+                                margin: 0,
+                                color: "#333",
+                                fontSize: 25,
+                              }
                         }
                       />
                     </Tooltip>
@@ -1262,64 +1275,56 @@ export default function BookingDialog(props) {
                 <Grid item xs={12} md={12} key={`panel0`}>
                   <div className={classes.infoDetails}>
                     <ul className={classes.ul}>
-
                       {!booking.confirmed && (
-                        <li style={{margin:"20px 0px"}}>
-                            <Button
-                              style={{height:"50px"}}
-                              color="primary"
-                              fullWidth
-                              variant="contained"
-                              onClick={()=> {
-                                setSelectedBooking(booking)
-                                setOpenConfirmDialog(true)
-                              }}
-                            >
-                              Confirm Booking
-
-                            </Button>
-
+                        <li style={{ margin: "20px 0px" }}>
+                          <Button
+                            style={{ height: "50px" }}
+                            color="primary"
+                            fullWidth
+                            variant="contained"
+                            onClick={() => {
+                              setSelectedBooking(booking);
+                              setOpenConfirmDialog(true);
+                            }}
+                          >
+                            Confirm Booking
+                          </Button>
                         </li>
                       )}
 
-                    {!booking.confirmed && !booking.tbcFolder && (
-                        <li style={{margin:"20px 0px"}}>
-                            <Button
-                              style={{height:"50px"}}
-                              color="secondary"
-                              fullWidth
-                              variant="contained"
-                              onClick={()=> {
-                                setSelectedBooking(booking)
-                                setOpenTBCDialog(true)
-                              }}
-                            >
-                              Move To Patients TBC 
-
-                            </Button>
-
+                      {!booking.confirmed && !booking.tbcFolder && (
+                        <li style={{ margin: "20px 0px" }}>
+                          <Button
+                            style={{ height: "50px" }}
+                            color="secondary"
+                            fullWidth
+                            variant="contained"
+                            onClick={() => {
+                              setSelectedBooking(booking);
+                              setOpenTBCDialog(true);
+                            }}
+                          >
+                            Move To Patients TBC
+                          </Button>
                         </li>
                       )}
 
-                    {!booking.confirmed && booking.tbcFolder && (
-                        <li style={{margin:"20px 0px"}}>
-                            <Button
-                              style={{height:"50px"}}
-                              color="secondary"
-                              fullWidth
-                              variant="contained"
-                              onClick={()=> {
-                                setSelectedBooking(booking)
-                                setOpenTBCDialog(true)
-                              }}
-                            >
-                              Move Back To Pending Bookings 
-                              
-                            </Button>
-
+                      {!booking.confirmed && booking.tbcFolder && (
+                        <li style={{ margin: "20px 0px" }}>
+                          <Button
+                            style={{ height: "50px" }}
+                            color="secondary"
+                            fullWidth
+                            variant="contained"
+                            onClick={() => {
+                              setSelectedBooking(booking);
+                              setOpenTBCDialog(true);
+                            }}
+                          >
+                            Move Back To Pending Bookings
+                          </Button>
                         </li>
                       )}
-
 
                       {/* Restore Functionality ******************************************* */}
                       <li
@@ -1781,9 +1786,7 @@ export default function BookingDialog(props) {
                           </Grid>
 
                           <Grid item xs={4}>
-                            <span className={classes.infoTitle}>
-                              DOB
-                            </span>
+                            <span className={classes.infoTitle}>DOB</span>
 
                             <span
                               hidden={
@@ -1853,7 +1856,6 @@ export default function BookingDialog(props) {
                             </span>
                           </Grid>
 
-
                           <Grid item xs={12}>
                             <span className={classes.infoTitle}>NOTES</span>
                             <span
@@ -1888,7 +1890,6 @@ export default function BookingDialog(props) {
                             </span>
                           </Grid>
 
-
                           <Grid item xs={12}>
                             <span className={classes.infoTitle}>Address</span>
                             <span
@@ -1922,14 +1923,10 @@ export default function BookingDialog(props) {
                               ></TextField>
                             </span>
                           </Grid>
-
                         </Grid>
-
-
-                        
                       </li>
 
-                      <li style={{marginTop:"20px"}}>
+                      <li style={{ marginTop: "20px" }}>
                         <span className={classes.infoTitle}>PACKAGE</span>
 
                         <span className={classes.PackageBox}>
@@ -1937,7 +1934,10 @@ export default function BookingDialog(props) {
                         </span>
                       </li>
 
-                      <li className={classes.li} style={{ paddingTop: "20px", width:"100%" }}>
+                      <li
+                        className={classes.li}
+                        style={{ paddingTop: "20px", width: "100%" }}
+                      >
                         <span className={classes.infoTitle}>STATUS</span>{" "}
                         {getStatusLabel(booking.status)}
                         {booking.status === "patient_attended" &&
@@ -1945,7 +1945,14 @@ export default function BookingDialog(props) {
                             editMode.edit && editMode.person._id === booking._id
                           ) &&
                           !booking.deleted && (
-                            <div style={{display:"flex", gap:"10px", width:"100%", paddingTop:"10px"}}>
+                            <div
+                              style={{
+                                display: "flex",
+                                gap: "10px",
+                                width: "100%",
+                                paddingTop: "10px",
+                              }}
+                            >
                               <Button
                                 variant="outlined"
                                 color="primary"
@@ -1962,7 +1969,7 @@ export default function BookingDialog(props) {
                                 variant="contained"
                                 color="secondary"
                                 disabled={saving}
-                                style={{ width: "200px" , margin:"0"}}
+                                style={{ width: "200px", margin: "0" }}
                                 className={classes.EditButton}
                                 onClick={(event) =>
                                   changeToCompleted(event, booking._id)
@@ -1971,7 +1978,6 @@ export default function BookingDialog(props) {
                                 Change To Completed
                               </Button>
                             </div>
-
                           )}
                         {booking.status === "booked" &&
                           !(
@@ -2007,14 +2013,20 @@ export default function BookingDialog(props) {
                               Change Back To Patient Attended
                             </Button>
                           )}
-
                       </li>
 
                       <li hidden={booking.deleted || editMode.edit}>
                         <Button
-                          disabled={booking.printStatus === 'printing' || booking.printStatus === 'preparing'}
+                          disabled={
+                            booking.printStatus === "printing" ||
+                            booking.printStatus === "preparing"
+                          }
                           startIcon={<PrintIcon />}
-                          endIcon={booking.printStatus === "printed" ? <DoneOutlineIcon style={{color:"green"}} />  : null}
+                          endIcon={
+                            booking.printStatus === "printed" ? (
+                              <DoneOutlineIcon style={{ color: "green" }} />
+                            ) : null
+                          }
                           type="button"
                           fullWidth
                           variant="outlined"
@@ -2022,44 +2034,79 @@ export default function BookingDialog(props) {
                           onClick={() => {
                             BookService.sendForPrint(booking._id);
                             setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(booking._id)
-                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                              const _booking = await BookService.getBookingById(
+                                booking._id
+                              );
+                              setBooking({
+                                ...booking,
+                                printStatus: _booking?.data.printStatus,
+                              });
                             }, 500);
                             setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(booking._id)
-                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                              const _booking = await BookService.getBookingById(
+                                booking._id
+                              );
+                              setBooking({
+                                ...booking,
+                                printStatus: _booking?.data.printStatus,
+                              });
                             }, 1500);
                             setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(booking._id)
-                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                              const _booking = await BookService.getBookingById(
+                                booking._id
+                              );
+                              setBooking({
+                                ...booking,
+                                printStatus: _booking?.data.printStatus,
+                              });
                             }, 3000);
                             setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(booking._id)
-                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                              const _booking = await BookService.getBookingById(
+                                booking._id
+                              );
+                              setBooking({
+                                ...booking,
+                                printStatus: _booking?.data.printStatus,
+                              });
                             }, 5000);
                             setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(booking._id)
-                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                              const _booking = await BookService.getBookingById(
+                                booking._id
+                              );
+                              setBooking({
+                                ...booking,
+                                printStatus: _booking?.data.printStatus,
+                              });
                             }, 10000);
                             setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(booking._id)
-                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                              const _booking = await BookService.getBookingById(
+                                booking._id
+                              );
+                              setBooking({
+                                ...booking,
+                                printStatus: _booking?.data.printStatus,
+                              });
                             }, 15000);
                             setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(booking._id)
-                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                              const _booking = await BookService.getBookingById(
+                                booking._id
+                              );
+                              setBooking({
+                                ...booking,
+                                printStatus: _booking?.data.printStatus,
+                              });
                             }, 20000);
                           }}
                           className={classes.DownloadForm}
                         >
-                          {!booking.printStatus && 'Print LAB Label' }
-                          {(booking.printStatus === 'printed') && 'Print LAB Label Again'}
-                          {(booking.printStatus === 'printing') && 'Printing'}
-                          {(booking.printStatus === 'preparing') && 'Preparing for print'}
-
+                          {!booking.printStatus && "Print LAB Label"}
+                          {booking.printStatus === "printed" &&
+                            "Print LAB Label Again"}
+                          {booking.printStatus === "printing" && "Printing"}
+                          {booking.printStatus === "preparing" &&
+                            "Preparing for print"}
                         </Button>
                       </li>
-
 
                       <li hidden={booking.deleted || editMode.edit}>
                         <Button
@@ -2319,22 +2366,71 @@ export default function BookingDialog(props) {
 
                       {booking.paymentInfo && (
                         <li>
-                          <div style={{position:"relative", border:"1px dashed #84b076", borderRadius:"8px" , padding:"10px", marginBottom:"10px"}}>
-                            <div style={{position:"absolute", top:"-10px", fontSize:"0.85em", background:"#fff", fontWeight:"600", color:"#32701d", padding:"0px 5px"}}>
+                          <div
+                            style={{
+                              position: "relative",
+                              border: "1px dashed #84b076",
+                              borderRadius: "8px",
+                              padding: "10px",
+                              marginBottom: "10px",
+                            }}
+                          >
+                            <div
+                              style={{
+                                position: "absolute",
+                                top: "-10px",
+                                fontSize: "0.85em",
+                                background: "#fff",
+                                fontWeight: "600",
+                                color: "#32701d",
+                                padding: "0px 5px",
+                              }}
+                            >
                               Payment Details
                             </div>
-                            <Grid container spacing={4} justify="space-around" alignItems="center">
+                            <Grid
+                              container
+                              spacing={4}
+                              justify="space-around"
+                              alignItems="center"
+                            >
                               <Grid item>
-                                cardBrand: <strong>{JSON.parse(booking.paymentInfo).cardDetails.card.cardBrand}</strong>  
+                                cardBrand:{" "}
+                                <strong>
+                                  {
+                                    JSON.parse(booking.paymentInfo).cardDetails
+                                      .card.cardBrand
+                                  }
+                                </strong>
                               </Grid>
                               <Grid item>
-                                expDate: <strong>{JSON.parse(booking.paymentInfo).cardDetails.card.expMonth}/{JSON.parse(booking.paymentInfo).cardDetails.card.expYear}</strong>  
+                                expDate:{" "}
+                                <strong>
+                                  {
+                                    JSON.parse(booking.paymentInfo).cardDetails
+                                      .card.expMonth
+                                  }
+                                  /
+                                  {
+                                    JSON.parse(booking.paymentInfo).cardDetails
+                                      .card.expYear
+                                  }
+                                </strong>
                               </Grid>
                               <Grid item>
-                                last4: <strong>{JSON.parse(booking.paymentInfo).cardDetails.card.last4}</strong>  
+                                last4:{" "}
+                                <strong>
+                                  {
+                                    JSON.parse(booking.paymentInfo).cardDetails
+                                      .card.last4
+                                  }
+                                </strong>
                               </Grid>
                               <Grid item>
-                                timeStamp: <strong>{JSON.parse(booking.paymentInfo).createdAt}</strong>  
+                                timeStamp:{" "}
+                                <strong>
+                                  {JSON.parse(booking.paymentInfo).createdAt}
+                                </strong>
                               </Grid>
                             </Grid>
                           </div>
@@ -2350,7 +2446,7 @@ export default function BookingDialog(props) {
                               ? classes.infoDataChargesHigher
                               : classes.infoDataCharges
                           }
-                        >{`£${booking.OTCCharges.toLocaleString(
+                        >{`£${(booking.OTCCharges && booking.OTCCharges > 0 ? booking.OTCCharges  : (invoice ? invoice.grandTotal - (booking.deposit || 0) : 0) ).toLocaleString(
                           "en-GB"
                         )}`}</span>
                         {!(
@@ -2416,23 +2512,49 @@ export default function BookingDialog(props) {
                         </div>
                       </li>
 
-                      {invoice &&
-                        <li style={{lineHeight:"0.5rem", border:"1px dashed #999", padding:"0px 10px", marginBottom:"10px", marginTop:"-10px"}}>
-                          {invoice.items.map(item => (
+                      {invoice && (
+                        <li
+                          style={{
+                            lineHeight: "0.5rem",
+                            border: "1px dashed #999",
+                            padding: "0px 10px",
+                            marginBottom: "10px",
+                            marginTop: "-10px",
+                          }}
+                        >
+                          {invoice.items.map((item) => (
                             <p>
-                              <span style={{width:"110px", display:"inline-block"}}> {item.code} </span>
+                              <span
+                                style={{
+                                  width: "110px",
+                                  display: "inline-block",
+                                }}
+                              >
+                                {" "}
+                                {item.code}{" "}
+                              </span>
                               <span> £{item.price}</span>
-                            </p>  
+                            </p>
                           ))}
 
-                            <p>
-                              <span style={{width:"110px", display:"inline-block", fontWeight:"500"}}> TOTAL </span>
-                              <span style={{fontWeight:"600", color:"green"}}> £{ getTotalPrice(invoice.items)}</span>
-                            </p>  
-
+                          <p>
+                            <span
+                              style={{
+                                width: "110px",
+                                display: "inline-block",
+                                fontWeight: "500",
+                              }}
+                            >
+                              {" "}
+                              TOTAL{" "}
+                            </span>
+                            <span style={{ fontWeight: "600", color: "green" }}>
+                              {" "}
+                              £{getTotalPrice(invoice.items)}
+                            </span>
+                          </p>
                         </li>
-                      }
-
+                      )}
 
                       {/* <li className={classes.li} style={{ marginTop: "20px" }}>
                         <span className={classes.infoTitle}>TOTAL CHARGES</span>{" "}
@@ -2516,24 +2638,35 @@ export default function BookingDialog(props) {
                             <div style={{ padding: "20px" }}>
                               <Grid container spacing={2} alignItems="center">
                                 <Grid item xs={12}>
-                                  <div style={{ color: "#dc2626", fontWeight: "600", fontSize: "1rem" }}>
+                                  <div
+                                    style={{
+                                      color: "#dc2626",
+                                      fontWeight: "600",
+                                      fontSize: "1rem",
+                                    }}
+                                  >
                                     Blood Results :
-                                    </div>
+                                  </div>
                                 </Grid>
-                                {bloodReports.map(report => (
+                                {bloodReports.map((report) => (
                                   <Grid item>
-                                    <Button onClick={() => showBloodReportClicked(report)} startIcon={<SearchIcon />} style={{ color: "#dc2626" }} variant="outlined">
+                                    <Button
+                                      onClick={() =>
+                                        showBloodReportClicked(report)
+                                      }
+                                      startIcon={<SearchIcon />}
+                                      style={{ color: "#dc2626" }}
+                                      variant="outlined"
+                                    >
                                       {report.filename}
                                     </Button>
                                   </Grid>
                                 ))}
-
                               </Grid>
                             </div>
                           </li>
                         </React.Fragment>
                       )}
-
                     </ul>
                   </div>
                 </Grid>
@@ -2543,7 +2676,9 @@ export default function BookingDialog(props) {
             <PayDialog
               booking={selectedBooking}
               open={openPayDialog}
-              price={invoice ? invoice.grandTotal : null}
+              price={
+                invoice ? invoice.grandTotal - (booking.deposit || 0) : null
+              }
               handleClose={handleClosePayDialog}
             />
 
@@ -2561,13 +2696,11 @@ export default function BookingDialog(props) {
             />
 
             <Backdrop
-                className={classes.backdrop}
-                open={saving || deleting || restoring}
-              >
-                <CircularProgress color="inherit" />
-          </Backdrop>
-
-
+              className={classes.backdrop}
+              open={saving || deleting || restoring}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
           </Dialog>
 
           <Dialog
@@ -2596,12 +2729,11 @@ export default function BookingDialog(props) {
               </Button>
             </DialogActions>
             <Backdrop
-                className={classes.backdrop}
-                open={saving || deleting || restoring}
-              >
-                <CircularProgress color="inherit" />
-          </Backdrop>
-
+              className={classes.backdrop}
+              open={saving || deleting || restoring}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
           </Dialog>
 
           <Dialog
@@ -2636,12 +2768,11 @@ export default function BookingDialog(props) {
             </DialogActions>
 
             <Backdrop
-                className={classes.backdrop}
-                open={saving || deleting || restoring}
-              >
-                <CircularProgress color="inherit" />
-          </Backdrop>
-
+              className={classes.backdrop}
+              open={saving || deleting || restoring}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
           </Dialog>
 
           <Dialog
@@ -2658,11 +2789,12 @@ export default function BookingDialog(props) {
                 style={{ color: "#333", fontWeight: "400" }}
                 id="alert-dialog-description"
               >
-                <span style={{fontWeight:"500"}}>
-                   Are you sure you want to confirm this booking?
+                <span style={{ fontWeight: "500" }}>
+                  Are you sure you want to confirm this booking?
                 </span>
                 <p>
-                  * After confirmation, email/sms will also be sent to the patient.
+                  * After confirmation, email/sms will also be sent to the
+                  patient.
                 </p>
               </DialogContentText>
             </DialogContent>
@@ -2680,12 +2812,11 @@ export default function BookingDialog(props) {
               </Button>
             </DialogActions>
             <Backdrop
-                className={classes.backdrop}
-                open={saving || deleting || restoring}
-              >
-                <CircularProgress color="inherit" />
-          </Backdrop>
-
+              className={classes.backdrop}
+              open={saving || deleting || restoring}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
           </Dialog>
 
           <Dialog
@@ -2695,17 +2826,19 @@ export default function BookingDialog(props) {
             aria-describedby="tbc-dialog-description"
           >
             <DialogTitle style={{ color: "#f68529" }} id="tbc-dialog-title">
-              {!booking.tbcFolder ?  "Move To Patients TBC" : "Move Back To Pending Bookings"}
+              {!booking.tbcFolder
+                ? "Move To Patients TBC"
+                : "Move Back To Pending Bookings"}
             </DialogTitle>
             <DialogContent>
               <DialogContentText
                 style={{ color: "#333", fontWeight: "400" }}
                 id="alert-dialog-description"
               >
-                <span style={{fontWeight:"500"}}>
-                {!booking.tbcFolder ?  `Are you sure you want to move this record to "Patients TBC"?` : `Are you sure you want to move this record to "Pending Bookings"?`}
-
-                   
+                <span style={{ fontWeight: "500" }}>
+                  {!booking.tbcFolder
+                    ? `Are you sure you want to move this record to "Patients TBC"?`
+                    : `Are you sure you want to move this record to "Pending Bookings"?`}
                 </span>
               </DialogContentText>
             </DialogContent>
@@ -2714,40 +2847,36 @@ export default function BookingDialog(props) {
                 Back
               </Button>
               <Button
-                onClick={!booking.tbcFolder ? moveTBCFolderClicked : undoMoveTBCFolderClicked}
+                onClick={
+                  !booking.tbcFolder
+                    ? moveTBCFolderClicked
+                    : undoMoveTBCFolderClicked
+                }
                 color="secondary"
                 variant="contained"
                 autoFocus
               >
-                {!booking.tbcFolder ?  "Yes, move to Patients TBC" : "Yes, move to Pending Bookings"}
-
-                
+                {!booking.tbcFolder
+                  ? "Yes, move to Patients TBC"
+                  : "Yes, move to Pending Bookings"}
               </Button>
             </DialogActions>
             <Backdrop
-                className={classes.backdrop}
-                open={saving || deleting || restoring}
-              >
-                <CircularProgress color="inherit" />
-          </Backdrop>
-
+              className={classes.backdrop}
+              open={saving || deleting || restoring}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
           </Dialog>
-
-
-
-
-
         </React.Fragment>
       )}
 
-          <Backdrop
-                className={classes.backdrop}
-                open={saving || deleting || restoring}
-              >
-                <CircularProgress color="inherit" />
-          </Backdrop>
-
-
+      <Backdrop
+        className={classes.backdrop}
+        open={saving || deleting || restoring}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </React.Fragment>
   );
 }

@@ -21,6 +21,7 @@ import { getGlobalPath } from "./GlobalPath";
 
 import GyaneBookService from "./Gynae/services/BookService"
 import ScreeningBookService from "./Screening/services/BookService"
+import BloodBookService from "./Blood/services/BookService"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -107,6 +108,22 @@ export default function MyMenu() {
     }
   }
 
+  const updateShouldRefundsCountBlood = async () =>
+  {
+    try{
+      const res = await BloodBookService.getShouldRefundsCount()
+      if (res && res.data && res.data.status === "OK")
+      {
+        setState(state => ({...state, shouldRefunsCountBlood: res.data.count}))
+      }
+    }
+    catch(ex)
+    {
+      console.error(ex)
+    }
+  }
+
+
 
   const updateHSPendingBookingsCount = async () =>
   {
@@ -128,6 +145,7 @@ export default function MyMenu() {
     setSelectedIndex(state.currentMenuIndex);
     updateShouldRefundsCount()
     updateShouldRefundsCountScreening()
+    updateShouldRefundsCountBlood()
 
     updateHSPendingBookingsCount()
   }, [state.currentMenuIndex, state.bookingDialogDataChanged]);
@@ -167,28 +185,51 @@ export default function MyMenu() {
                       justify="flex-start"
                       alignItems="flex-start"
                       spacing={3}
-                      style={{paddingLeft:"15px"}}
+                      style={{ paddingLeft: "15px" }}
                     >
                       <Grid item>{item.icon}</Grid>
 
-                      <Grid item style={{textAlign:"left"}}>
+                      <Grid item style={{ textAlign: "left" }}>
                         <span
                           className={classes.menuText}
                         >{`${item.title}`}</span>{" "}
                       </Grid>
 
-                      {state.role === "gynae" && item.id === "deletedBookings" && state.shouldRefunsCount > 0 && (
-                        <span className={classes.Badge}> {state.shouldRefunsCount} </span>
-                      )}
+                      {state.role === "gynae" &&
+                        item.id === "deletedBookings" &&
+                        state.shouldRefunsCount > 0 && (
+                          <span className={classes.Badge}>
+                            {" "}
+                            {state.shouldRefunsCount}{" "}
+                          </span>
+                        )}
 
-                      {state.role === "screening" && item.id === "pendingBookings" && state.hsPendingBookingsCount > 0 && (
-                        <span className={classes.Badge}> {state.hsPendingBookingsCount} </span>
-                      )}
+                      {state.role === "screening" &&
+                        item.id === "pendingBookings" &&
+                        state.hsPendingBookingsCount > 0 && (
+                          <span className={classes.Badge}>
+                            {" "}
+                            {state.hsPendingBookingsCount}{" "}
+                          </span>
+                        )}
 
-                      {state.role === "screening" && item.id === "deletedBookings" && state.shouldRefunsCountScreening > 0 && (
-                        <span className={classes.Badge}> {state.shouldRefunsCountScreening} </span>
-                      )}
+                      {state.role === "screening" &&
+                        item.id === "deletedBookings" &&
+                        state.shouldRefunsCountScreening > 0 && (
+                          <span className={classes.Badge}>
+                            {" "}
+                            {state.shouldRefunsCountScreening}{" "}
+                          </span>
+                        )}
 
+                      {state.role === "blood" &&
+                        item.id === "deletedBookings" &&
+                        state.shouldRefunsCountBlood > 0 && (
+                          <span className={classes.Badge}>
+                            {" "}
+                            {state.shouldRefunsCountBlood}{" "}
+                          </span>
+                        )}
 
 
                     </Grid>

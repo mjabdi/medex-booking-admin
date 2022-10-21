@@ -92,6 +92,16 @@ export default class BookService {
       return API.post(`/api/blood/book/sendforprint?id=${bookingId}`);
    }
 
+   static changeDepositBooking = (bookingId, deposit) => {
+      return API.post(`/api/blood/book/changedepositbooking?id=${bookingId}&deposit=${deposit}`);
+   }
+
+   static manualRefundBooking = (bookingId) =>
+   {
+      return API.post(`/api/blood/payment/manualrefundpayment`, {bookingId: bookingId});
+   }
+
+
 
    static payBooking = (bookingId,price, paymentMethod, corporate) =>
    {

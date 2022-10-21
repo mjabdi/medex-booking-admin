@@ -412,7 +412,7 @@ export default function PayDialog(props) {
                   <TextField
                                 autoFocus
                                 error={priceError}
-                                label="TOTAL Charges"
+                                label="OTC Charges"
                                 value={price}
                                 fullWidth
                                 required

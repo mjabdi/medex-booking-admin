@@ -16,15 +16,17 @@ export default class BookService {
       return API.post(`/api/screening/book/changedepositbooking?id=${bookingId}&deposit=${deposit}`);
    }
 
+   static manualRefundBooking = (bookingId) =>
+   {
+      return API.post(`/api/screening/payment/manualrefundpayment`, {bookingId: bookingId});
+   }
+
+
    static addNewBooking = (payload) =>
    {
       return API.post(`/api/screening/book/addnewbooking`, payload);
    }
 
-   static manualRefundBooking = (bookingId) =>
-   {
-      return API.post(`/api/screening/payment/manualrefundpayment`, {bookingId: bookingId});
-   }
 
    static sendForPrint = (bookingId) =>
    {

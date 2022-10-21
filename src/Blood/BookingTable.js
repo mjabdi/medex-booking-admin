@@ -401,7 +401,9 @@ export default function BookingTable(props) {
                         onClick = {event => openDetailsDialog(event, params.value)}
                 > 
             
-            <SearchIcon/> 
+            <SearchIcon
+                  style={parseInt(params.getValue('deposit')) > 0 ? { color: "green" } : {}}
+                />
             
             </Button>
 
@@ -527,7 +529,9 @@ export default function BookingTable(props) {
                         onClick = {event => openDetailsDialog(event, params.value)}
                 > 
             
-            <SearchIcon/> 
+            <SearchIcon
+                  style={parseInt(params.getValue('deposit')) > 0 ? { color: "green" } : {}}
+                />
             
             </Button>
 
