@@ -2388,51 +2388,91 @@ export default function BookingDialog(props) {
                             >
                               Payment Details
                             </div>
-                            <Grid
-                              container
-                              spacing={4}
-                              justify="space-around"
-                              alignItems="center"
-                            >
-                              <Grid item>
-                                cardBrand:{" "}
-                                <strong>
-                                  {
-                                    JSON.parse(booking.paymentInfo).cardDetails
-                                      .card.cardBrand
-                                  }
-                                </strong>
+                            {JSON.parse(booking.paymentInfo).cardDetails ? (
+                              <Grid
+                                container
+                                spacing={4}
+                                justify="space-around"
+                                alignItems="center"
+                              >
+                                <Grid item>
+                                  cardBrand:{" "}
+                                  <strong>
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .cardDetails?.card.cardBrand
+                                    }
+                                  </strong>
+                                </Grid>
+                                <Grid item>
+                                  expDate:{" "}
+                                  <strong>
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .cardDetails?.card.expMonth
+                                    }
+                                    /
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .cardDetails?.card.expYear
+                                    }
+                                  </strong>
+                                </Grid>
+                                <Grid item>
+                                  last4:{" "}
+                                  <strong>
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .cardDetails?.card.last4
+                                    }
+                                  </strong>
+                                </Grid>
+                                <Grid item>
+                                  timeStamp:{" "}
+                                  <strong>
+                                    {JSON.parse(booking.paymentInfo).createdAt}
+                                  </strong>
+                                </Grid>
                               </Grid>
-                              <Grid item>
-                                expDate:{" "}
-                                <strong>
-                                  {
-                                    JSON.parse(booking.paymentInfo).cardDetails
-                                      .card.expMonth
-                                  }
-                                  /
-                                  {
-                                    JSON.parse(booking.paymentInfo).cardDetails
-                                      .card.expYear
-                                  }
-                                </strong>
+                            ) : (
+                              <Grid
+                                container
+                                spacing={4}
+                                justify="space-around"
+                                alignItems="center"
+                              >
+                                <Grid item>
+                                  Operator:{" "}
+                                  <strong>
+                                    {
+                                      "PAYPAL"
+                                    }
+                                  </strong>
+                                </Grid>
+
+                                <Grid item>
+                                  Payer Name:{" "}
+                                  <strong>
+                                    {
+                                      `${JSON.parse(booking.paymentInfo)
+                                      .payer?.name.given_name} ${JSON.parse(booking.paymentInfo)
+                                        .payer?.name.surname } `
+                                    }
+                                  </strong>
+                                </Grid>
+
+                                <Grid item>
+                                  timeStamp:{" "}
+                                  <strong>
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .create_time
+                                    }
+                                  </strong>
+                                </Grid>
                               </Grid>
-                              <Grid item>
-                                last4:{" "}
-                                <strong>
-                                  {
-                                    JSON.parse(booking.paymentInfo).cardDetails
-                                      .card.last4
-                                  }
-                                </strong>
-                              </Grid>
-                              <Grid item>
-                                timeStamp:{" "}
-                                <strong>
-                                  {JSON.parse(booking.paymentInfo).createdAt}
-                                </strong>
-                              </Grid>
-                            </Grid>
+                            )}
+
                           </div>
                         </li>
                       )}

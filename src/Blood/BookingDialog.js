@@ -1119,7 +1119,9 @@ const manualRefund = async () => {
                   borderRadius: "10px",
                 }}
               >
-                {booking.doctorConsultation ? "Blood + Doctor Consultation" : "Blood"}
+                {booking.doctorConsultation
+                  ? "Blood + Doctor Consultation"
+                  : "Blood"}
               </div>
 
               <Grid
@@ -1638,7 +1640,7 @@ const manualRefund = async () => {
                             </span>
                           </Grid>
                           <Grid item xs={4}>
-                          <span className={classes.infoTitle}>D.O.B</span>
+                            <span className={classes.infoTitle}>D.O.B</span>
                             <span
                               hidden={
                                 editMode.edit &&
@@ -1670,10 +1672,7 @@ const manualRefund = async () => {
                                 }}
                               ></TextField>
                             </span>
-
                           </Grid>
-
-
 
                           <Grid item xs={4}>
                             <span className={classes.infoTitle}>GENDER</span>
@@ -1709,8 +1708,6 @@ const manualRefund = async () => {
                               ></TextField>
                             </span>
                           </Grid>
-
-
                         </Grid>
                       </li>
 
@@ -1748,48 +1745,45 @@ const manualRefund = async () => {
                       </li>
 
                       <li className={classes.li} style={{ paddingTop: "10px" }}>
-                        <span className={classes.infoTitle}>Indivisual Tests</span>
-                        <span
-                          className={classes.infoData}
-                        >
+                        <span className={classes.infoTitle}>
+                          Indivisual Tests
+                        </span>
+                        <span className={classes.infoData}>
                           {getIndivisualTestsString(booking.indivisualTests)}
                         </span>
                       </li>
 
-
                       <li className={classes.li} style={{ paddingTop: "10px" }}>
-                      <span className={classes.infoTitle}>NOTES</span>
-                            <span
-                              hidden={
-                                editMode.edit &&
-                                editMode.person._id === booking._id
-                              }
-                              className={classes.infoData}
-                            >
-                              {booking.notes}
-                            </span>
-                            <span
-                              hidden={
-                                !(
-                                  editMode.edit &&
-                                  editMode.person._id === booking._id
-                                )
-                              }
-                              className={classes.infoData}
-                            >
-                              <TextField
-                                fullWidth
-                                className={classes.TextBox}
-                                value={notes}
-                                onChange={notesChanged}
-                                inputProps={{
-                                  style: {
-                                    padding: 0,
-                                  },
-                                }}
-                              ></TextField>
-                            </span>
-
+                        <span className={classes.infoTitle}>NOTES</span>
+                        <span
+                          hidden={
+                            editMode.edit && editMode.person._id === booking._id
+                          }
+                          className={classes.infoData}
+                        >
+                          {booking.notes}
+                        </span>
+                        <span
+                          hidden={
+                            !(
+                              editMode.edit &&
+                              editMode.person._id === booking._id
+                            )
+                          }
+                          className={classes.infoData}
+                        >
+                          <TextField
+                            fullWidth
+                            className={classes.TextBox}
+                            value={notes}
+                            onChange={notesChanged}
+                            inputProps={{
+                              style: {
+                                padding: 0,
+                              },
+                            }}
+                          ></TextField>
+                        </span>
                       </li>
 
                       <li className={classes.li} style={{ paddingTop: "10px" }}>
@@ -1800,7 +1794,14 @@ const manualRefund = async () => {
                             editMode.edit && editMode.person._id === booking._id
                           ) &&
                           !booking.deleted && (
-                            <div style={{display:"flex", gap:"10px", width:"100%", paddingTop:"10px"}}>
+                            <div
+                              style={{
+                                display: "flex",
+                                gap: "10px",
+                                width: "100%",
+                                paddingTop: "10px",
+                              }}
+                            >
                               <Button
                                 variant="outlined"
                                 color="primary"
@@ -1817,7 +1818,7 @@ const manualRefund = async () => {
                                 variant="contained"
                                 color="secondary"
                                 disabled={saving}
-                                style={{ width: "200px" , margin:"0"}}
+                                style={{ width: "200px", margin: "0" }}
                                 className={classes.EditButton}
                                 onClick={(event) =>
                                   changeToCompleted(event, booking._id)
@@ -1884,9 +1885,16 @@ const manualRefund = async () => {
 
                       <li hidden={booking.deleted || editMode.edit}>
                         <Button
-                          disabled={booking.printStatus === 'printing' || booking.printStatus === 'preparing'}
+                          disabled={
+                            booking.printStatus === "printing" ||
+                            booking.printStatus === "preparing"
+                          }
                           startIcon={<PrintIcon />}
-                          endIcon={booking.printStatus === "printed" ? <DoneOutlineIcon style={{color:"green"}} />  : null}
+                          endIcon={
+                            booking.printStatus === "printed" ? (
+                              <DoneOutlineIcon style={{ color: "green" }} />
+                            ) : null
+                          }
                           type="button"
                           fullWidth
                           variant="outlined"
@@ -1894,44 +1902,79 @@ const manualRefund = async () => {
                           onClick={() => {
                             BookService.sendForPrint(booking._id);
                             setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(booking._id)
-                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                              const _booking = await BookService.getBookingById(
+                                booking._id
+                              );
+                              setBooking({
+                                ...booking,
+                                printStatus: _booking?.data.printStatus,
+                              });
                             }, 500);
                             setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(booking._id)
-                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                              const _booking = await BookService.getBookingById(
+                                booking._id
+                              );
+                              setBooking({
+                                ...booking,
+                                printStatus: _booking?.data.printStatus,
+                              });
                             }, 1500);
                             setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(booking._id)
-                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                              const _booking = await BookService.getBookingById(
+                                booking._id
+                              );
+                              setBooking({
+                                ...booking,
+                                printStatus: _booking?.data.printStatus,
+                              });
                             }, 3000);
                             setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(booking._id)
-                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                              const _booking = await BookService.getBookingById(
+                                booking._id
+                              );
+                              setBooking({
+                                ...booking,
+                                printStatus: _booking?.data.printStatus,
+                              });
                             }, 5000);
                             setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(booking._id)
-                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                              const _booking = await BookService.getBookingById(
+                                booking._id
+                              );
+                              setBooking({
+                                ...booking,
+                                printStatus: _booking?.data.printStatus,
+                              });
                             }, 10000);
                             setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(booking._id)
-                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                              const _booking = await BookService.getBookingById(
+                                booking._id
+                              );
+                              setBooking({
+                                ...booking,
+                                printStatus: _booking?.data.printStatus,
+                              });
                             }, 15000);
                             setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(booking._id)
-                              setBooking({...booking, printStatus: _booking?.data.printStatus})
+                              const _booking = await BookService.getBookingById(
+                                booking._id
+                              );
+                              setBooking({
+                                ...booking,
+                                printStatus: _booking?.data.printStatus,
+                              });
                             }, 20000);
                           }}
                           className={classes.DownloadForm}
                         >
-                          {!booking.printStatus && 'Print LAB Label' }
-                          {(booking.printStatus === 'printed') && 'Print LAB Label Again'}
-                          {(booking.printStatus === 'printing') && 'Printing'}
-                          {(booking.printStatus === 'preparing') && 'Preparing for print'}
-
+                          {!booking.printStatus && "Print LAB Label"}
+                          {booking.printStatus === "printed" &&
+                            "Print LAB Label Again"}
+                          {booking.printStatus === "printing" && "Printing"}
+                          {booking.printStatus === "preparing" &&
+                            "Preparing for print"}
                         </Button>
                       </li>
-
 
                       <li hidden={booking.deleted || editMode.edit}>
                         <Button
@@ -2001,7 +2044,6 @@ const manualRefund = async () => {
                           Show Audit Trail
                         </Button>
                       </li>
-
 
                       <Divider />
 
@@ -2104,7 +2146,6 @@ const manualRefund = async () => {
                             </React.Fragment>
                           )}
                       </li>
-
 
                       <li className={classes.li}>
                         <div
@@ -2211,29 +2252,115 @@ const manualRefund = async () => {
 
                       {booking.paymentInfo && (
                         <li>
-                          <div style={{position:"relative", border:"1px dashed #84b076", borderRadius:"8px" , padding:"10px", marginBottom:"10px"}}>
-                            <div style={{position:"absolute", top:"-10px", fontSize:"0.85em", background:"#fff", fontWeight:"600", color:"#32701d", padding:"0px 5px"}}>
+                          <div
+                            style={{
+                              position: "relative",
+                              border: "1px dashed #84b076",
+                              borderRadius: "8px",
+                              padding: "10px",
+                              marginBottom: "10px",
+                            }}
+                          >
+                            <div
+                              style={{
+                                position: "absolute",
+                                top: "-10px",
+                                fontSize: "0.85em",
+                                background: "#fff",
+                                fontWeight: "600",
+                                color: "#32701d",
+                                padding: "0px 5px",
+                              }}
+                            >
                               Payment Details
                             </div>
-                            <Grid container spacing={4} justify="space-around" alignItems="center">
-                              <Grid item>
-                                cardBrand: <strong>{JSON.parse(booking.paymentInfo).cardDetails.card.cardBrand}</strong>  
+                            {JSON.parse(booking.paymentInfo).cardDetails ? (
+                              <Grid
+                                container
+                                spacing={4}
+                                justify="space-around"
+                                alignItems="center"
+                              >
+                                <Grid item>
+                                  cardBrand:{" "}
+                                  <strong>
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .cardDetails?.card.cardBrand
+                                    }
+                                  </strong>
+                                </Grid>
+                                <Grid item>
+                                  expDate:{" "}
+                                  <strong>
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .cardDetails?.card.expMonth
+                                    }
+                                    /
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .cardDetails?.card.expYear
+                                    }
+                                  </strong>
+                                </Grid>
+                                <Grid item>
+                                  last4:{" "}
+                                  <strong>
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .cardDetails?.card.last4
+                                    }
+                                  </strong>
+                                </Grid>
+                                <Grid item>
+                                  timeStamp:{" "}
+                                  <strong>
+                                    {JSON.parse(booking.paymentInfo).createdAt}
+                                  </strong>
+                                </Grid>
                               </Grid>
-                              <Grid item>
-                                expDate: <strong>{JSON.parse(booking.paymentInfo).cardDetails.card.expMonth}/{JSON.parse(booking.paymentInfo).cardDetails.card.expYear}</strong>  
+                            ) : (
+                              <Grid
+                                container
+                                spacing={4}
+                                justify="space-around"
+                                alignItems="center"
+                              >
+                                <Grid item>
+                                  Operator:{" "}
+                                  <strong>
+                                    {
+                                      "PAYPAL"
+                                    }
+                                  </strong>
+                                </Grid>
+
+                                <Grid item>
+                                  Payer Name:{" "}
+                                  <strong>
+                                    {
+                                      `${JSON.parse(booking.paymentInfo)
+                                      .payer?.name.given_name} ${JSON.parse(booking.paymentInfo)
+                                        .payer?.name.surname } `
+                                    }
+                                  </strong>
+                                </Grid>
+
+                                <Grid item>
+                                  timeStamp:{" "}
+                                  <strong>
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .create_time
+                                    }
+                                  </strong>
+                                </Grid>
                               </Grid>
-                              <Grid item>
-                                last4: <strong>{JSON.parse(booking.paymentInfo).cardDetails.card.last4}</strong>  
-                              </Grid>
-                              <Grid item>
-                                timeStamp: <strong>{JSON.parse(booking.paymentInfo).createdAt}</strong>  
-                              </Grid>
-                            </Grid>
+                            )}
                           </div>
                         </li>
                       )}
-
-
 
                       <li className={classes.li} style={{ marginTop: "20px" }}>
                         <span className={classes.infoTitle}>OTC CHARGES</span>{" "}
@@ -2244,9 +2371,12 @@ const manualRefund = async () => {
                               ? classes.infoDataChargesHigher
                               : classes.infoDataCharges
                           }
-                        >{`£${(booking.OTCCharges && booking.OTCCharges > 0 ? booking.OTCCharges  : (invoice ? invoice.grandTotal - (booking.deposit || 0) : 0)).toLocaleString(
-                          "en-GB"
-                        )}`}</span>
+                        >{`£${(booking.OTCCharges && booking.OTCCharges > 0
+                          ? booking.OTCCharges
+                          : invoice
+                          ? invoice.grandTotal - (booking.deposit || 0)
+                          : 0
+                        ).toLocaleString("en-GB")}`}</span>
                         {!(
                           editMode.edit && editMode.person._id === booking._id
                         ) &&
@@ -2310,24 +2440,49 @@ const manualRefund = async () => {
                         </div>
                       </li>
 
-
-                      {invoice &&
-                        <li style={{lineHeight:"0.5rem", border:"1px dashed #999", padding:"0px 10px", marginBottom:"10px", marginTop:"-10px"}}>
-                          {invoice.items.map(item => (
+                      {invoice && (
+                        <li
+                          style={{
+                            lineHeight: "0.5rem",
+                            border: "1px dashed #999",
+                            padding: "0px 10px",
+                            marginBottom: "10px",
+                            marginTop: "-10px",
+                          }}
+                        >
+                          {invoice.items.map((item) => (
                             <p>
-                              <span style={{width:"130px", display:"inline-block"}}> {item.code} </span>
+                              <span
+                                style={{
+                                  width: "130px",
+                                  display: "inline-block",
+                                }}
+                              >
+                                {" "}
+                                {item.code}{" "}
+                              </span>
                               <span> £{item.price}</span>
-                            </p>  
+                            </p>
                           ))}
 
-                            <p>
-                              <span style={{width:"130px", display:"inline-block", fontWeight:"500"}}> TOTAL </span>
-                              <span style={{fontWeight:"600", color:"green"}}> £{ getTotalPrice(invoice.items)}</span>
-                            </p>  
-
+                          <p>
+                            <span
+                              style={{
+                                width: "130px",
+                                display: "inline-block",
+                                fontWeight: "500",
+                              }}
+                            >
+                              {" "}
+                              TOTAL{" "}
+                            </span>
+                            <span style={{ fontWeight: "600", color: "green" }}>
+                              {" "}
+                              £{getTotalPrice(invoice.items)}
+                            </span>
+                          </p>
                         </li>
-                      }
-
+                      )}
 
                       {bloodReports && bloodReports.length > 0 && (
                         <React.Fragment>
@@ -2336,24 +2491,35 @@ const manualRefund = async () => {
                             <div style={{ padding: "20px" }}>
                               <Grid container spacing={2} alignItems="center">
                                 <Grid item xs={12}>
-                                  <div style={{ color: "#dc2626", fontWeight: "600", fontSize: "1rem" }}>
+                                  <div
+                                    style={{
+                                      color: "#dc2626",
+                                      fontWeight: "600",
+                                      fontSize: "1rem",
+                                    }}
+                                  >
                                     Blood Results :
-                                    </div>
+                                  </div>
                                 </Grid>
-                                {bloodReports.map(report => (
+                                {bloodReports.map((report) => (
                                   <Grid item>
-                                    <Button onClick={() => showBloodReportClicked(report)} startIcon={<SearchIcon/>} style={{color:"#dc2626"}} variant="outlined">
+                                    <Button
+                                      onClick={() =>
+                                        showBloodReportClicked(report)
+                                      }
+                                      startIcon={<SearchIcon />}
+                                      style={{ color: "#dc2626" }}
+                                      variant="outlined"
+                                    >
                                       {report.filename}
                                     </Button>
-                                  </Grid>  
+                                  </Grid>
                                 ))}
-
                               </Grid>
                             </div>
                           </li>
-                         </React.Fragment>
-                       )}     
-
+                        </React.Fragment>
+                      )}
                     </ul>
                   </div>
                 </Grid>
@@ -2369,7 +2535,9 @@ const manualRefund = async () => {
             <PayDialog
               booking={selectedBooking}
               open={openPayDialog}
-              price={invoice ? (invoice.grandTotal - (booking.deposit || 0)) : null}
+              price={
+                invoice ? invoice.grandTotal - (booking.deposit || 0) : null
+              }
               handleClose={handleClosePayDialog}
             />
 
@@ -2392,8 +2560,6 @@ const manualRefund = async () => {
               bloodReports={bloodReports}
               handleClose={handleCloseTimeStampDialog}
             />
-
-
           </Dialog>
 
           <Dialog
@@ -2453,12 +2619,7 @@ const manualRefund = async () => {
                 Yes, Refund Payment
               </Button>
             </DialogActions>
-
           </Dialog>
-
-
-
-
         </React.Fragment>
       )}
     </React.Fragment>
