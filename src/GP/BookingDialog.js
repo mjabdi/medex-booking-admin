@@ -48,6 +48,8 @@ import SendIcon from "@material-ui/icons/Send";
 import HistoryIcon from "@material-ui/icons/History";
 
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
+import {SaveAlt, SaveAltOutlined, SaveRounded, SaveSharp, SaveTwoTone} from "@material-ui/icons";
+
 import { CalendarColors } from "../Admin/calendar-admin/colors";
 import InvoiceDialog from "../InvoiceDialog";
 import InvoiceService from "../services/InvoiceService";
@@ -410,7 +412,11 @@ export default function BookingDialog(props) {
   const [email, setEmail] = React.useState("");
   const [tel, setTel] = React.useState("");
   const [notes, setNotes] = React.useState("");
+
+
   const [service, setService] = React.useState("");
+
+
 
   const [refreshData, setRefreshData] = React.useState(false);
 
@@ -443,8 +449,15 @@ export default function BookingDialog(props) {
     if (props.booking && props.open) {
       fetchInvoice();
       fetchBloodReports();
+
+      setClinicNotes(props.booking.clinicNotes || "")
+      setInitialClinicNotes(props.booking.clinicNotes || "")
+      setNotesSaving(false)
+
     }
   }, [props.booking, props.open]);
+
+
 
   const [bloodReports, setBloodReports] = React.useState(null)
   const [selectedBloodReport, setSelectedBloodReport] = React.useState(null)
@@ -561,6 +574,8 @@ export default function BookingDialog(props) {
     setNotes(event.target.value);
     setFieldChanged(!fieldChanged);
   };
+
+
 
   const getStatusLabel = (status) => {
     if (status === "booked") {
@@ -932,6 +947,36 @@ export default function BookingDialog(props) {
   
   }
 
+
+
+  const [clinicNotes, setClinicNotes] = React.useState("");
+  const [initialClinicNotes, setInitialClinicNotes] = React.useState("");
+
+  const [notesSaving, setNotesSaving] = useState(false);
+
+  const clinicNotesChanged = (event) => {
+    setClinicNotes(event.target.value);
+  };
+
+  const saveNotesClicked = async () => {
+    try {
+      setNotesSaving(true);
+      const res = await BookService.setClinicNotes(props.booking._id, clinicNotes)
+      if (res && res.data && res.data.status && res.data.status === "OK")
+      {
+        setInitialClinicNotes(clinicNotes)
+        setNotesSaving(false)
+        setRefreshData(!refreshData);
+      }else
+      {
+        setNotesSaving(false)
+      }
+    } catch (err) {
+      console.error(err);
+      setNotesSaving(false);
+    }
+  };
+
   return (
     <React.Fragment>
       {booking && (
@@ -988,6 +1033,86 @@ export default function BookingDialog(props) {
                 style={{
                   position: "absolute",
                   top: "25x",
+                  left: "150px",
+                  // border: "1px solid #69c9ab",
+                  background: `${clinicNotes ? "#d4fffe" : "#fff"} `,
+                  borderRadius: "4px",
+                  fontSize: "0.7rem",
+                  width: "620px",
+                  height: "60px",
+                }}
+              >
+                <TextField
+                  fullWidth
+                  // label="MY NOTES"
+                  label="Notes on the patient - staff only"
+                  style={{ margin: "0px", height: "100%", fontSize: "0.7em" }}
+                  value={clinicNotes || ""}
+                  onChange={clinicNotesChanged}
+                  variant="outlined"
+                  // inputProps={{
+                  //   style: {
+                  //     fontSize:"0.8em"
+                  //   },
+                  // }}
+                ></TextField>
+              </div>
+
+              {notesSaving && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "25x",
+                    left: "770px",
+                    // border: "1px solid #69c9ab",
+                    borderRadius:"0px 4px 4px 0px",
+                    background: `"#fff"`,
+                    fontSize: "0.8rem",
+                    fontWeight:"500",
+                    backgroundColor:"#e84331",
+                    padding:"0px 2px",
+                    color:"#fff"
+                  }}      
+                >
+                  saving
+                </div>
+              )}
+
+              {initialClinicNotes !== clinicNotes && !notesSaving && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "25x",
+                    left: "770px",
+                    // border: "1px solid #69c9ab",
+                    background: `${clinicNotes ? "#d4fffe" : "#fff"} `,
+                    borderRadius: "4px",
+                    fontSize: "0.7rem",
+                  }}
+                >
+                  <Tooltip title="SAVE NOTES">
+                    <IconButton
+                      onClick={saveNotesClicked}
+                      className={classes.margin}
+                      size="small"
+                    >
+                      <SaveAlt
+                        style={{
+                          color: "#fff6f5",
+                          background: "#d91b07",
+                          borderRadius: "4px",
+                        }}
+                        fontSize="14px"
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              )}
+
+              <div
+                style={{
+                  position: "absolute",
+                  top: "25x",
                   right: "60px",
                   backgroundColor: CalendarColors.GP_COLOR,
                   color: "#fff",
@@ -1007,6 +1132,7 @@ export default function BookingDialog(props) {
 
               <Grid
                 container
+                style={{paddingTop:"60px"}}
                 direction="row"
                 justify="center"
                 spacing={2}
@@ -1017,9 +1143,9 @@ export default function BookingDialog(props) {
                     style={
                       booking.deleted
                         ? {
-                          paddingBottom: "5px",
-                          textDecoration: "line-through",
-                        }
+                            paddingBottom: "5px",
+                            textDecoration: "line-through",
+                          }
                         : {}
                     }
                   >
@@ -1034,17 +1160,17 @@ export default function BookingDialog(props) {
                         style={
                           booking.tr
                             ? {
-                              padding: 0,
-                              margin: 0,
-                              color: "#fff",
-                              fontSize: 25,
-                            }
+                                padding: 0,
+                                margin: 0,
+                                color: "#fff",
+                                fontSize: 25,
+                              }
                             : {
-                              padding: 0,
-                              margin: 0,
-                              color: "#333",
-                              fontSize: 25,
-                            }
+                                padding: 0,
+                                margin: 0,
+                                color: "#333",
+                                fontSize: 25,
+                              }
                         }
                       />
                     </Tooltip>
@@ -1801,22 +1927,49 @@ export default function BookingDialog(props) {
                           )}
                       </li>
 
-                      {invoice &&
-                        <li style={{lineHeight:"0.5rem", border:"1px dashed #999", padding:"0px 10px", marginBottom:"10px", marginTop:"-10px"}}>
-                          {invoice.items.map(item => (
+                      {invoice && (
+                        <li
+                          style={{
+                            lineHeight: "0.5rem",
+                            border: "1px dashed #999",
+                            padding: "0px 10px",
+                            marginBottom: "10px",
+                            marginTop: "-10px",
+                          }}
+                        >
+                          {invoice.items.map((item) => (
                             <p>
-                              <span style={{width:"125px", display:"inline-block"}}> {item.code} </span>
+                              <span
+                                style={{
+                                  width: "125px",
+                                  display: "inline-block",
+                                }}
+                              >
+                                {" "}
+                                {item.code}{" "}
+                              </span>
                               <span> £{item.price}</span>
-                            </p>  
+                            </p>
                           ))}
 
-                            <p>
-                              <span style={{width:"125px", display:"inline-block", fontWeight:"500"}}> TOTAL </span>
-                              <span style={{fontWeight:"600", color:"green"}}> £{ getTotalPrice(invoice.items)}</span>
-                            </p>  
-
+                          <p>
+                            <span
+                              style={{
+                                width: "125px",
+                                display: "inline-block",
+                                fontWeight: "500",
+                              }}
+                            >
+                              {" "}
+                              TOTAL{" "}
+                            </span>
+                            <span style={{ fontWeight: "600", color: "green" }}>
+                              {" "}
+                              £{getTotalPrice(invoice.items)}
+                            </span>
+                          </p>
                         </li>
-                      }
+                      )}
 
                       {/* <li className={classes.li}>
                         <div
@@ -1847,24 +2000,35 @@ export default function BookingDialog(props) {
                             <div style={{ padding: "20px" }}>
                               <Grid container spacing={2} alignItems="center">
                                 <Grid item xs={12}>
-                                  <div style={{ color: "#dc2626", fontWeight: "600", fontSize: "1rem" }}>
+                                  <div
+                                    style={{
+                                      color: "#dc2626",
+                                      fontWeight: "600",
+                                      fontSize: "1rem",
+                                    }}
+                                  >
                                     Blood Results :
-                                    </div>
+                                  </div>
                                 </Grid>
-                                {bloodReports.map(report => (
+                                {bloodReports.map((report) => (
                                   <Grid item>
-                                    <Button onClick={() => showBloodReportClicked(report)} startIcon={<SearchIcon />} style={{ color: "#dc2626" }} variant="outlined">
+                                    <Button
+                                      onClick={() =>
+                                        showBloodReportClicked(report)
+                                      }
+                                      startIcon={<SearchIcon />}
+                                      style={{ color: "#dc2626" }}
+                                      variant="outlined"
+                                    >
                                       {report.filename}
                                     </Button>
                                   </Grid>
                                 ))}
-
                               </Grid>
                             </div>
                           </li>
                         </React.Fragment>
                       )}
-
                     </ul>
                   </div>
                 </Grid>
@@ -1896,7 +2060,6 @@ export default function BookingDialog(props) {
               open={bloodReportDialogOpen}
               onClose={handleClodeBloodReportDialog}
             />
-
           </Dialog>
 
           <Dialog

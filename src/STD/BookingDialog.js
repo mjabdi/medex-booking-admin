@@ -56,6 +56,7 @@ import InvoiceService from "../services/InvoiceService";
 import InvoiceDialog from "../InvoiceDialog";
 import BloodReportDialog from "../Blood/BloodReportDialog";
 import SearchIcon from '@material-ui/icons/Search';
+import { SaveAlt } from "@material-ui/icons";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -915,6 +916,11 @@ export default function BookingDialog(props) {
     if (props.booking && props.open) {
       fetchInvoice();
       fetchBloodReports();
+
+      setClinicNotes(props.booking.clinicNotes || "")
+      setInitialClinicNotes(props.booking.clinicNotes || "")
+      setNotesSaving(false)
+
     }
   }, [props.booking, props.open]);
 
@@ -995,6 +1001,37 @@ export default function BookingDialog(props) {
     return sum
 
   }
+
+
+  const [clinicNotes, setClinicNotes] = React.useState("");
+  const [initialClinicNotes, setInitialClinicNotes] = React.useState("");
+
+  const [notesSaving, setNotesSaving] = useState(false);
+
+  const clinicNotesChanged = (event) => {
+    setClinicNotes(event.target.value);
+  };
+
+  const saveNotesClicked = async () => {
+    try {
+      setNotesSaving(true);
+      const res = await BookService.setClinicNotes(props.booking._id, clinicNotes)
+      if (res && res.data && res.data.status && res.data.status === "OK")
+      {
+        setInitialClinicNotes(clinicNotes)
+        setNotesSaving(false)
+        setRefreshData(!refreshData);
+      }else
+      {
+        setNotesSaving(false)
+      }
+    } catch (err) {
+      console.error(err);
+      setNotesSaving(false);
+    }
+  };
+
+
   //***************************** */
 
   return (
@@ -1053,6 +1090,87 @@ export default function BookingDialog(props) {
                 style={{
                   position: "absolute",
                   top: "25x",
+                  left: "150px",
+                  // border: "1px solid #69c9ab",
+                  background: `${clinicNotes ? "#d4fffe" : "#fff"} `,
+                  borderRadius: "4px",
+                  fontSize: "0.7rem",
+                  width: "620px",
+                  height: "60px",
+                }}
+              >
+                <TextField
+                  fullWidth
+                  // label="MY NOTES"
+                  label="Notes on the patient - staff only"
+                  style={{ margin: "0px", height: "100%", fontSize: "0.7em" }}
+                  value={clinicNotes || ""}
+                  onChange={clinicNotesChanged}
+                  variant="outlined"
+                  // inputProps={{
+                  //   style: {
+                  //     fontSize:"0.8em"
+                  //   },
+                  // }}
+                ></TextField>
+              </div>
+
+              {notesSaving && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "25x",
+                    left: "770px",
+                    // border: "1px solid #69c9ab",
+                    borderRadius:"0px 4px 4px 0px",
+                    background: `"#fff"`,
+                    fontSize: "0.8rem",
+                    fontWeight:"500",
+                    backgroundColor:"#e84331",
+                    padding:"0px 2px",
+                    color:"#fff"
+                  }}      
+                >
+                  saving
+                </div>
+              )}
+
+              {initialClinicNotes !== clinicNotes && !notesSaving && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "25x",
+                    left: "770px",
+                    // border: "1px solid #69c9ab",
+                    background: `${clinicNotes ? "#d4fffe" : "#fff"} `,
+                    borderRadius: "4px",
+                    fontSize: "0.7rem",
+                  }}
+                >
+                  <Tooltip title="SAVE NOTES">
+                    <IconButton
+                      onClick={saveNotesClicked}
+                      className={classes.margin}
+                      size="small"
+                    >
+                      <SaveAlt
+                        style={{
+                          color: "#fff6f5",
+                          background: "#d91b07",
+                          borderRadius: "4px",
+                        }}
+                        fontSize="14px"
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              )}
+
+
+              <div
+                style={{
+                  position: "absolute",
+                  top: "25x",
                   right: "60px",
                   backgroundColor: CalendarColors.STD_COLOR,
                   color: "#fff",
@@ -1065,6 +1183,7 @@ export default function BookingDialog(props) {
 
               <Grid
                 container
+                style={{paddingTop:"60px"}}
                 direction="row"
                 justify="center"
                 spacing={2}

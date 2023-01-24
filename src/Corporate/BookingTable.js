@@ -499,7 +499,9 @@ export default function BookingTable(props) {
   
         );
       }},
-      { field: 'fullname', headerName: 'Fullname', width: 250 },
+      { field: 'fullname', headerName: 'Fullname', width: 200 },
+      { field: 'service', headerName: 'Package', width: 200 },
+
       { field: 'email', headerName: 'Email', width: 200 },
       { field: 'phone', headerName: 'Tel', width: 150 },
       { field: 'notes', headerName: 'Notes', width: 500 },
@@ -619,7 +621,8 @@ export default function BookingTable(props) {
 
     );
   }},
-  { field: 'fullname', headerName: 'Fullname', width: 250 },
+  { field: 'fullname', headerName: 'Fullname', width: 200 },
+  { field: 'service', headerName: 'Package', width: 200 },
   { field: 'email', headerName: 'Email', width: 200 },
   { field: 'phone', headerName: 'Tel', width: 150 },
   { field: 'notes', headerName: 'Notes', width: 500 },

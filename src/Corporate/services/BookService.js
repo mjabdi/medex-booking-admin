@@ -3,6 +3,12 @@ import axiosRetry from 'axios-retry';
 
 export default class BookService {
 
+   static setClinicNotes = (bookingId, notes) =>
+   {
+      return API.post(`/api/corporate/book/setclinicnotes`, {bookingId, notes});
+   }
+
+
    static getCorporateReportsByBookingId = (bookingId) =>
    {
       return API.get(`/api/blood/book/getcorporatereportsbybookingid?id=${bookingId}`);
