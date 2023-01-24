@@ -1230,16 +1230,16 @@ export default function BookingDialog(props) {
                 </span>
               </div> */}
 
-<div
+            <div
                 style={{
                   position: "absolute",
                   top: "25x",
-                  left: "150px",
+                  left: "190px",
                   // border: "1px solid #69c9ab",
                   background: `${clinicNotes ? "#d4fffe" : "#fff"} `,
                   borderRadius: "4px",
                   fontSize: "0.7rem",
-                  width: "620px",
+                  width: "580px",
                   height: "60px",
                 }}
               >
