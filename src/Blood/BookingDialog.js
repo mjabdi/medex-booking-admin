@@ -1088,6 +1088,23 @@ const saveNotesClicked = async () => {
   }
 };
 
+const [isPrinting, setPrinting] = useState(false)
+const printLabel = async () => {
+
+
+  try {
+    setPrinting(true)
+
+    setTimeout(() => {
+      setPrinting(false)
+      alert("send to printer");
+    }, 3000);
+
+  } catch (err) {
+    setPrinting(false)
+  }
+};
+
 
 
 
@@ -2013,10 +2030,12 @@ const saveNotesClicked = async () => {
                               <DoneOutlineIcon style={{ color: "green" }} />
                             ) : null
                           }
+                          // disabled={isPrinting}
                           type="button"
                           fullWidth
                           variant="outlined"
                           color="primary"
+                          // onClick={printLabel}
                           onClick={() => {
                             BookService.sendForPrint(booking._id);
                             setTimeout(async () => {
@@ -2085,12 +2104,14 @@ const saveNotesClicked = async () => {
                           }}
                           className={classes.DownloadForm}
                         >
-                          {!booking.printStatus && "Print LAB Label"}
+                          {/* {!booking.printStatus && "Print LAB Label"}
                           {booking.printStatus === "printed" &&
                             "Print LAB Label Again"}
                           {booking.printStatus === "printing" && "Printing"}
                           {booking.printStatus === "preparing" &&
-                            "Preparing for print"}
+                            "Preparing for print"} */}
+
+                            {isPrinting ? "Printing..." : "Print LAB Label"}
                         </Button>
                       </li>
 

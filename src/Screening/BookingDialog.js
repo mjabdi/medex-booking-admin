@@ -42,6 +42,12 @@ import {
 
 import PayDialog from "./PayDialog";
 
+import ReportIcon from "@material-ui/icons/BarChart";
+
+import TickIcon from "@material-ui/icons/DoneAll";
+import NotIcon from "@material-ui/icons/Close";
+
+
 import PrintIcon from "@material-ui/icons/Print";
 import UndoIcon from "@material-ui/icons/Undo";
 
@@ -60,6 +66,7 @@ import InvoiceService from "../services/InvoiceService";
 import SearchIcon from '@material-ui/icons/Search';
 import BloodReportDialog from "../Blood/BloodReportDialog";
 import { SaveAlt } from "@material-ui/icons";
+import ReportDataDialog from "./ReportDataDialog";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -400,6 +407,8 @@ export default function BookingDialog(props) {
   const [openResendDialog, setOpenResendDialog] = React.useState(false);
   const [openPayDialog, setOpenPayDialog] = React.useState(false);
   const [openRefundDialog, setOpenRefundDialog] = React.useState(false);
+  const [openReportDataDialog, setOpenReportDataDialog] = React.useState(false);
+
 
   const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
   const [openTBCDialog, setOpenTBCDialog] = React.useState(false);
@@ -536,6 +545,11 @@ export default function BookingDialog(props) {
 
   const handleClosePayDialog = () => {
     setOpenPayDialog(false);
+    setSelectedBooking(null);
+  };
+
+  const handleCloseReportDataDialog = () => {
+    setOpenReportDataDialog(false);
     setSelectedBooking(null);
   };
 
@@ -911,6 +925,13 @@ export default function BookingDialog(props) {
     setInvoice(invoice);
     setOpenInvoiceDialog(true);
   };
+
+  const ShowReportDataDialog = () => {
+    setSelectedBooking(booking);
+    setOpenReportDataDialog(true);
+  };
+
+
 
   useEffect(() => {
     if (props.booking) {
@@ -2117,6 +2138,7 @@ export default function BookingDialog(props) {
                             editMode.edit && editMode.person._id === booking._id
                           ) &&
                           !booking.deleted && (
+                            <React.Fragment>
                             <Button
                               variant="outlined"
                               color="secondary"
@@ -2128,6 +2150,23 @@ export default function BookingDialog(props) {
                             >
                               Change Back To Patient Attended
                             </Button>
+
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              startIcon={<ReportIcon />}
+                              endIcon={ (!!booking.reportData && !!JSON.parse(booking.reportData) && JSON.parse(booking.reportData).find(item => !!item.value)) ? <TickIcon style={{color:"green"}}/> : <NotIcon style={{color:"red"}}/>}  
+                              disabled={saving}
+                              style={{ width: "300px", marginLeft:"20px" }}
+                              onClick={() => ShowReportDataDialog()}
+                            >
+                              Report Details...
+                            </Button>
+
+
+
+                            </React.Fragment>
+
                           )}
                       </li>
 
@@ -2843,6 +2882,12 @@ export default function BookingDialog(props) {
               invoice={invoice}
               open={openInvoiceDialog}
               handleClose={handleCloseInvoiceDialog}
+            />
+
+            <ReportDataDialog
+              booking={selectedBooking}
+              open={openReportDataDialog}
+              handleClose={handleCloseReportDataDialog}
             />
 
             <BloodReportDialog

@@ -4,6 +4,17 @@ import axiosRetry from 'axios-retry';
 export default class BookService {
 
 
+   static getReportData = (bookingId) =>
+   {
+      return API.get(`/api/screening/book/getreportdata?id=${bookingId}`);
+   }
+
+   static setReportData = (bookingId, reportData) =>
+   {
+      return API.post(`/api/screening/book/setreportdata`, {bookingId, reportData});
+   }
+
+
    static setClinicNotes = (bookingId, notes) =>
    {
       return API.post(`/api/screening/book/setclinicnotes`, {bookingId, notes});
