@@ -24,6 +24,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 import CreditCardIcon from "@material-ui/icons/CreditCard";
 import ReportIcon from "@material-ui/icons/BarChart";
+import PdfIcon from "@material-ui/icons/PictureAsPdf";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -288,6 +289,7 @@ export default function ReportDataDialog(props) {
 
     props.handleClose();
     setReportData(null)
+    setIsDownloading(false)
     setSaving(false);
   };
 
@@ -341,6 +343,27 @@ export default function ReportDataDialog(props) {
       _temp[index].value = value
       setReportData(prev => _temp)
     }
+  }
+
+  const [isDownloading, setIsDownloading] = useState(false)
+  const downloadPdf = async () => {
+
+    setIsDownloading(true)
+
+    BookService.downloadPDFReport(props.booking._id, reportData)
+    .then((res) => {
+      setIsDownloading(false)
+      const file = new Blob([res.data], { type: "application/pdf" });
+
+      const fileURL = URL.createObjectURL(file);
+      window.open(fileURL, "_blank");
+    })
+    .catch((err) => {
+      console.log(err);
+      setIsDownloading(false)
+    });
+
+
   }
 
   return (
@@ -463,6 +486,18 @@ export default function ReportDataDialog(props) {
                   >
                     Reset Data
                   </Button>
+
+                  <Button
+                    onClick={downloadPdf}
+                    disabled={isDownloading}
+                    variant="contained"
+                    color="secondary"  
+                    startIcon={<PdfIcon/>}                  
+                    style={{ width: "250px", marginLeft:"10px" }}
+                  >
+                    {isDownloading ? "Generating PDF ..." :  "Download PDF Report"} 
+                  </Button>
+
                 </div>
 
                 <div

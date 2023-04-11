@@ -3,6 +3,17 @@ import axiosRetry from 'axios-retry';
 
 export default class BookService {
 
+   static downloadPDFReport = (bookingId, reportData) =>
+   {
+      return API.post(`/api/screening/book/downloadpdfreport?id=${bookingId}`,{reportData: reportData},
+      {
+         responseType: 'arraybuffer',
+         id: bookingId,
+         headers: {
+             Accept: 'application/pdf',
+         }
+      })
+   }
 
    static getReportData = (bookingId) =>
    {
