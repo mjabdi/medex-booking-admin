@@ -62,6 +62,8 @@ import BloodReportDialog from "./BloodReportDialog";
 import TimeStampDialog from "./TimeStampDialog"
 import { SaveAlt } from "@material-ui/icons";
 
+import * as dateformat from "dateformat"
+
 const useStyles = makeStyles((theme) => ({
   box: {
     backgroundColor: "#373737",
@@ -1090,20 +1092,63 @@ const saveNotesClicked = async () => {
 
 const [isPrinting, setPrinting] = useState(false)
 const printLabel = async () => {
-
-
   try {
     setPrinting(true)
 
-    setTimeout(() => {
-      setPrinting(false)
-      alert("send to printer");
-    }, 3000);
+    const now = new Date()
+    const dateStr = dateformat(now, "yyyy-mm-dd")
+    const timeStr = dateformat(now, "HH:MM:ss")
+
+    const element = document.createElement("a");
+    const file = new Blob([`Text_3=${props.booking.fullname?.trim().split(' ').slice(-1).join(' ').toUpperCase()}`,
+                           "\n",
+                           `Text_3_1=${props.booking.fullname?.trim().split(' ').slice(0, -1).join(' ').toUpperCase()}`,
+                            "\n",
+                            `Text_3_1_1=${convertGender(props.booking.gender)}`,
+                            "\n",
+                            `Text_3_1_1_1=${props.booking.birthDate}`,
+                            "\n",
+                            `Text_3_1_1_2=${dateStr}`,
+                            "\n",
+                            `Text_3_1_1_2_1=${timeStr}`,
+                            "\n",
+                            `Text_3_1_1_2_2=${props.booking.bookingRef}`,
+                            "\n"
+                          ],    
+                {type: 'text/plain;charset=utf-8'});
+    element.href = URL.createObjectURL(file);
+    element.download = `${props.booking.fullname}.values`;
+    document.body.appendChild(element);
+    element.click();
+
+    setPrinting(false)
 
   } catch (err) {
     setPrinting(false)
   }
+
+
+  function convertGender(str){
+    if (str === "M")
+      return "Male"
+    else if (str === "F")
+      return "Female"
+    else
+      return ""    
+  }
+
+  function convertDate(str) {
+
+    if (!str || str.length != 10) {
+        return ""
+    }
+    return `${str.substr(8, 2)}-${str.substr(5, 2)}-${str.substr(0, 4)}`
+  }
+  
 };
+
+
+
 
 
 
@@ -2020,88 +2065,88 @@ const printLabel = async () => {
 
                       <li hidden={booking.deleted || editMode.edit}>
                         <Button
-                          disabled={
-                            booking.printStatus === "printing" ||
-                            booking.printStatus === "preparing"
-                          }
+                          // disabled={
+                          //   booking.printStatus === "printing" ||
+                          //   booking.printStatus === "preparing"
+                          // }
                           startIcon={<PrintIcon />}
-                          endIcon={
-                            booking.printStatus === "printed" ? (
-                              <DoneOutlineIcon style={{ color: "green" }} />
-                            ) : null
-                          }
-                          // disabled={isPrinting}
+                          // endIcon={
+                          //   booking.printStatus === "printed" ? (
+                          //     <DoneOutlineIcon style={{ color: "green" }} />
+                          //   ) : null
+                          // }
+                          disabled={isPrinting}
                           type="button"
                           fullWidth
                           variant="outlined"
                           color="primary"
-                          // onClick={printLabel}
-                          onClick={() => {
-                            BookService.sendForPrint(booking._id);
-                            setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(
-                                booking._id
-                              );
-                              setBooking({
-                                ...booking,
-                                printStatus: _booking?.data.printStatus,
-                              });
-                            }, 500);
-                            setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(
-                                booking._id
-                              );
-                              setBooking({
-                                ...booking,
-                                printStatus: _booking?.data.printStatus,
-                              });
-                            }, 1500);
-                            setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(
-                                booking._id
-                              );
-                              setBooking({
-                                ...booking,
-                                printStatus: _booking?.data.printStatus,
-                              });
-                            }, 3000);
-                            setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(
-                                booking._id
-                              );
-                              setBooking({
-                                ...booking,
-                                printStatus: _booking?.data.printStatus,
-                              });
-                            }, 5000);
-                            setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(
-                                booking._id
-                              );
-                              setBooking({
-                                ...booking,
-                                printStatus: _booking?.data.printStatus,
-                              });
-                            }, 10000);
-                            setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(
-                                booking._id
-                              );
-                              setBooking({
-                                ...booking,
-                                printStatus: _booking?.data.printStatus,
-                              });
-                            }, 15000);
-                            setTimeout(async () => {
-                              const _booking = await BookService.getBookingById(
-                                booking._id
-                              );
-                              setBooking({
-                                ...booking,
-                                printStatus: _booking?.data.printStatus,
-                              });
-                            }, 20000);
-                          }}
+                          onClick={printLabel}
+                          // onClick={() => {
+                          //   BookService.sendForPrint(booking._id);
+                          //   setTimeout(async () => {
+                          //     const _booking = await BookService.getBookingById(
+                          //       booking._id
+                          //     );
+                          //     setBooking({
+                          //       ...booking,
+                          //       printStatus: _booking?.data.printStatus,
+                          //     });
+                          //   }, 500);
+                          //   setTimeout(async () => {
+                          //     const _booking = await BookService.getBookingById(
+                          //       booking._id
+                          //     );
+                          //     setBooking({
+                          //       ...booking,
+                          //       printStatus: _booking?.data.printStatus,
+                          //     });
+                          //   }, 1500);
+                          //   setTimeout(async () => {
+                          //     const _booking = await BookService.getBookingById(
+                          //       booking._id
+                          //     );
+                          //     setBooking({
+                          //       ...booking,
+                          //       printStatus: _booking?.data.printStatus,
+                          //     });
+                          //   }, 3000);
+                          //   setTimeout(async () => {
+                          //     const _booking = await BookService.getBookingById(
+                          //       booking._id
+                          //     );
+                          //     setBooking({
+                          //       ...booking,
+                          //       printStatus: _booking?.data.printStatus,
+                          //     });
+                          //   }, 5000);
+                          //   setTimeout(async () => {
+                          //     const _booking = await BookService.getBookingById(
+                          //       booking._id
+                          //     );
+                          //     setBooking({
+                          //       ...booking,
+                          //       printStatus: _booking?.data.printStatus,
+                          //     });
+                          //   }, 10000);
+                          //   setTimeout(async () => {
+                          //     const _booking = await BookService.getBookingById(
+                          //       booking._id
+                          //     );
+                          //     setBooking({
+                          //       ...booking,
+                          //       printStatus: _booking?.data.printStatus,
+                          //     });
+                          //   }, 15000);
+                          //   setTimeout(async () => {
+                          //     const _booking = await BookService.getBookingById(
+                          //       booking._id
+                          //     );
+                          //     setBooking({
+                          //       ...booking,
+                          //       printStatus: _booking?.data.printStatus,
+                          //     });
+                          //   }, 20000);
+                          // }}
                           className={classes.DownloadForm}
                         >
                           {/* {!booking.printStatus && "Print LAB Label"}
