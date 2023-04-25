@@ -1098,15 +1098,32 @@ const printLabel = async () => {
     const now = new Date()
     const dateStr = dateformat(now, "yyyy-mm-dd")
     const timeStr = dateformat(now, "HH:MM:ss")
+    let surname = props.booking.fullname?.trim().split(' ').slice(-1).join(' ').toUpperCase()
+    if (!surname || surname.trim().length === 0)
+    {
+      surname = "--"
+    }
+
+    let forename = props.booking.fullname?.trim().split(' ').slice(0, -1).join(' ').toUpperCase()
+    if (!forename || forename.trim().length === 0)
+    {
+      forename = "--"
+    }
+
+    let dob = props.booking.birthDate
+    if (!dob || dob.trim().length === 0)
+    {
+      dob = "--"
+    }
 
     const element = document.createElement("a");
-    const file = new Blob([`Text_3=${props.booking.fullname?.trim().split(' ').slice(-1).join(' ').toUpperCase()}`,
+    const file = new Blob([`Text_3=${surname}`,
                            "\n",
-                           `Text_3_1=${props.booking.fullname?.trim().split(' ').slice(0, -1).join(' ').toUpperCase()}`,
+                           `Text_3_1=${forename}`,
                             "\n",
                             `Text_3_1_1=${convertGender(props.booking.gender)}`,
                             "\n",
-                            `Text_3_1_1_1=${props.booking.birthDate}`,
+                            `Text_3_1_1_1=${dob}`,
                             "\n",
                             `Text_3_1_1_2=${dateStr}`,
                             "\n",
@@ -1134,7 +1151,7 @@ const printLabel = async () => {
     else if (str === "F")
       return "Female"
     else
-      return ""    
+      return "--"    
   }
 
   function convertDate(str) {

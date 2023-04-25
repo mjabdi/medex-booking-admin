@@ -56,7 +56,7 @@ import InvoiceService from "../services/InvoiceService";
 
 import SearchIcon from '@material-ui/icons/Search';
 import BloodReportDialog from "../Blood/BloodReportDialog";
-
+import * as dateformat from "dateformat"
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -977,6 +977,81 @@ export default function BookingDialog(props) {
     }
   };
 
+  const [isPrinting, setPrinting] = useState(false)
+  const printLabel = async () => {
+    try {
+      setPrinting(true)
+  
+      const now = new Date()
+      const dateStr = dateformat(now, "yyyy-mm-dd")
+      const timeStr = dateformat(now, "HH:MM:ss")
+      let surname = props.booking.fullname?.trim().split(' ').slice(-1).join(' ').toUpperCase()
+      if (!surname || surname.trim().length === 0)
+      {
+        surname = "--"
+      }
+  
+      let forename = props.booking.fullname?.trim().split(' ').slice(0, -1).join(' ').toUpperCase()
+      if (!forename || forename.trim().length === 0)
+      {
+        forename = "--"
+      }
+  
+      let dob = props.booking.birthDate
+      if (!dob || dob.trim().length === 0)
+      {
+        dob = "--"
+      }
+  
+      const element = document.createElement("a");
+      const file = new Blob([`Text_3=${surname}`,
+                             "\n",
+                             `Text_3_1=${forename}`,
+                              "\n",
+                              `Text_3_1_1=${convertGender(props.booking.gender)}`,
+                              "\n",
+                              `Text_3_1_1_1=${dob}`,
+                              "\n",
+                              `Text_3_1_1_2=${dateStr}`,
+                              "\n",
+                              `Text_3_1_1_2_1=${timeStr}`,
+                              "\n",
+                              `Text_3_1_1_2_2=${props.booking.bookingRef}`,
+                              "\n"
+                            ],    
+                  {type: 'text/plain;charset=utf-8'});
+      element.href = URL.createObjectURL(file);
+      element.download = `${props.booking.fullname}.values`;
+      document.body.appendChild(element);
+      element.click();
+  
+      setPrinting(false)
+  
+    } catch (err) {
+      setPrinting(false)
+    }
+  
+  
+    function convertGender(str){
+      if (str === "M")
+        return "Male"
+      else if (str === "F")
+        return "Female"
+      else
+        return "--"    
+    }
+  
+    function convertDate(str) {
+  
+      if (!str || str.length != 10) {
+          return ""
+      }
+      return `${str.substr(8, 2)}-${str.substr(5, 2)}-${str.substr(0, 4)}`
+    }
+    
+  };
+
+
   return (
     <React.Fragment>
       {booking && (
@@ -1720,6 +1795,27 @@ export default function BookingDialog(props) {
                             </Button>
                           )}
                       </li>
+
+                      <li hidden={booking.deleted || editMode.edit}>
+                        <Button
+                          disabled={isPrinting}
+                          startIcon={<PrintIcon />}
+                          type="button"
+                          fullWidth
+                          variant="outlined"
+                          color="primary"
+                          onClick={printLabel}
+                          className={classes.DownloadForm}
+                        >
+                          {!booking.printStatus && "Print LAB Label"}
+                          {booking.printStatus === "printed" &&
+                            "Print LAB Label Again"}
+                          {booking.printStatus === "printing" && "Printing"}
+                          {booking.printStatus === "preparing" &&
+                            "Preparing for print"}
+                        </Button>
+                      </li>
+
 
                       <li hidden={booking.deleted || editMode.edit}>
                         <Button
