@@ -759,7 +759,7 @@ export default function Dashboard() {
                   </Grid>
                 </Grid>
 
-                <Grid item>
+                {/* <Grid item>
                   <Grid
                     container
                     direction="column"
@@ -775,7 +775,7 @@ export default function Dashboard() {
                     <Grid item>{getAppsLogo("pcr")}</Grid>
                     <Grid item>{getAppsLabel("pcr")}</Grid>
                   </Grid>
-                </Grid>
+                </Grid> */}
 
                 <Grid item>
                   <Grid

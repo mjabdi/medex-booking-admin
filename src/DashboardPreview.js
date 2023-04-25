@@ -109,7 +109,7 @@ export default function DashboardPreview() {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        {/* <Grid item xs={12} md={6}>
           <Paper className={fixedHeightPaperSmall} onClick={gotoLateBookings}>
              <LateBookingView />
           </Paper>
@@ -119,7 +119,7 @@ export default function DashboardPreview() {
           <Paper className={fixedHeightPaperSmall} onClick={gotoUnmatchedPCR}>
              <UnmatchedBookingView />
           </Paper>
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={12} md={6}>
           <Paper className={fixedHeightPaperSmall} onClick={gotoRefundGynae}>
