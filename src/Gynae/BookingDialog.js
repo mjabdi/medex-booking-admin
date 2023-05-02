@@ -13,6 +13,10 @@ import {
   Switch,
   TextField,
   Tooltip,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from "@material-ui/core";
 import PDFService from "./services/PDFService";
 
@@ -1076,6 +1080,73 @@ export default function BookingDialog(props) {
 
 
   //***************************** */
+
+
+  /////********************** REVIEW SMS */
+
+const smsTypes = [
+  {value: 1, text: "Medical Express Clinic"},
+]
+
+const smsMessageArray = [
+  `It was great to see and treat you at the Medical Express Clinic, Please let us know how you got on by clicking here: https://g.page/r/CZcAyTF67Ec0EBM/review`,
+]
+
+const [smsType, setSmstype] = useState(1)
+const smsTypeChanged = (event) => {
+  setSmstype(event.target.value)
+  setSmsMessage(smsMessageArray[event.target.value-1])
+}
+
+const [smsSending, setSmsSending] = useState(false)
+
+const SendSMS = async () => {
+
+  setSmsSending(true)
+
+  try{
+
+    const res =await BookService.sendReviewSMS(booking._id, smsMessage)
+    if (res && res.data && res.data.status === "OK")
+    {
+      setBooking(r => { return {...r, smsSent: true}})
+      setState((state) => ({
+        ...state,
+        bookingDialogDataChanged: !state.bookingDialogDataChanged
+          ? true
+          : false,
+      }));
+
+    }
+
+    setSmsSending(false)
+    
+
+  }catch(err)
+  {
+    console.error(err)
+    setSmsSending(false)
+    setBooking(r => { return {...r, smsSent: false}})
+  }
+ 
+
+}
+
+const [smsMessage, setSmsMessage] = useState(smsMessageArray[0])
+const smsMessageChanged = (event) => {
+  setSmsMessage(event.target.value)
+}
+
+const isValidPhone = (phone) => {
+  if (!phone || phone.length < 7)
+  {
+    return false
+  }else
+  {
+    return true
+  }
+}
+
 
   return (
     <React.Fragment>
@@ -2219,6 +2290,85 @@ export default function BookingDialog(props) {
 
                         </li>
                       }
+
+<li className={classes.li}>
+                        <div
+                          style={{
+                            border: "1px dashed #285927",
+                            background: "#fafffa",
+                            padding: "10px",
+                          }}
+                        >
+                          <Grid
+                            container
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="center"
+                          >
+                            <Grid item>
+                              <span className={classes.infoTitle} style={{color:"#2a422a"}}>
+                                Ask for Review By SMS
+                              </span>
+                            </Grid>
+                            <Grid item>
+                              <span>
+                                {booking.smsSent ? (
+                                  <CheckIcon className={classes.checkIcon} />
+                                ) : (
+                                  <CloseIcon className={classes.closeIcon} />
+                                )}
+                              </span>
+                            </Grid>
+                            <Grid item xs={4} style={{paddingLeft:"20px"}}>
+                              <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">
+                                  Patient Source
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  value={smsType}
+                                  onChange={smsTypeChanged}
+                                  label="Source"
+                                  fullWidth
+                                >
+                                  {smsTypes.map((element) => (
+                                    <MenuItem
+                                      value={element.value}
+                                    >{`${element.text}`}</MenuItem>
+                                  ))}
+                                </Select>
+                              </FormControl>
+                            </Grid>
+                            <Grid item xs={3}>
+
+                            <Button
+                              variant="contained"
+                              disabled = {smsSending || !isValidPhone(booking.phone)}
+                              color="primary"
+                              className={classes.PayButton}
+                              onClick={SendSMS}
+                            >
+                              Send SMS
+                            </Button>
+                            </Grid>
+
+                            <Grid item xs={12} style={{paddingTop:"20px"}}>
+
+                              <TextField
+                                label="SMS TEXT" 
+                                variant="outlined"
+                                fullWidth
+                                className={classes.TextBox}
+                                value={smsMessage}
+                                onChange={smsMessageChanged}
+                              ></TextField>
+
+                            </Grid>
+                          </Grid>
+                        </div>
+                      </li>
+
 
                       {bloodReports && bloodReports.length > 0 && (
                         <React.Fragment>

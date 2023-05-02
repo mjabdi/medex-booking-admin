@@ -3,6 +3,11 @@ import axiosRetry from 'axios-retry';
 
 export default class BookService {
 
+   static sendReviewSMS = (bookingId, message) => {
+      return API.post(`/api/blood/book/sendreviewsms`, {id: bookingId, message});
+   }
+
+
    static setClinicNotes = (bookingId, notes) =>
    {
       return API.post(`/api/blood/book/setclinicnotes`, {bookingId, notes});

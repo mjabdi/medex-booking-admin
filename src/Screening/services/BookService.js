@@ -3,6 +3,10 @@ import axiosRetry from 'axios-retry';
 
 export default class BookService {
 
+   static sendReviewSMS = (bookingId, message) => {
+      return API.post(`/api/screening/book/sendreviewsms`, {id: bookingId, message});
+   }
+
    static downloadPDFReport = (bookingId, reportData) =>
    {
       return API.post(`/api/screening/book/downloadpdfreport?id=${bookingId}`,{reportData: reportData},
