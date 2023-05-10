@@ -2843,7 +2843,7 @@ const isValidPhone = (phone) => {
                           >
                             <Grid item>
                               <span className={classes.infoTitle} style={{color:"#2a422a"}}>
-                                Ask for Review By SMS
+                                Ask for Review By EMAIL
                               </span>
                             </Grid>
                             <Grid item>
@@ -2880,16 +2880,16 @@ const isValidPhone = (phone) => {
 
                             <Button
                               variant="contained"
-                              disabled = {smsSending || !isValidPhone(booking.phone)}
+                              disabled = {smsSending || !isValidPhone(booking.email)}
                               color="primary"
                               className={classes.PayButton}
                               onClick={SendSMS}
                             >
-                              Send SMS
+                              Send EMAIL
                             </Button>
                             </Grid>
 
-                            <Grid item xs={12} style={{paddingTop:"20px"}}>
+                            {/* <Grid item xs={12} style={{paddingTop:"20px"}}>
 
                               <TextField
                                 label="SMS TEXT" 
@@ -2900,7 +2900,7 @@ const isValidPhone = (phone) => {
                                 onChange={smsMessageChanged}
                               ></TextField>
 
-                            </Grid>
+                            </Grid> */}
                           </Grid>
                         </div>
                       </li>
