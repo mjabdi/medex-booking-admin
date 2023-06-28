@@ -425,7 +425,11 @@ export default function BookingTable(props) {
         }
         else
         {
-           if (params.getValue('paidBy') === 'credit card')
+          if (params.getValue('prepaid') === true)
+          {
+            return ( <CreditCardIcon className={classes.checkIcon} style={{color:"#f70a79"}}/> );
+          }
+           else if (params.getValue('paidBy') === 'credit card')
            {
              return ( <CreditCardIcon className={classes.checkIcon}/> );
            }
@@ -552,22 +556,22 @@ export default function BookingTable(props) {
                }
                else
                {
-                  if (params.getValue('paidBy') === 'credit card')
-                  {
-                    return ( <CreditCardIcon className={classes.checkIcon}/> );
-                  }
-                  else if (params.getValue('paidBy') === 'cash')
-                  {
-                    return ( <LocalAtmIcon className={classes.checkIcon}/> );
-                  }
-                  else if (params.getValue('paidBy') === 'corporate')
-                  {
-                    return ( <BusinessIcon className={classes.checkIcon}/> );
-                  }
-                  else
-                  {
-                    return '';  
-                  }
+                if (params.getValue("prepaid") === true) {
+                  return (
+                    <CreditCardIcon
+                      className={classes.checkIcon}
+                      style={{ color: "#f70a79" }}
+                    />
+                  );
+                } else if (params.getValue("paidBy") === "credit card") {
+                  return <CreditCardIcon className={classes.checkIcon} />;
+                } else if (params.getValue("paidBy") === "cash") {
+                  return <LocalAtmIcon className={classes.checkIcon} />;
+                } else if (params.getValue("paidBy") === "corporate") {
+                  return <BusinessIcon className={classes.checkIcon} />;
+                } else {
+                  return "";
+                }
                }
          }
         },

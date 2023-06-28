@@ -1210,14 +1210,14 @@ const isValidPhone = (phone) => {
                     top: "25x",
                     left: "770px",
                     // border: "1px solid #69c9ab",
-                    borderRadius:"0px 4px 4px 0px",
+                    borderRadius: "0px 4px 4px 0px",
                     background: `"#fff"`,
                     fontSize: "0.8rem",
-                    fontWeight:"500",
-                    backgroundColor:"#e84331",
-                    padding:"0px 2px",
-                    color:"#fff"
-                  }}      
+                    fontWeight: "500",
+                    backgroundColor: "#e84331",
+                    padding: "0px 2px",
+                    color: "#fff",
+                  }}
                 >
                   saving
                 </div>
@@ -1277,7 +1277,7 @@ const isValidPhone = (phone) => {
 
               <Grid
                 container
-                style={{paddingTop:"60px"}}
+                style={{ paddingTop: "60px" }}
                 direction="row"
                 justify="center"
                 spacing={2}
@@ -1528,7 +1528,9 @@ const isValidPhone = (phone) => {
                           <Tooltip title={"Paid Records Cannot be Deleted!"}>
                             <div>
                               <Button
-                                disabled={booking.OTCCharges > 0}
+                                disabled={
+                                  booking.OTCCharges > 0 && !booking.prepaid
+                                }
                                 type="button"
                                 fullWidth
                                 variant="contained"
@@ -1886,7 +1888,6 @@ const isValidPhone = (phone) => {
                         </Button>
                       </li>
 
-
                       <li hidden={booking.deleted || editMode.edit}>
                         <Button
                           disabled={!booking.formData}
@@ -2043,7 +2044,10 @@ const isValidPhone = (phone) => {
                       <li className={classes.li} style={{ marginTop: "20px" }}>
                         <span className={classes.infoTitle}>TOTAL CHARGES</span>{" "}
                         <span
-                          style={{ paddingLeft: "15px" }}
+                          style={{
+                            paddingLeft: "15px",
+                            color: `${booking.prepaid ? "#f70a79" : ""} `,
+                          }}
                           className={
                             !booking.OTCCharges || booking.OTCCharges === 0
                               ? classes.infoDataChargesHigher
@@ -2066,10 +2070,40 @@ const isValidPhone = (phone) => {
                               Pay
                             </Button>
                           )}
+                        {!booking.paid && booking.refund && (
+                          <React.Fragment>
+                            <span
+                              className={classes.PayLabel}
+                              style={{ color: "#e04209" }}
+                            >
+                              {" "}
+                              <UndoIcon
+                                className={classes.checkIconSmall}
+                                style={{ color: "#e04209" }}
+                              />{" "}
+                              Online payment has been refunded.
+                            </span>
+                          </React.Fragment>
+                        )}
                         {!(
                           editMode.edit && editMode.person._id === booking._id
                         ) &&
-                          booking.paid && (
+                          booking.paid &&
+                          (booking.prepaid ? (
+                            <React.Fragment>
+                              <span
+                                className={classes.PayLabel}
+                                style={{ color: "#f70a79" }}
+                              >
+                                {" "}
+                                <CheckIcon
+                                  className={classes.checkIconSmall}
+                                  style={{ color: "#f70a79" }}
+                                />{" "}
+                                Paid Online
+                              </span>
+                            </React.Fragment>
+                          ) : (
                             <React.Fragment>
                               <span className={classes.PayLabel}>
                                 {" "}
@@ -2090,8 +2124,117 @@ const isValidPhone = (phone) => {
                                 </IconButton>
                               </Tooltip>
                             </React.Fragment>
-                          )}
+                          ))}
                       </li>
+
+                      {booking.paymentInfo && (
+                        <li>
+                          <div
+                            style={{
+                              position: "relative",
+                              border: "1px dashed #84b076",
+                              borderRadius: "8px",
+                              padding: "10px",
+                              marginBottom: "20px",
+                            }}
+                          >
+                            <div
+                              style={{
+                                position: "absolute",
+                                top: "-10px",
+                                fontSize: "0.85em",
+                                background: "#fff",
+                                fontWeight: "600",
+                                color: "#32701d",
+                                padding: "0px 5px",
+                              }}
+                            >
+                              Payment Details
+                            </div>
+                            {JSON.parse(booking.paymentInfo).cardDetails ? (
+                              <Grid
+                                container
+                                spacing={4}
+                                justify="space-around"
+                                alignItems="center"
+                              >
+                                <Grid item>
+                                  cardBrand:{" "}
+                                  <strong>
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .cardDetails?.card.cardBrand
+                                    }
+                                  </strong>
+                                </Grid>
+                                <Grid item>
+                                  expDate:{" "}
+                                  <strong>
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .cardDetails?.card.expMonth
+                                    }
+                                    /
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .cardDetails?.card.expYear
+                                    }
+                                  </strong>
+                                </Grid>
+                                <Grid item>
+                                  last4:{" "}
+                                  <strong>
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .cardDetails?.card.last4
+                                    }
+                                  </strong>
+                                </Grid>
+                                <Grid item>
+                                  timeStamp:{" "}
+                                  <strong>
+                                    {JSON.parse(booking.paymentInfo).createdAt}
+                                  </strong>
+                                </Grid>
+                              </Grid>
+                            ) : (
+                              <Grid
+                                container
+                                spacing={4}
+                                justify="space-around"
+                                alignItems="center"
+                              >
+                                <Grid item>
+                                  Operator: <strong>{"PAYPAL"}</strong>
+                                </Grid>
+
+                                <Grid item>
+                                  Payer Name:{" "}
+                                  <strong>
+                                    {`${
+                                      JSON.parse(booking.paymentInfo).payer
+                                        ?.name.given_name
+                                    } ${
+                                      JSON.parse(booking.paymentInfo).payer
+                                        ?.name.surname
+                                    } `}
+                                  </strong>
+                                </Grid>
+
+                                <Grid item>
+                                  timeStamp:{" "}
+                                  <strong>
+                                    {
+                                      JSON.parse(booking.paymentInfo)
+                                        .create_time
+                                    }
+                                  </strong>
+                                </Grid>
+                              </Grid>
+                            )}
+                          </div>
+                        </li>
+                      )}
 
                       {invoice && (
                         <li
@@ -2137,8 +2280,7 @@ const isValidPhone = (phone) => {
                         </li>
                       )}
 
-
-<li className={classes.li}>
+                      <li className={classes.li}>
                         <div
                           style={{
                             border: "1px dashed #285927",
@@ -2153,7 +2295,10 @@ const isValidPhone = (phone) => {
                             alignItems="center"
                           >
                             <Grid item>
-                              <span className={classes.infoTitle} style={{color:"#2a422a"}}>
+                              <span
+                                className={classes.infoTitle}
+                                style={{ color: "#2a422a" }}
+                              >
                                 Ask for Review By EMAIL
                               </span>
                             </Grid>
@@ -2166,7 +2311,7 @@ const isValidPhone = (phone) => {
                                 )}
                               </span>
                             </Grid>
-                            <Grid item xs={4} style={{paddingLeft:"20px"}}>
+                            <Grid item xs={4} style={{ paddingLeft: "20px" }}>
                               <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">
                                   Patient Source
@@ -2188,18 +2333,19 @@ const isValidPhone = (phone) => {
                               </FormControl>
                             </Grid>
                             <Grid item xs={3}>
-
-                            <Button
-                              variant="contained"
-                              disabled = {smsSending || !isValidPhone(booking.email)}
-                              color="primary"
-                              className={classes.PayButton}
-                              onClick={SendSMS}
-                            >
-                              Send EMAIL
-                            </Button>
+                              <Button
+                                variant="contained"
+                                disabled={
+                                  smsSending || !isValidPhone(booking.email)
+                                }
+                                color="primary"
+                                className={classes.PayButton}
+                                onClick={SendSMS}
+                              >
+                                Send EMAIL
+                              </Button>
                             </Grid>
-{/* 
+                            {/* 
                             <Grid item xs={12} style={{paddingTop:"20px"}}>
 
                               <TextField
@@ -2215,7 +2361,6 @@ const isValidPhone = (phone) => {
                           </Grid>
                         </div>
                       </li>
-
 
                       {/* <li className={classes.li}>
                         <div
