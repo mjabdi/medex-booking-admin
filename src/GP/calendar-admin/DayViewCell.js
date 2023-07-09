@@ -315,12 +315,27 @@ const DayViewCell = ({ key, date, time }) => {
         <React.Fragment>
           {_bookings.map((booking) => (
             <div
-              style={booking.tr ? { borderTop: "5px solid #d00fd6" } : {}}
-              className={
-                getBookingClass(booking.status)
-                }
+              style={booking.tr ? { borderTop: "5px solid #d00fd6" } : {position:"relative"}}
+              className={getBookingClass(booking.status)}
               onClick={(event) => bookingCliked(event, booking)}
             >
+              {booking.prepaid && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "0px",
+                    right: "0px",
+                    background: "#ff8400",
+                    width: "100%",
+                    height: "7px",
+                    color: "white",
+                    textAlign: "center",
+                    fontSize: "0.8em",
+                    fontWeight: "700",
+                  }}
+                ></div>
+              )}
+
               {`${booking.fullname}`.substring(0, 15)}
             </div>
           ))}

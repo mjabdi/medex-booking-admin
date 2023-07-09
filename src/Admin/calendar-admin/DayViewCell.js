@@ -471,13 +471,19 @@ const DayViewCell = ({ key, date, time }) => {
                 (e) => e === booking.clinic.toUpperCase()
               ) >= 0 && (
                 <div
-                  style={booking.tr ? { borderTop: "5px solid #d00fd6" } : {}}
+                  style={booking.tr ? { borderTop: "5px solid #d00fd6" } : {position:"relative"}}
                   className={clsx(
                     getBookingClass(booking),
                     getBookingBorderClass(booking.clinic)
                   )}
                   onClick={(event) => bookingCliked(event, booking)}
                 >
+                 {booking.prepaid && (
+                  <div style={{position:"absolute", top:"0px", right:"0px", background:"#ff8400", width:"100%", height:"7px", color:"white", textAlign:"center", fontSize:"0.8em", fontWeight:"700"}}>
+                  </div>
+                 )}
+
+
                   {`${booking.fullname
                       ? booking.fullname
                       : `${booking.forename} ${booking.surname}`
