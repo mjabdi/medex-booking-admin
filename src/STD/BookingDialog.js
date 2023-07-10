@@ -464,11 +464,12 @@ export default function BookingDialog(props) {
         bookingTime !== booking.bookingTime ||
         fullname !== booking.fullname ||
         email !== booking.email ||
-        gender !== booking.gender ||
         tel !== booking.phone ||
         notes !== booking.notes ||
         service !== booking.packageName ||
-        birthDate !== booking.birthDate
+        birthDate !== booking.birthDate ||
+        gender !== booking.gender 
+
 
       setRecordChanged(isChanged);
     }
@@ -516,6 +517,13 @@ export default function BookingDialog(props) {
     setFieldChanged(!fieldChanged);
   };
 
+  const birthDateChanged = (event) => {
+    setBirthDate(event.target.value);
+    setValidationError({ ...validationError, birthDateError: false });
+    setFieldChanged(!fieldChanged);
+  };
+
+
   const serviceChanged = (event) => {
     setService(event.target.value);
     setFieldChanged(!fieldChanged);
@@ -526,11 +534,6 @@ export default function BookingDialog(props) {
     setFieldChanged(!fieldChanged);
   };
 
-  const birthDateChanged = (event) => {
-    setBirthDate(event.target.value);
-    setValidationError({ ...validationError, birthDateError: false });
-    setFieldChanged(!fieldChanged);
-  };
 
   const getStatusLabel = (status) => {
     if (status === "booked") {
