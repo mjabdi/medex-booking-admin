@@ -17,7 +17,7 @@ import AirplanemodeActiveIcon from "@material-ui/icons/AirplanemodeActive";
 import ArchiveIcon from '@material-ui/icons/Archive';
 import CallIcon from '@material-ui/icons/Call';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
-
+import EventBusyIcon from "@material-ui/icons/EventBusy";
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 
@@ -36,6 +36,7 @@ import DashboardPreview from "./PCR/DashboardPreview";
 import UnmatchedRecords from "./PCR/UnmatchedRecords";
 // import CalendarView from "./PCR/calendar/CalendarView";
 import PCRCalendarView from "./PCR/calendar-admin/CalendarView";
+import PCROffDays from "./PCR/OffDays";
 //-----------------------
 
 /// Gynae -------------------
@@ -43,6 +44,7 @@ import GynaeBookingTable from "./Gynae/BookingTable";
 import GynaeDashboardPreview from "./Gynae/DashboardPreview";
 import GynaeFindByRef from "./Gynae/FindByRef";
 import GynaeCalendarView from "./Gynae/calendar-admin/CalendarView";
+import GynaeOffDays from "./Gynae/OffDays";
 //----------------------------
 
 /// GP -------------------
@@ -50,6 +52,7 @@ import GPBookingTable from "./GP/BookingTable";
 import GPDashboardPreview from "./GP/DashboardPreview";
 import GPFindByRef from "./GP/FindByRef";
 import GPCalendarView from "./GP/calendar-admin/CalendarView";
+import GPOffDays from "./GP/OffDays";
 //----------------------------
 
 /// STD -------------------
@@ -57,6 +60,7 @@ import STDBookingTable from "./STD/BookingTable";
 import STDDashboardPreview from "./STD/DashboardPreview";
 import STDFindByRef from "./STD/FindByRef";
 import STDCalendarView from "./STD/calendar-admin/CalendarView";
+import STDOffDays from "./STD/OffDays";
 //----------------------------
 
 /// Blood -------------------
@@ -68,7 +72,7 @@ import BloodUnmatchedRecords from "./Blood/UnmatchedRecords";
 import BloodMatchedRecords from "./Blood/MatchedRecords";
 import BloodArchivedRecords from "./Blood/ArchivedRecords";
 import SentBloodRecords from "./Blood/SentRecords";
-
+import BloodOffDays from "./Blood/OffDays";
 //----------------------------
 
 /// Derma -------------------
@@ -76,6 +80,7 @@ import DermaBookingTable from "./Derma/BookingTable";
 import DermaDashboardPreview from "./Derma/DashboardPreview";
 import DermaFindByRef from "./Derma/FindByRef";
 import DermaCalendarView from "./Derma/calendar-admin/CalendarView";
+import DermaOffDays from "./Derma/OffDays";
 //----------------------------
 
 /// Screening -------------------
@@ -83,6 +88,7 @@ import ScreeningBookingTable from "./Screening/BookingTable";
 import ScreeningDashboardPreview from "./Screening/DashboardPreview";
 import ScreeningFindByRef from "./Screening/FindByRef";
 import ScreeningCalendarView from "./Screening/calendar-admin/CalendarView";
+import ScreeningOffDays from "./Screening/OffDays";
 //----------------------------
 
 
@@ -91,6 +97,7 @@ import CorporateBookingTable from "./Corporate/BookingTable";
 import CorporateDashboardPreview from "./Corporate/DashboardPreview";
 import CorporateFindByRef from "./Corporate/FindByRef";
 import CorporateCalendarView from "./Corporate/calendar-admin/CalendarView";
+import CorporateOffDays from "./Corporate/OffDays";
 //----------------------------
 
 
@@ -102,6 +109,7 @@ import AdminBookingTable from "./Admin/BookingTable";
 import AdminCalendarView from "./Admin/calendar-admin/CalendarView";
 import SearchBookingTable from "./Admin/SearchBookingTable";
 import InvoiceCodes from "./Admin/InvoiceCodes"
+import OffDays from "./Admin/OffDays"
 
 
 // Payment ----------------
@@ -253,9 +261,24 @@ export const MenuList_Admin = [
   },
 
   { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
-  { index: 9, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
-  { index: 10, id: `systemCodes`, title: `System Codes`, icon: <FormatListBulletedIcon /> },
-
+  {
+    index: 9,
+    id: `searchBooking`,
+    title: `Search By Name`,
+    icon: <SearchOutlinedIcon />,
+  },
+  {
+    index: 10,
+    id: `systemCodes`,
+    title: `System Codes`,
+    icon: <FormatListBulletedIcon />,
+  },
+  {
+    index: 11,
+    id: `offDays`,
+    title: `Off Days`,
+    icon: <EventBusyIcon />,
+  },
 ];
 
 export const MenuList_Gynae = [
@@ -303,8 +326,19 @@ export const MenuList_Gynae = [
     icon: <DateRangeIcon />,
   },
   { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
-  { index: 9, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
+  {
+    index: 9,
+    id: `searchBooking`,
+    title: `Search By Name`,
+    icon: <SearchOutlinedIcon />,
+  },
 
+  {
+    index: 10,
+    id: `offDays`,
+    title: `Off Days`,
+    icon: <EventBusyIcon />,
+  },
 ];
 
 export const MenuList_GP = [
@@ -352,8 +386,18 @@ export const MenuList_GP = [
     icon: <DateRangeIcon />,
   },
   { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
-  { index: 9, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
-
+  {
+    index: 9,
+    id: `searchBooking`,
+    title: `Search By Name`,
+    icon: <SearchOutlinedIcon />,
+  },
+  {
+    index: 10,
+    id: `offDays`,
+    title: `Off Days`,
+    icon: <EventBusyIcon />,
+  },
 ];
 
 export const MenuList_STD = [
@@ -414,8 +458,18 @@ export const MenuList_STD = [
     icon: <DateRangeIcon />,
   },
   { index: 10, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
-  { index: 11, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
-
+  {
+    index: 11,
+    id: `searchBooking`,
+    title: `Search By Name`,
+    icon: <SearchOutlinedIcon />,
+  },
+  {
+    index: 12,
+    id: `offDays`,
+    title: `Off Days`,
+    icon: <EventBusyIcon />,
+  },
 ];
 
 
@@ -503,8 +557,18 @@ export const MenuList_Blood = [
     icon: <DateRangeIcon />,
   },
   { index: 14, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
-  { index: 15, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
-
+  {
+    index: 15,
+    id: `searchBooking`,
+    title: `Search By Name`,
+    icon: <SearchOutlinedIcon />,
+  },
+  {
+    index: 16,
+    id: `offDays`,
+    title: `Off Days`,
+    icon: <EventBusyIcon />,
+  },
 ];
 
 export const MenuList_PCR = [
@@ -589,8 +653,18 @@ export const MenuList_PCR = [
   //   icon: <EventNoteIcon />,
   // },
   { index: 15, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
-  { index: 16, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
-
+  {
+    index: 16,
+    id: `searchBooking`,
+    title: `Search By Name`,
+    icon: <SearchOutlinedIcon />,
+  },
+  {
+    index: 17,
+    id: `offDays`,
+    title: `Off Days`,
+    icon: <EventBusyIcon />,
+  },
 ];
 
 export const MenuList_Derma = [
@@ -638,13 +712,28 @@ export const MenuList_Derma = [
     icon: <DateRangeIcon />,
   },
   { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
-  { index: 9, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
-
+  {
+    index: 9,
+    id: `searchBooking`,
+    title: `Search By Name`,
+    icon: <SearchOutlinedIcon />,
+  },
+  {
+    index: 10,
+    id: `offDays`,
+    title: `Off Days`,
+    icon: <EventBusyIcon />,
+  },
 ];
 
 export const MenuList_Screening = [
   { index: 0, id: `dashboard`, title: `Dashboard`, icon: <DashboardIcon /> },
-  { index: 1, id: `pendingBookings`, title: `Pending Bookings`, icon: <AddAlertIcon /> },
+  {
+    index: 1,
+    id: `pendingBookings`,
+    title: `Pending Bookings`,
+    icon: <AddAlertIcon />,
+  },
   { index: 2, id: `tbcBookings`, title: `Patients TBC`, icon: <CallIcon /> },
 
   {
@@ -702,8 +791,18 @@ export const MenuList_Screening = [
     icon: <DateRangeIcon />,
   },
   { index: 12, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
-  { index: 13, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
-
+  {
+    index: 13,
+    id: `searchBooking`,
+    title: `Search By Name`,
+    icon: <SearchOutlinedIcon />,
+  },
+  {
+    index: 14,
+    id: `offDays`,
+    title: `Off Days`,
+    icon: <EventBusyIcon />,
+  },
 ];
 
 
@@ -752,8 +851,18 @@ export const MenuList_Corporate = [
     icon: <DateRangeIcon />,
   },
   { index: 8, id: `findByRef`, title: `Find By Ref No`, icon: <SearchIcon /> },
-  { index: 9, id: `searchBooking`, title: `Search By Name`, icon: <SearchOutlinedIcon /> },
-
+  {
+    index: 9,
+    id: `searchBooking`,
+    title: `Search By Name`,
+    icon: <SearchOutlinedIcon />,
+  },
+  {
+    index: 10,
+    id: `offDays`,
+    title: `Off Days`,
+    icon: <EventBusyIcon />,
+  },
 ];
 
 
@@ -824,7 +933,8 @@ export const getMenuContent = (role, index) => {
         return <FindByRef />;
       case 16:
         return <SearchBookingTable />
-
+      case 17:
+        return <PCROffDays />
       default:
         return `Page Not Found!`;
     }
@@ -864,7 +974,8 @@ export const getMenuContent = (role, index) => {
         return <GynaeFindByRef />;
       case 9:
         return <SearchBookingTable />;
-
+      case 10:
+        return <GynaeOffDays />;
       default:
         return `Page Not Found!`;
     }
@@ -890,7 +1001,8 @@ export const getMenuContent = (role, index) => {
         return <GPFindByRef />;
       case 9:
         return <SearchBookingTable />;
-
+      case 10:
+        return <GPOffDays />;
       default:
         return `Page Not Found!`;
     }
@@ -905,7 +1017,7 @@ export const getMenuContent = (role, index) => {
       case 3:
         return <STDBookingTable date="live" />;
       case 4:
-        return <STDBookingTable date="completed" />;      
+        return <STDBookingTable date="completed" />;
       case 5:
         return <STDBookingTable date="old" />;
       case 6:
@@ -920,7 +1032,8 @@ export const getMenuContent = (role, index) => {
         return <STDFindByRef />;
       case 11:
         return <SearchBookingTable />;
-
+      case 12:
+        return <STDOffDays />;
       default:
         return `Page Not Found!`;
     }
@@ -935,7 +1048,7 @@ export const getMenuContent = (role, index) => {
       case 3:
         return <BloodBookingTable date="live" />;
       case 4:
-        return <BloodBookingTable date="completed" />;      
+        return <BloodBookingTable date="completed" />;
       case 5:
         return <BloodBookingTable date="old" />;
       case 6:
@@ -958,7 +1071,8 @@ export const getMenuContent = (role, index) => {
         return <BloodFindByRef />;
       case 15:
         return <SearchBookingTable />;
-
+      case 16:
+        return <BloodOffDays />;
       default:
         return `Page Not Found!`;
     }
@@ -986,6 +1100,8 @@ export const getMenuContent = (role, index) => {
         return <SearchBookingTable />;
       case 10:
         return <InvoiceCodes />;
+      case 11:
+        return <OffDays />;
 
       default:
         return `Page Not Found!`;
@@ -1013,7 +1129,8 @@ export const getMenuContent = (role, index) => {
         return <DermaFindByRef />;
       case 9:
         return <SearchBookingTable />;
-
+      case 10:
+        return <DermaOffDays />;
       default:
         return `Page Not Found!`;
     }
@@ -1052,7 +1169,7 @@ export const getMenuContent = (role, index) => {
       case 5:
         return <ScreeningBookingTable date="live" />;
       case 6:
-        return <ScreeningBookingTable date="completed" />;       
+        return <ScreeningBookingTable date="completed" />;
       case 7:
         return <ScreeningBookingTable date="old" />;
       case 8:
@@ -1067,7 +1184,8 @@ export const getMenuContent = (role, index) => {
         return <ScreeningFindByRef />;
       case 13:
         return <SearchBookingTable />;
-
+      case 14:
+        return <ScreeningOffDays />;
 
       default:
         return `Page Not Found!`;
@@ -1094,7 +1212,8 @@ export const getMenuContent = (role, index) => {
         return <CorporateFindByRef />;
       case 9:
         return <SearchBookingTable />;
-
+      case 10:
+        return <CorporateOffDays />;
       default:
         return `Page Not Found!`;
     }
