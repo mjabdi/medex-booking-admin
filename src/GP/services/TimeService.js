@@ -22,7 +22,7 @@ export default class TimeService {
   };
   static addWorkingHours = (payload) => {
     return API.post("/api/medex/workinghours/add", {
-      payload,
+      ...payload,
       service: "gp",
     });
   };
