@@ -8,7 +8,11 @@ export default class TimeService {
     return API.post("/api/medex/offdays/remove", { id: id });
   };
   static addOneDay = (date) => {
-    return API.post("/api/medex/offdays/add", { date: date, service: "gp" });
+    return API.post("/api/medex/offdays/add", {
+      date: date,
+      service: "gp",
+      offset: new Date().getTimezoneOffset(),
+    });
   };
   static getWorkingHours = () => {
     return API.get("/api/medex/workinghours?service=gp");

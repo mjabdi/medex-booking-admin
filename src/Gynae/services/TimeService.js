@@ -34,6 +34,7 @@ export default class TimeService {
     return API.post("/api/medex/offdays/add", {
       date: date,
       service: "gynae",
+      offset: new Date().getTimezoneOffset(),
     });
   };
   static getWorkingHours = () => {
