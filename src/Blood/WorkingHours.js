@@ -15,7 +15,6 @@ import {
 import RefreshIcon from "@material-ui/icons/Refresh";
 import { IconButton } from "@material-ui/core";
 import AvTimerIcon from "@material-ui/icons/AvTimer";
-import EventBusyIcon from "@material-ui/icons/EventBusy";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -35,14 +34,27 @@ export default function BookingTable(props) {
     isFetching: true,
   });
 const [form, setFormData] = React.useState({
-  startingHour: "",
-  endingHour: "",
-  period: "",
-  unavailabelTimes: [],
-  weekendStartingHour: "",
-  weekendEndingHour: "",
-  weekendPeriod: "",
-  weekendUnavailabelTimes: [],
+  startingHourMonday: "",
+  endingHourMonday: "",
+  periodMonday: "",
+  startingHourTuesday: "",
+  endingHourTuesday: "",
+  periodTuesday: "",
+  startingHourWednesday: "",
+  endingHourWednesday: "",
+  periodWednesday: "",
+  startingHourThursday: "",
+  endingHourThursday: "",
+  periodThursday: "",
+  startingHourFriday: "",
+  endingHourFriday: "",
+  periodFriday: "",
+  startingHourSaturday: "",
+  endingHourSaturday: "",
+  periodSaturday: "",
+  startingHourSunday: "",
+  endingHourSunday: "",
+  periodSunday: "",
 });
   const loadData = async () => {
     var api = TimeService.getWorkingHours;
@@ -162,7 +174,7 @@ const [form, setFormData] = React.useState({
       </Grid>
       <Grid style={{ marginBottom: "40px" }}>
         <Typography variant="h6" gutterBottom>
-          Week Days :
+          Monday:
         </Typography>
         <div style={{ display: "flex", gap: "16px" }}>
           <FormControl variant="filled" style={{ minWidth: "200px" }}>
@@ -171,10 +183,10 @@ const [form, setFormData] = React.useState({
               labelId="starting-hour"
               id="starting-hour"
               label="Starting hour"
-              value={form.startingHour}
+              value={form.startingHourMonday}
               onChange={(e, data) =>
                 setFormData((other) => {
-                  return { ...other, startingHour: data.props.value };
+                  return { ...other, startingHourMonday: data.props.value };
                 })
               }
             >
@@ -192,10 +204,10 @@ const [form, setFormData] = React.useState({
               labelId="ending-hour"
               id="ending-hour"
               label="ending hour"
-              value={form.endingHour}
+              value={form.endingHourMonday}
               onChange={(e, data) =>
                 setFormData((other) => {
-                  return { ...other, endingHour: data.props.value };
+                  return { ...other, endingHourMonday: data.props.value };
                 })
               }
             >
@@ -213,10 +225,10 @@ const [form, setFormData] = React.useState({
               labelId="period"
               id="period"
               label="period"
-              value={form.period}
+              value={form.periodMonday}
               onChange={(e, data) =>
                 setFormData((other) => {
-                  return { ...other, period: data.props.value };
+                  return { ...other, periodMonday: data.props.value };
                 })
               }
             >
@@ -237,7 +249,7 @@ const [form, setFormData] = React.useState({
       </Grid>
       <Grid style={{ marginBottom: "40px" }}>
         <Typography variant="h6" gutterBottom>
-          Weekend Days :
+          Tuesday:
         </Typography>
         <div style={{ display: "flex", gap: "16px" }}>
           <FormControl variant="filled" style={{ minWidth: "200px" }}>
@@ -246,10 +258,10 @@ const [form, setFormData] = React.useState({
               labelId="starting-hour"
               id="starting-hour"
               label="Starting hour"
-              value={form.weekendStartingHour}
+              value={form.startingHourTuesday}
               onChange={(e, data) =>
                 setFormData((other) => {
-                  return { ...other, weekendStartingHour: data.props.value };
+                  return { ...other, startingHourTuesday: data.props.value };
                 })
               }
             >
@@ -267,10 +279,10 @@ const [form, setFormData] = React.useState({
               labelId="ending-hour"
               id="ending-hour"
               label="ending hour"
-              value={form.weekendEndingHour}
+              value={form.endingHourTuesday}
               onChange={(e, data) =>
                 setFormData((other) => {
-                  return { ...other, weekendEndingHour: data.props.value };
+                  return { ...other, endingHourTuesday: data.props.value };
                 })
               }
             >
@@ -288,10 +300,385 @@ const [form, setFormData] = React.useState({
               labelId="period"
               id="period"
               label="period"
-              value={form.weekendPeriod}
+              value={form.periodTuesday}
               onChange={(e, data) =>
                 setFormData((other) => {
-                  return { ...other, weekendPeriod: data.props.value };
+                  return { ...other, periodTuesday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={0.25}>15 min</MenuItem>
+              <MenuItem value={0.5}>30 min</MenuItem>
+              <MenuItem value={0.75}>45 min</MenuItem>
+              <MenuItem value={1}>60 min</MenuItem>
+              <MenuItem value={1.25}>75 min</MenuItem>
+              <MenuItem value={1.5}>90 min</MenuItem>
+              <MenuItem value={1.75}>105 min</MenuItem>
+              <MenuItem value={2}>120 min</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
+      </Grid>
+      <Grid style={{ marginBottom: "40px" }}>
+        <Typography variant="h6" gutterBottom>
+          Wednesday:
+        </Typography>
+        <div style={{ display: "flex", gap: "16px" }}>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="starting-hour">Starting Hour</InputLabel>
+            <Select
+              labelId="starting-hour"
+              id="starting-hour"
+              label="Starting hour"
+              value={form.startingHourWednesday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, startingHourWednesday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {times.map((el) => {
+                return <MenuItem value={el.value}>{el.label}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="ending-hour">Ending Hour</InputLabel>
+            <Select
+              labelId="ending-hour"
+              id="ending-hour"
+              label="ending hour"
+              value={form.endingHourWednesday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, endingHourWednesday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {times.map((el) => {
+                return <MenuItem value={el.value}>{el.label}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="period">Period</InputLabel>
+            <Select
+              labelId="period"
+              id="period"
+              label="period"
+              value={form.periodWednesday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, periodWednesday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={0.25}>15 min</MenuItem>
+              <MenuItem value={0.5}>30 min</MenuItem>
+              <MenuItem value={0.75}>45 min</MenuItem>
+              <MenuItem value={1}>60 min</MenuItem>
+              <MenuItem value={1.25}>75 min</MenuItem>
+              <MenuItem value={1.5}>90 min</MenuItem>
+              <MenuItem value={1.75}>105 min</MenuItem>
+              <MenuItem value={2}>120 min</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
+      </Grid>
+      <Grid style={{ marginBottom: "40px" }}>
+        <Typography variant="h6" gutterBottom>
+          Thursday:
+        </Typography>
+        <div style={{ display: "flex", gap: "16px" }}>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="starting-hour">Starting Hour</InputLabel>
+            <Select
+              labelId="starting-hour"
+              id="starting-hour"
+              label="Starting hour"
+              value={form.startingHourThursday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, startingHourThursday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {times.map((el) => {
+                return <MenuItem value={el.value}>{el.label}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="ending-hour">Ending Hour</InputLabel>
+            <Select
+              labelId="ending-hour"
+              id="ending-hour"
+              label="ending hour"
+              value={form.endingHourThursday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, endingHourThursday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {times.map((el) => {
+                return <MenuItem value={el.value}>{el.label}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="period">Period</InputLabel>
+            <Select
+              labelId="period"
+              id="period"
+              label="period"
+              value={form.periodThursday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, periodThursday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={0.25}>15 min</MenuItem>
+              <MenuItem value={0.5}>30 min</MenuItem>
+              <MenuItem value={0.75}>45 min</MenuItem>
+              <MenuItem value={1}>60 min</MenuItem>
+              <MenuItem value={1.25}>75 min</MenuItem>
+              <MenuItem value={1.5}>90 min</MenuItem>
+              <MenuItem value={1.75}>105 min</MenuItem>
+              <MenuItem value={2}>120 min</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
+      </Grid>
+      <Grid style={{ marginBottom: "40px" }}>
+        <Typography variant="h6" gutterBottom>
+          Friday:
+        </Typography>
+        <div style={{ display: "flex", gap: "16px" }}>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="starting-hour">Starting Hour</InputLabel>
+            <Select
+              labelId="starting-hour"
+              id="starting-hour"
+              label="Starting hour"
+              value={form.startingHourFriday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, startingHourFriday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {times.map((el) => {
+                return <MenuItem value={el.value}>{el.label}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="ending-hour">Ending Hour</InputLabel>
+            <Select
+              labelId="ending-hour"
+              id="ending-hour"
+              label="ending hour"
+              value={form.endingHourFriday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, endingHourFriday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {times.map((el) => {
+                return <MenuItem value={el.value}>{el.label}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="period">Period</InputLabel>
+            <Select
+              labelId="period"
+              id="period"
+              label="period"
+              value={form.periodFriday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, periodFriday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={0.25}>15 min</MenuItem>
+              <MenuItem value={0.5}>30 min</MenuItem>
+              <MenuItem value={0.75}>45 min</MenuItem>
+              <MenuItem value={1}>60 min</MenuItem>
+              <MenuItem value={1.25}>75 min</MenuItem>
+              <MenuItem value={1.5}>90 min</MenuItem>
+              <MenuItem value={1.75}>105 min</MenuItem>
+              <MenuItem value={2}>120 min</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
+      </Grid>
+      <Grid style={{ marginBottom: "40px" }}>
+        <Typography variant="h6" gutterBottom>
+          Saturday:
+        </Typography>
+        <div style={{ display: "flex", gap: "16px" }}>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="starting-hour">Starting Hour</InputLabel>
+            <Select
+              labelId="starting-hour"
+              id="starting-hour"
+              label="Starting hour"
+              value={form.startingHourSaturday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, startingHourSaturday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {times.map((el) => {
+                return <MenuItem value={el.value}>{el.label}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="ending-hour">Ending Hour</InputLabel>
+            <Select
+              labelId="ending-hour"
+              id="ending-hour"
+              label="ending hour"
+              value={form.endingHourSaturday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, endingHourSaturday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {times.map((el) => {
+                return <MenuItem value={el.value}>{el.label}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="period">Period</InputLabel>
+            <Select
+              labelId="period"
+              id="period"
+              label="period"
+              value={form.periodSaturday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, periodSaturday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={0.25}>15 min</MenuItem>
+              <MenuItem value={0.5}>30 min</MenuItem>
+              <MenuItem value={0.75}>45 min</MenuItem>
+              <MenuItem value={1}>60 min</MenuItem>
+              <MenuItem value={1.25}>75 min</MenuItem>
+              <MenuItem value={1.5}>90 min</MenuItem>
+              <MenuItem value={1.75}>105 min</MenuItem>
+              <MenuItem value={2}>120 min</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
+      </Grid>
+      <Grid style={{ marginBottom: "40px" }}>
+        <Typography variant="h6" gutterBottom>
+          Sunday:
+        </Typography>
+        <div style={{ display: "flex", gap: "16px" }}>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="starting-hour">Starting Hour</InputLabel>
+            <Select
+              labelId="starting-hour"
+              id="starting-hour"
+              label="Starting hour"
+              value={form.startingHourSunday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, startingHourSunday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {times.map((el) => {
+                return <MenuItem value={el.value}>{el.label}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="ending-hour">Ending Hour</InputLabel>
+            <Select
+              labelId="ending-hour"
+              id="ending-hour"
+              label="ending hour"
+              value={form.endingHourSunday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, endingHourSunday: data.props.value };
+                })
+              }
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {times.map((el) => {
+                return <MenuItem value={el.value}>{el.label}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+          <FormControl variant="filled" style={{ minWidth: "200px" }}>
+            <InputLabel id="period">Period</InputLabel>
+            <Select
+              labelId="period"
+              id="period"
+              label="period"
+              value={form.periodSunday}
+              onChange={(e, data) =>
+                setFormData((other) => {
+                  return { ...other, periodSunday: data.props.value };
                 })
               }
             >
@@ -311,7 +698,9 @@ const [form, setFormData] = React.useState({
         </div>
       </Grid>
       <Grid>
-        <Button variant="contained" color="primary" onClick={submit}>Save</Button>
+        <Button variant="contained" color="primary" onClick={submit}>
+          Save
+        </Button>
       </Grid>
     </React.Fragment>
   );
