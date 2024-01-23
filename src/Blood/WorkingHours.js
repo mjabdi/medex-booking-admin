@@ -76,11 +76,6 @@ const [form, setFormData] = React.useState({
         console.error(err);
       });
   };
-
-  const removeOneDay = async (id) => {
-    await TimeService.removeWorkingHours(id);
-    await refreshClicked();
-  };
   useEffect(() => {
     loadData();
   }, [props.date]);

@@ -20,9 +20,6 @@ import {
 } from "./DateFormatter";
 import EventBusyIcon from "@material-ui/icons/EventBusy";
 
-import * as dateformat from "dateformat";
-
-
 const useStyles = makeStyles((theme) => ({
   title: {
     marginTop: theme.spacing(0),
@@ -128,16 +125,6 @@ export default function BookingTable(props) {
     offDays: [],
     isFetching: true,
   });
-
-  const formatTimeStamp = (timeStamp) => {
-    const todayStr = dateformat(new Date(), "yyyy-mm-dd");
-    const timeStampStr = dateformat(timeStamp, "yyyy-mm-dd");
-    if (todayStr === timeStampStr) {
-      return dateformat(timeStamp, "'Today', h:MM:ss TT");
-    } else {
-      return dateformat(timeStamp, "mmm dS, h:MM:ss TT");
-    }
-  };
 
   const loadData = async () => {
     var api = TimeService.getAllOffDays;
