@@ -10,4 +10,16 @@ export default class TimeService {
   static addOneDay = (date) => {
     return API.post("/api/medex/offdays/add", { date: date, service: "gp" });
   };
+  static getWorkingHours = () => {
+    return API.get("/api/medex/workinghours?service=gp");
+  };
+  static removeWorkingHours = (id) => {
+    return API.post("/api/medex/workinghours/remove", { id: id });
+  };
+  static addWorkingHours = (payload) => {
+    return API.post("/api/medex/workinghours/add", {
+      payload,
+      service: "gp",
+    });
+  };
 }

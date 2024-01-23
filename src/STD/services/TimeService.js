@@ -13,4 +13,16 @@ export default class TimeService {
       service: "std",
     });
   };
+  static getWorkingHours = () => {
+    return API.get("/api/medex/workinghours?service=std");
+  };
+  static removeWorkingHours = (id) => {
+    return API.post("/api/medex/workinghours/remove", { id: id });
+  };
+  static addWorkingHours = (payload) => {
+    return API.post("/api/medex/workinghours/add", {
+      ...payload,
+      service: "std",
+    });
+  };
 }

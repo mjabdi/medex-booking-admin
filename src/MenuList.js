@@ -18,9 +18,9 @@ import ArchiveIcon from '@material-ui/icons/Archive';
 import CallIcon from '@material-ui/icons/Call';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import EventBusyIcon from "@material-ui/icons/EventBusy";
+import AvTimerIcon from "@material-ui/icons/AvTimer";
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
-
 import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn';
 import SendIcon from '@material-ui/icons/Send';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
@@ -37,6 +37,7 @@ import UnmatchedRecords from "./PCR/UnmatchedRecords";
 // import CalendarView from "./PCR/calendar/CalendarView";
 import PCRCalendarView from "./PCR/calendar-admin/CalendarView";
 import PCROffDays from "./PCR/OffDays";
+import PCRWorkingHours from "./PCR/WorkingHours";
 //-----------------------
 
 /// Gynae -------------------
@@ -45,6 +46,7 @@ import GynaeDashboardPreview from "./Gynae/DashboardPreview";
 import GynaeFindByRef from "./Gynae/FindByRef";
 import GynaeCalendarView from "./Gynae/calendar-admin/CalendarView";
 import GynaeOffDays from "./Gynae/OffDays";
+import GynaeWorkingHours from "./Gynae/WorkingHours";
 //----------------------------
 
 /// GP -------------------
@@ -53,6 +55,7 @@ import GPDashboardPreview from "./GP/DashboardPreview";
 import GPFindByRef from "./GP/FindByRef";
 import GPCalendarView from "./GP/calendar-admin/CalendarView";
 import GPOffDays from "./GP/OffDays";
+import GPWorkingHours from "./GP/WorkingHours";
 //----------------------------
 
 /// STD -------------------
@@ -61,6 +64,7 @@ import STDDashboardPreview from "./STD/DashboardPreview";
 import STDFindByRef from "./STD/FindByRef";
 import STDCalendarView from "./STD/calendar-admin/CalendarView";
 import STDOffDays from "./STD/OffDays";
+import STDWorkingHours from "./STD/WorkingHours";
 //----------------------------
 
 /// Blood -------------------
@@ -73,6 +77,7 @@ import BloodMatchedRecords from "./Blood/MatchedRecords";
 import BloodArchivedRecords from "./Blood/ArchivedRecords";
 import SentBloodRecords from "./Blood/SentRecords";
 import BloodOffDays from "./Blood/OffDays";
+import BloodWorkingHours from "./Blood/WorkingHours";
 //----------------------------
 
 /// Derma -------------------
@@ -81,6 +86,7 @@ import DermaDashboardPreview from "./Derma/DashboardPreview";
 import DermaFindByRef from "./Derma/FindByRef";
 import DermaCalendarView from "./Derma/calendar-admin/CalendarView";
 import DermaOffDays from "./Derma/OffDays";
+import DermaWorkingHours from "./Derma/WorkingHours";
 //----------------------------
 
 /// Screening -------------------
@@ -89,6 +95,7 @@ import ScreeningDashboardPreview from "./Screening/DashboardPreview";
 import ScreeningFindByRef from "./Screening/FindByRef";
 import ScreeningCalendarView from "./Screening/calendar-admin/CalendarView";
 import ScreeningOffDays from "./Screening/OffDays";
+import ScreeningWorkingHours from "./Screening/WorkingHours";
 //----------------------------
 
 
@@ -98,6 +105,7 @@ import CorporateDashboardPreview from "./Corporate/DashboardPreview";
 import CorporateFindByRef from "./Corporate/FindByRef";
 import CorporateCalendarView from "./Corporate/calendar-admin/CalendarView";
 import CorporateOffDays from "./Corporate/OffDays";
+import CorporateWorkingHours from "./Corporate/WorkingHours";
 //----------------------------
 
 
@@ -339,6 +347,12 @@ export const MenuList_Gynae = [
     title: `Off Days`,
     icon: <EventBusyIcon />,
   },
+  {
+    index: 11,
+    id: `workingHours`,
+    title: `Working Hours`,
+    icon: <AvTimerIcon />,
+  },
 ];
 
 export const MenuList_GP = [
@@ -397,6 +411,12 @@ export const MenuList_GP = [
     id: `offDays`,
     title: `Off Days`,
     icon: <EventBusyIcon />,
+  },
+  {
+    index: 11,
+    id: `workingHours`,
+    title: `Working Hours`,
+    icon: <AvTimerIcon />,
   },
 ];
 
@@ -469,6 +489,12 @@ export const MenuList_STD = [
     id: `offDays`,
     title: `Off Days`,
     icon: <EventBusyIcon />,
+  },
+  {
+    index: 13,
+    id: `workingHours`,
+    title: `Working Hours`,
+    icon: <AvTimerIcon />,
   },
 ];
 
@@ -569,6 +595,12 @@ export const MenuList_Blood = [
     title: `Off Days`,
     icon: <EventBusyIcon />,
   },
+  {
+    index: 17,
+    id: `workingHours`,
+    title: `Working Hours`,
+    icon: <AvTimerIcon />,
+  },
 ];
 
 export const MenuList_PCR = [
@@ -665,6 +697,12 @@ export const MenuList_PCR = [
     title: `Off Days`,
     icon: <EventBusyIcon />,
   },
+  {
+    index: 18,
+    id: `workingHours`,
+    title: `Working Hours`,
+    icon: <AvTimerIcon />,
+  },
 ];
 
 export const MenuList_Derma = [
@@ -723,6 +761,12 @@ export const MenuList_Derma = [
     id: `offDays`,
     title: `Off Days`,
     icon: <EventBusyIcon />,
+  },
+  {
+    index: 11,
+    id: `workingHours`,
+    title: `Working Hours`,
+    icon: <AvTimerIcon />,
   },
 ];
 
@@ -803,6 +847,12 @@ export const MenuList_Screening = [
     title: `Off Days`,
     icon: <EventBusyIcon />,
   },
+  {
+    index: 15,
+    id: `workingHours`,
+    title: `Working Hours`,
+    icon: <AvTimerIcon />,
+  },
 ];
 
 
@@ -862,6 +912,12 @@ export const MenuList_Corporate = [
     id: `offDays`,
     title: `Off Days`,
     icon: <EventBusyIcon />,
+  },
+  {
+    index: 11,
+    id: `workingHours`,
+    title: `Working Hours`,
+    icon: <AvTimerIcon />,
   },
 ];
 
@@ -932,9 +988,11 @@ export const getMenuContent = (role, index) => {
       case 15:
         return <FindByRef />;
       case 16:
-        return <SearchBookingTable />
+        return <SearchBookingTable />;
       case 17:
-        return <PCROffDays />
+        return <PCROffDays />;
+      case 18:
+        return <PCRWorkingHours />;
       default:
         return `Page Not Found!`;
     }
@@ -976,6 +1034,8 @@ export const getMenuContent = (role, index) => {
         return <SearchBookingTable />;
       case 10:
         return <GynaeOffDays />;
+      case 11:
+        return <GynaeWorkingHours />;
       default:
         return `Page Not Found!`;
     }
@@ -1003,6 +1063,8 @@ export const getMenuContent = (role, index) => {
         return <SearchBookingTable />;
       case 10:
         return <GPOffDays />;
+      case 11:
+        return <GPWorkingHours />;
       default:
         return `Page Not Found!`;
     }
@@ -1034,6 +1096,8 @@ export const getMenuContent = (role, index) => {
         return <SearchBookingTable />;
       case 12:
         return <STDOffDays />;
+      case 13:
+        return <STDWorkingHours />;
       default:
         return `Page Not Found!`;
     }
@@ -1073,6 +1137,8 @@ export const getMenuContent = (role, index) => {
         return <SearchBookingTable />;
       case 16:
         return <BloodOffDays />;
+      case 17:
+        return <BloodWorkingHours />;
       default:
         return `Page Not Found!`;
     }
@@ -1131,6 +1197,8 @@ export const getMenuContent = (role, index) => {
         return <SearchBookingTable />;
       case 10:
         return <DermaOffDays />;
+      case 11:
+        return <DermaWorkingHours />;
       default:
         return `Page Not Found!`;
     }
@@ -1186,7 +1254,8 @@ export const getMenuContent = (role, index) => {
         return <SearchBookingTable />;
       case 14:
         return <ScreeningOffDays />;
-
+      case 15:
+        return <ScreeningWorkingHours />;
       default:
         return `Page Not Found!`;
     }
@@ -1214,6 +1283,8 @@ export const getMenuContent = (role, index) => {
         return <SearchBookingTable />;
       case 10:
         return <CorporateOffDays />;
+      case 11:
+        return <CorporateWorkingHours />;
       default:
         return `Page Not Found!`;
     }

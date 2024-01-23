@@ -36,4 +36,16 @@ export default class TimeService {
       service: "pcr",
     });
   };
+  static getWorkingHours = () => {
+    return API.get("/api/medex/workinghours?service=pcr");
+  };
+  static removeWorkingHours = (id) => {
+    return API.post("/api/medex/workinghours/remove", { id: id });
+  };
+  static addWorkingHours = (payload) => {
+    return API.post("/api/medex/workinghours/add", {
+      ...payload,
+      service: "pcr",
+    });
+  };
 }

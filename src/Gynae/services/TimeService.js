@@ -36,4 +36,16 @@ export default class TimeService {
       service: "gynae",
     });
   };
+  static getWorkingHours = () => {
+    return API.get("/api/medex/workinghours?service=gynae");
+  };
+  static removeWorkingHours = (id) => {
+    return API.post("/api/medex/workinghours/remove", { id: id });
+  };
+  static addWorkingHours = (payload) => {
+    return API.post("/api/medex/workinghours/add", {
+      ...payload,
+      service: "gynae",
+    });
+  };
 }

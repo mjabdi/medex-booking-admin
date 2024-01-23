@@ -8,6 +8,18 @@ export default class TimeService {
     return API.post("/api/medex/offdays/remove", { id: id });
   };
   static addOneDay = (date) => {
-    return API.post("/api/medex/offdays/add", { date: date, service: 'blood' });
+    return API.post("/api/medex/offdays/add", { date: date, service: "blood" });
+  };
+  static getWorkingHours = () => {
+    return API.get("/api/medex/workinghours?service=blood");
+  };
+  static removeWorkingHours = (id) => {
+    return API.post("/api/medex/workinghours/remove", { id: id });
+  };
+  static addWorkingHours = (payload) => {
+    return API.post("/api/medex/workinghours/add", {
+      ...payload,
+      service: "blood",
+    });
   };
 }
