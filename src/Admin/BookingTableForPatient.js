@@ -291,8 +291,10 @@ function PaperComponent(props) {
 export default function SearchBookingTable({ data }) {
   const classes = useStyles();
   if (Array.isArray(data.bookings)) {
-    for (var i = 0; i < data.bookings.length; i++) {
-      data.bookings[i] = { ...data.bookings[i], id: i + 1 };
+    const dataArray = data.bookings;
+    data.bookings = []
+    for (var i = 0; i < dataArray.length; i++) {
+      data.bookings[i] = { ...dataArray[i], id: i + 1 };
     }
   }
   const getClassforClinic = (clinic) => {
