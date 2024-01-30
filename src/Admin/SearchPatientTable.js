@@ -330,9 +330,11 @@ export default function SearchBookingTable(props) {
 
   const handleCloseSeeDetaisDialog = () => {
     setSeeDetailsDialogOpen(false);
+    setSelectedBooking({bookings: null});
   };
 
   const openDetailsDialog = (event, id) => {
+    console.log(id)
     const booking = data.patients.find((element) => element._id === id);
     setSelectedBooking(booking);
     setSeeDetailsDialogOpen(true);
@@ -458,7 +460,7 @@ export default function SearchBookingTable(props) {
             <Divider />
           </DialogTitle>
           <DialogContent>
-                <BookingTableForPatient data={selectedBooking} />
+            <BookingTableForPatient bookingsData={selectedBooking} />
           </DialogContent>
         </Dialog>
       )}

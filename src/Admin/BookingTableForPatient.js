@@ -288,11 +288,13 @@ function PaperComponent(props) {
   );
 }
 
-export default function SearchBookingTable({ data }) {
+export default function SearchBookingTable({ bookingsData }) {
   const classes = useStyles();
-  if (Array.isArray(data.bookings)) {
-    const dataArray = data.bookings;
-    data.bookings = []
+  console.log(bookingsData)
+  const data = {bookings : []}
+  if (Array.isArray(bookingsData.bookings)) {
+    const dataArray = bookingsData.bookings;
+    data.bookings = [];
     for (var i = 0; i < dataArray.length; i++) {
       data.bookings[i] = { ...dataArray[i], id: i + 1 };
     }
