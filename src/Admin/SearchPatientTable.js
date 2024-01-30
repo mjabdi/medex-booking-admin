@@ -1,6 +1,7 @@
 import React from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import PatientService from "./services/PatientService";
+import BookingTableForPatient from './BookingTableForPatient'
 import {
   Button,
   CircularProgress,
@@ -16,8 +17,8 @@ import {
   FormatDateFromString,
 } from "./DateFormatter";
 
-// import SearchIcon from "@material-ui/icons/Search";
-// import * as dateformat from "dateformat";
+import SearchIcon from "@material-ui/icons/Search";
+import * as dateformat from "dateformat";
 import { CalendarColors } from "./calendar-admin/colors";
 
 const useStyles = makeStyles((theme) => ({
@@ -229,23 +230,23 @@ export default function SearchBookingTable(props) {
 
   let columns = [];
   columns = [
-    // {
-    //   field: "_id",
-    //   headerName: " ",
-    //   width: 70,
-    //   renderCell: (params) => {
-    //     return (
-    //       <React.Fragment>
-    //         <Button
-    //           color="primary"
-    //           onClick={(event) => openDetailsDialog(event, params.value)}
-    //         >
-    //           <SearchIcon />
-    //         </Button>
-    //       </React.Fragment>
-    //     );
-    //   },
-    // },
+    {
+      field: "_id",
+      headerName: " ",
+      width: 70,
+      renderCell: (params) => {
+        return (
+          <React.Fragment>
+            <Button
+              color="primary"
+              onClick={(event) => openDetailsDialog(event, params.value)}
+            >
+              <SearchIcon />
+            </Button>
+          </React.Fragment>
+        );
+      },
+    },
     { field: "title", headerName: "Title", width: 100 },
     {
       field: "fullname",
@@ -328,7 +329,6 @@ export default function SearchBookingTable(props) {
   };
 
   const handleCloseSeeDetaisDialog = () => {
-    setSelectedBooking(null);
     setSeeDetailsDialogOpen(false);
   };
 
@@ -451,13 +451,15 @@ export default function SearchBookingTable(props) {
                   }}
                 >
                   {" "}
-                  Bookings{" "}
+                  History{" "}
                 </div>
               </Grid>
             </Grid>
             <Divider />
           </DialogTitle>
-          <DialogContent>{selectedBooking?.bookings}</DialogContent>
+          <DialogContent>
+                <BookingTableForPatient data={selectedBooking} />
+          </DialogContent>
         </Dialog>
       )}
     </React.Fragment>
