@@ -28,6 +28,7 @@ import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import AddAlertIcon from '@material-ui/icons/AddAlert';
 import BusinessIcon from '@material-ui/icons/Business';
+import PersonIcon from "@material-ui/icons/Person";
 
 /// PCR ------------------
 import FindByRef from "./PCR/FindByRef";
@@ -116,6 +117,7 @@ import AdminFindByRef from "./Admin/FindByRef";
 import AdminBookingTable from "./Admin/BookingTable";
 import AdminCalendarView from "./Admin/calendar-admin/CalendarView";
 import SearchBookingTable from "./Admin/SearchBookingTable";
+import SearchPatientTable from "./Admin/SearchPatientTable";
 import InvoiceCodes from "./Admin/InvoiceCodes"
 import OffDays from "./Admin/OffDays"
 
@@ -287,6 +289,12 @@ export const MenuList_Admin = [
     title: `Off Days`,
     icon: <EventBusyIcon />,
   },
+  {
+    index: 12,
+    id: `searchPatients`,
+    title: `Search Patients`,
+    icon: <PersonIcon />,
+  },
 ];
 
 export const MenuList_Gynae = [
@@ -353,6 +361,12 @@ export const MenuList_Gynae = [
     title: `Working Hours`,
     icon: <AvTimerIcon />,
   },
+  {
+    index: 12,
+    id: `searchPatients`,
+    title: `Search Patients`,
+    icon: <PersonIcon />,
+  },
 ];
 
 export const MenuList_GP = [
@@ -417,6 +431,12 @@ export const MenuList_GP = [
     id: `workingHours`,
     title: `Working Hours`,
     icon: <AvTimerIcon />,
+  },
+  {
+    index: 12,
+    id: `searchPatients`,
+    title: `Search Patients`,
+    icon: <PersonIcon />,
   },
 ];
 
@@ -495,6 +515,12 @@ export const MenuList_STD = [
     id: `workingHours`,
     title: `Working Hours`,
     icon: <AvTimerIcon />,
+  },
+  {
+    index: 14,
+    id: `searchPatients`,
+    title: `Search Patients`,
+    icon: <PersonIcon />,
   },
 ];
 
@@ -601,6 +627,12 @@ export const MenuList_Blood = [
     title: `Working Hours`,
     icon: <AvTimerIcon />,
   },
+  {
+    index: 18,
+    id: `searchPatients`,
+    title: `Search Patients`,
+    icon: <PersonIcon />,
+  },
 ];
 
 export const MenuList_PCR = [
@@ -703,6 +735,12 @@ export const MenuList_PCR = [
     title: `Working Hours`,
     icon: <AvTimerIcon />,
   },
+  {
+    index: 19,
+    id: `searchPatients`,
+    title: `Search Patients`,
+    icon: <PersonIcon />,
+  },
 ];
 
 export const MenuList_Derma = [
@@ -767,6 +805,12 @@ export const MenuList_Derma = [
     id: `workingHours`,
     title: `Working Hours`,
     icon: <AvTimerIcon />,
+  },
+  {
+    index: 12,
+    id: `searchPatients`,
+    title: `Search Patients`,
+    icon: <PersonIcon />,
   },
 ];
 
@@ -853,6 +897,12 @@ export const MenuList_Screening = [
     title: `Working Hours`,
     icon: <AvTimerIcon />,
   },
+  {
+    index: 16,
+    id: `searchPatients`,
+    title: `Search Patients`,
+    icon: <PersonIcon />,
+  },
 ];
 
 
@@ -918,6 +968,12 @@ export const MenuList_Corporate = [
     id: `workingHours`,
     title: `Working Hours`,
     icon: <AvTimerIcon />,
+  },
+  {
+    index: 12,
+    id: `searchPatients`,
+    title: `Search Patients`,
+    icon: <PersonIcon />,
   },
 ];
 
@@ -993,6 +1049,8 @@ export const getMenuContent = (role, index) => {
         return <PCROffDays />;
       case 18:
         return <PCRWorkingHours />;
+      case 19:
+        return <SearchPatientTable />;
       default:
         return `Page Not Found!`;
     }
@@ -1036,6 +1094,8 @@ export const getMenuContent = (role, index) => {
         return <GynaeOffDays />;
       case 11:
         return <GynaeWorkingHours />;
+      case 12:
+        return <SearchPatientTable />;
       default:
         return `Page Not Found!`;
     }
@@ -1065,6 +1125,8 @@ export const getMenuContent = (role, index) => {
         return <GPOffDays />;
       case 11:
         return <GPWorkingHours />;
+      case 12:
+        return <SearchPatientTable />;
       default:
         return `Page Not Found!`;
     }
@@ -1098,6 +1160,8 @@ export const getMenuContent = (role, index) => {
         return <STDOffDays />;
       case 13:
         return <STDWorkingHours />;
+      case 14:
+        return <SearchPatientTable />;
       default:
         return `Page Not Found!`;
     }
@@ -1139,6 +1203,8 @@ export const getMenuContent = (role, index) => {
         return <BloodOffDays />;
       case 17:
         return <BloodWorkingHours />;
+      case 18:
+        return <SearchPatientTable />;
       default:
         return `Page Not Found!`;
     }
@@ -1168,7 +1234,8 @@ export const getMenuContent = (role, index) => {
         return <InvoiceCodes />;
       case 11:
         return <OffDays />;
-
+      case 12:
+        return <SearchPatientTable />;
       default:
         return `Page Not Found!`;
     }
@@ -1199,6 +1266,8 @@ export const getMenuContent = (role, index) => {
         return <DermaOffDays />;
       case 11:
         return <DermaWorkingHours />;
+      case 12:
+        return <SearchPatientTable />;
       default:
         return `Page Not Found!`;
     }
@@ -1256,6 +1325,8 @@ export const getMenuContent = (role, index) => {
         return <ScreeningOffDays />;
       case 15:
         return <ScreeningWorkingHours />;
+      case 16:
+        return <SearchPatientTable />;
       default:
         return `Page Not Found!`;
     }
@@ -1285,6 +1356,8 @@ export const getMenuContent = (role, index) => {
         return <CorporateOffDays />;
       case 11:
         return <CorporateWorkingHours />;
+      case 12:
+        return <SearchPatientTable />;
       default:
         return `Page Not Found!`;
     }
@@ -1301,7 +1374,6 @@ export const getMenuContent = (role, index) => {
         return <SearchInvoices />;
       case 3:
         return <CorporatesList />;
-
       default:
         return `Page Not Found!`;
     }
