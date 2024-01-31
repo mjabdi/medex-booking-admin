@@ -20,6 +20,7 @@ import {
 import SearchIcon from "@material-ui/icons/Search";
 import * as dateformat from "dateformat";
 import { CalendarColors } from "./calendar-admin/colors";
+import { width } from "@material-ui/system";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -330,13 +331,12 @@ export default function SearchBookingTable(props) {
 
   const handleCloseSeeDetaisDialog = () => {
     setSeeDetailsDialogOpen(false);
-    setSelectedBooking({bookings: null});
+    setSelectedBooking({id:0, bookings: null});
   };
 
   const openDetailsDialog = (event, id) => {
-    console.log(id)
     const booking = data.patients.find((element) => element._id === id);
-    setSelectedBooking(booking);
+    setSelectedBooking({ id: 0, bookings: null, ...booking });
     setSeeDetailsDialogOpen(true);
   };
 
@@ -453,14 +453,14 @@ export default function SearchBookingTable(props) {
                   }}
                 >
                   {" "}
-                  Patient Details{" "}
+                  Patient Info{" "}
                 </div>
               </Grid>
             </Grid>
             <Divider />
           </DialogTitle>
           <DialogContent>
-            {/* <Grid
+            <Grid
               container
               spacing={2}
               direction="row"
@@ -480,8 +480,14 @@ export default function SearchBookingTable(props) {
                 </div>
               </Grid>
             </Grid>
-            <Divider /> */}
-            {/* <DataGrid rows={[data.patients[0]]} columns={columns} autoPageSize /> */}
+            <Divider />
+            <div style={{ minHeight: 120, width: "100%", marginTop: "20px", marginBottom: "20px" }}>
+              <DataGrid
+                rows={[selectedBooking]}
+                columns={columns}
+                hideFooter={true}
+              />
+            </div>
             <Grid
               container
               spacing={2}

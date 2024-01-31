@@ -290,7 +290,7 @@ function PaperComponent(props) {
 
 export default function SearchBookingTable({ bookingsData }) {
   const classes = useStyles();
-  console.log(bookingsData)
+  // console.log(bookingsData)
   const data = {bookings : []}
   if (Array.isArray(bookingsData.bookings)) {
     const dataArray = bookingsData.bookings;
