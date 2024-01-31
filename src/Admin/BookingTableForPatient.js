@@ -467,7 +467,7 @@ export default function SearchBookingTable({ bookingsData }) {
     {
       field: "fullname",
       headerName: "Fullname",
-      width: 200,
+      width: 240,
       valueGetter: (params) => {
         if (!params.value || params.value.length === 0) {
           return `${params.getValue("forename")} ${params.getValue("surname")}`;
@@ -479,8 +479,8 @@ export default function SearchBookingTable({ bookingsData }) {
 
     {
       field: "bookingDate",
-      headerName: "B Date",
-      width: 110,
+      headerName: "Attendance Date",
+      width: 170,
       valueFormatter: (params) => {
         return FormatDateFromString(params.value);
       },

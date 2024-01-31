@@ -453,13 +453,56 @@ export default function SearchBookingTable(props) {
                   }}
                 >
                   {" "}
-                  History{" "}
+                  Patient Details{" "}
                 </div>
               </Grid>
             </Grid>
             <Divider />
           </DialogTitle>
           <DialogContent>
+            {/* <Grid
+              container
+              spacing={2}
+              direction="row"
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item>
+                <div
+                  style={{
+                    color: "#2f942e",
+                    paddingBottom: "5px",
+                    fontWeight: "800",
+                  }}
+                >
+                  {" "}
+                  Details{" "}
+                </div>
+              </Grid>
+            </Grid>
+            <Divider /> */}
+            {/* <DataGrid rows={[data.patients[0]]} columns={columns} autoPageSize /> */}
+            <Grid
+              container
+              spacing={2}
+              direction="row"
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item>
+                <div
+                  style={{
+                    color: "#2f942e",
+                    paddingBottom: "5px",
+                    fontWeight: "800",
+                  }}
+                >
+                  {" "}
+                  History{" "}
+                </div>
+              </Grid>
+            </Grid>
+            <Divider />
             <BookingTableForPatient bookingsData={selectedBooking} />
           </DialogContent>
         </Dialog>
