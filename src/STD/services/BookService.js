@@ -2,189 +2,164 @@ import API from './api';
 import axiosRetry from 'axios-retry';
 
 export default class BookService {
+  static setClinicNotes = (bookingId, notes) => {
+    return API.post(`/api/std/book/setclinicnotes`, { bookingId, notes });
+  };
 
-   static setClinicNotes = (bookingId, notes) =>
-   {
-      return API.post(`/api/std/book/setclinicnotes`, {bookingId, notes});
-   }
+  static getBloodReportsByBookingId = (bookingId) => {
+    return API.get(
+      `/api/blood/book/getbloodreportsbybookingid?id=${bookingId}`
+    );
+  };
 
+  static addNewBooking = (payload) => {
+    return API.post(`/api/std/book/addnewbooking`, payload);
+  };
 
-   static getBloodReportsByBookingId = (bookingId) =>
-   {
-      return API.get(`/api/blood/book/getbloodreportsbybookingid?id=${bookingId}`);
-   }
+  static sendRegFormEmail = (bookingId) => {
+    return API.post(`/api/std/book/sendregformemail?id=${bookingId}`);
+  };
 
+  static sendForPrint = (bookingId) => {
+    return API.post(`/api/std/book/sendforprint?id=${bookingId}`);
+  };
 
-   static addNewBooking = (payload) =>
-   {
-      return API.post(`/api/std/book/addnewbooking`, payload);
-   }
-   
-   static sendRegFormEmail = (bookingId) =>
-   {
-      return API.post(`/api/std/book/sendregformemail?id=${bookingId}`);
-   }
+  static payBooking = (bookingId, price, paymentMethod, corporate) => {
+    return API.post(
+      `/api/std/book/paybooking?id=${bookingId}&paymentmethod=${paymentMethod}&corporate=${corporate}&price=${price}`
+    );
+  };
 
-   static sendForPrint = (bookingId) =>
-   {
-      return API.post(`/api/std/book/sendforprint?id=${bookingId}`);
-   }
+  static unPayBooking = (bookingId) => {
+    return API.post(`/api/std/book/unpaybooking?id=${bookingId}`);
+  };
 
-   static payBooking = (bookingId,price, paymentMethod, corporate) =>
-   {
-      return API.post(`/api/std/book/paybooking?id=${bookingId}&paymentmethod=${paymentMethod}&corporate=${corporate}&price=${price}`);
-   }
+  static getShouldRefundsCount = () => {
+    return API.get(`/api/std/book/getshouldrefundscount?`);
+  };
 
-   static unPayBooking = (bookingId) =>
-   {
-      return API.post(`/api/std/book/unpaybooking?id=${bookingId}`);
-   }
+  static refundBooking = (bookingId) => {
+    return API.post(`/api/std/payment/refundpayment`, { bookingId: bookingId });
+  };
 
-   static getShouldRefundsCount = () =>
-   {
-      return API.get(`/api/std/book/getshouldrefundscount?`);
-   }
+  static getBookingsStatsByDateStr = (dateStr) => {
+    return API.get(`/api/std/book/getbookingsstatsbydatestr?date=${dateStr}`);
+  };
 
-   
+  static getBookingsCountByDateStr = (dateStr) => {
+    return API.get(`/api/std/book/getbookingscountbydatestr?date=${dateStr}`);
+  };
 
-   static refundBooking = (bookingId) =>
-   {
-      return API.post(`/api/std/payment/refundpayment`, {bookingId: bookingId});
-   }
+  static getAllBookingsCountAll = () => {
+    return API.get(`/api/std/book/getallbookingscountall`);
+  };
 
-   static getBookingsStatsByDateStr = (dateStr) =>
-   {
-      return API.get(`/api/std/book/getbookingsstatsbydatestr?date=${dateStr}`);
-   }
+  static getBookingsCountByDateStrandTime = (dateStr, time, source) => {
+    return API.get(
+      `/api/std/book/getbookingscountbydatestrandtime?date=${dateStr}&time=${time}`,
+      { cancelToken: source.token }
+    );
+  };
 
-   static getBookingsCountByDateStr = (dateStr) =>
-   {
-      return API.get(`/api/std/book/getbookingscountbydatestr?date=${dateStr}`);
-   }
+  static getBookingsByDateStrandTime = (dateStr, time) => {
+    return API.get(
+      `/api/std/book/getbookingsbydatestrandtime?date=${dateStr}&time=${time}`
+    );
+  };
 
-   static getAllBookingsCountAll = () =>
-   {
-      return API.get(`/api/std/book/getallbookingscountall`);
-   }
+  static getAllBookingsCountByDateStr = (dateStr) => {
+    return API.get(
+      `/api/std/book/getallbookingscountbydatestr?date=${dateStr}`
+    );
+  };
 
-   static getBookingsCountByDateStrandTime = (dateStr, time, source) =>
-   {
-      return API.get(`/api/std/book/getbookingscountbydatestrandtime?date=${dateStr}&time=${time}`, {cancelToken: source.token});
-   }
+  static getAllBookingsCountByDateStrandTime = (dateStr, time, source) => {
+    return API.get(
+      `/api/std/book/getallbookingscountbydatestrandtime?date=${dateStr}&time=${time}`,
+      { cancelToken: source.token }
+    );
+  };
 
-   static getBookingsByDateStrandTime = (dateStr, time) =>
-   {
-      return API.get(`/api/std/book/getbookingsbydatestrandtime?date=${dateStr}&time=${time}`);
-   }
+  static getAllBookingsByDateStrandTime = (dateStr, time) => {
+    return API.get(
+      `/api/std/book/getallbookingsbydatestrandtime?date=${dateStr}&time=${time}`
+    );
+  };
 
+  static changeBackToBookingMade = (id) => {
+    return API.post(`/api/std/book/changebacktobookingmade?id=${id}`);
+  };
 
-   static getAllBookingsCountByDateStr = (dateStr) =>
-   {
-      return API.get(`/api/std/book/getallbookingscountbydatestr?date=${dateStr}`);
-   }
+  static changeToPatientAttended = (id, payload) => {
+    return API.post(`/api/std/book/changetopatientattended?id=${id}`, payload);
+  };
 
-   static getAllBookingsCountByDateStrandTime = (dateStr, time, source) =>
-   {
-      return API.get(`/api/std/book/getallbookingscountbydatestrandtime?date=${dateStr}&time=${time}`, {cancelToken: source.token});
-   }
+  static changeToCompleted = (id) => {
+    return API.post(`/api/std/book/changetocompleted?id=${id}`);
+  };
 
-   static getAllBookingsByDateStrandTime = (dateStr, time) =>
-   {
-      return API.get(`/api/std/book/getallbookingsbydatestrandtime?date=${dateStr}&time=${time}`);
-   }
+  static updateBooking = (payload) => {
+    return API.post(`/api/std/book/updatebookappointment`, payload);
+  };
 
-   static changeBackToBookingMade = (id) =>
-   {
-      return API.post(`/api/std/book/changebacktobookingmade?id=${id}`);
-   }
+  static updateBookingTime = (payload) => {
+    return API.post(`/api/std/book/updatebookappointmenttime`, payload);
+  };
 
-   static changeToPatientAttended = (id) =>
-   {
-      return API.post(`/api/std/book/changetopatientattended?id=${id}`);
-   }
+  static deleteBooking = (id) => {
+    return API.post(`/api/std/book/deletebookappointment?id=${id}`);
+  };
 
-   static changeToCompleted = (id) =>
-   {
-      return API.post(`/api/std/book/changetocompleted?id=${id}`);
-   }
+  static unDeleteBooking = (id) => {
+    return API.post(`/api/std/book/undeletebookappointment?id=${id}`);
+  };
 
-   static updateBooking = (payload) =>
-   {
-      return API.post(`/api/std/book/updatebookappointment`, payload);
-   } 
+  static getBookingsByRef = (ref) => {
+    return API.get(`/api/std/book/getbookingsbyref?ref=${ref}`);
+  };
 
-   static updateBookingTime = (payload) =>
-   {
-      return API.post(`/api/std/book/updatebookappointmenttime`, payload);
-   } 
+  static getBookingById = (id) => {
+    return API.get(`/api/std/book/getbookingbyid?id=${id}`);
+  };
 
-   static deleteBooking = (id) =>
-   {
-      return API.post(`/api/std/book/deletebookappointment?id=${id}`);
-   } 
+  static getAllBookings = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/std/book/getallbookings?limit=${limit}`);
+  };
 
-   static unDeleteBooking = (id) =>
-   {
-      return API.post(`/api/std/book/undeletebookappointment?id=${id}`);
-   } 
-   
-    static getBookingsByRef = (ref) =>
-    {
-       return API.get(`/api/std/book/getbookingsbyref?ref=${ref}`);
-    }
+  static getDeletedBookings = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/std/book/getdeletedbookings?limit=${limit}`);
+  };
 
-    static getBookingById = (id) =>
-    {
-       return API.get(`/api/std/book/getbookingbyid?id=${id}`);
-    }
+  static getTodayBookings = () => {
+    return API.get(`/api/std/book/gettodaybookings`);
+  };
 
-    static getAllBookings = (limit) =>
-    {
-      if (!limit) limit = 25 
-      return API.get(`/api/std/book/getallbookings?limit=${limit}`);
-    }
+  static getLiveBookings = () => {
+    return API.get(`/api/std/book/getlivebookings`);
+  };
 
-    static getDeletedBookings= (limit) =>
-    {
-      if (!limit) limit = 25 
-       return API.get(`/api/std/book/getdeletedbookings?limit=${limit}`);
-    }
+  static getCompletedBookings = (limit) => {
+    return API.get(`/api/std/book/getcompletedbookings?limit=${limit}`);
+  };
 
-    static getTodayBookings= () =>
-    {
-       return API.get(`/api/std/book/gettodaybookings`);
-    }
+  static getOldBookings = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/std/book/getoldbookings?limit=${limit}`);
+  };
 
-    static getLiveBookings= () =>
-    {
-       return API.get(`/api/std/book/getlivebookings`);
-    }
+  static getFutureBookings = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/std/book/getfuturebookings?limit=${limit}`);
+  };
 
-    static getCompletedBookings= (limit) =>
-    {
-       return API.get(`/api/std/book/getcompletedbookings?limit=${limit}`);
-    }
+  static getRecentBookings = () => {
+    return API.get(`/api/std/book/getrecentbookings`);
+  };
 
-    static getOldBookings= (limit) =>
-    {
-      if (!limit) limit = 25 
-       return API.get(`/api/std/book/getoldbookings?limit=${limit}`);
-    }
-
-    static getFutureBookings= (limit) =>
-    {
-      if (!limit) limit = 25 
-       return API.get(`/api/std/book/getfuturebookings?limit=${limit}`);
-    }
-
-    static getRecentBookings= () =>
-    {
-       return API.get(`/api/std/book/getrecentbookings`);
-    }
-
-    static getRecentBookingsAll= (limit) =>
-    {
-      if (!limit) limit = 25 
-       return API.get(`/api/std/book/getrecentbookingsall?limit=${limit}`);
-    }
+  static getRecentBookingsAll = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/std/book/getrecentbookingsall?limit=${limit}`);
+  };
 }

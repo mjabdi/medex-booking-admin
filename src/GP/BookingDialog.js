@@ -2,6 +2,14 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import GlobalState from "./../GlobalState";
 import Grid from "@material-ui/core/Grid";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+import SearchPatientTableForSelecting from "../Admin/SearchPatientTableForSelecting";
+
 import {
   Button,
   Checkbox,
@@ -433,6 +441,26 @@ export default function BookingDialog(props) {
   const [openUndoPayDialog, setOpenUndoPayDialog] = React.useState(false);
 
   const [openTimeStampDialog, setOpenTimeStampDialog] = React.useState(false);
+ const [isFindPatientModalShow, setFindPatientModalShow] = React.useState(null);
+ const [selectedBookingId, setSelectedBookingId] = React.useState(null);
+
+ const handleBirthDateChange = (event, date) => {
+   setPatientBirthDate(date);
+ };
+ const handleGenderChange = (event, data) => {
+   setPatientGenderType(data.props.value);
+ };
+ const handleSurnameChange = (event) => {
+   setPatientSurname(event.target.value);
+ };
+ const handleForenameChange = (event) => {
+   setPatientForename(event.target.value);
+ };
+
+ const [patientBirthDate, setPatientBirthDate] = React.useState(null);
+ const [patientGenderType, setPatientGenderType] = React.useState(null);
+ const [patientForename, setPatientForename] = React.useState(null);
+ const [patientSurname, setPatientSurname] = React.useState(null);
 
   const [invoice, setInvoice] = React.useState(null);
   const [invoiceLoaded, setInvoiceLoaded] = React.useState(false);
@@ -823,12 +851,37 @@ export default function BookingDialog(props) {
       });
   };
 
-  const changeToPatientAttended = (event, id) => {
+  const openPatientsModal = (booking) => {
+    setFindPatientModalShow(true);
+    setSelectedBooking(booking);
+    setPatientBirthDate(booking.birthDate);
+    setPatientSurname(booking.surname);
+    setPatientForename(booking.forename);
+    setPatientGenderType(booking.gender);
+  };
+
+  const closePatientsModal = () => {
+    setFindPatientModalShow(false);
+    setSelectedBookingId(null);
+    setPatientBirthDate(null);
+    setPatientSurname(null);
+    setPatientForename(null);
+    setPatientGenderType(null);
+  };
+
+  const changeToPatientAttended = (event, patientid) => {
     setSaving(true);
-    BookService.changeToPatientAttended(id)
+    BookService.changeToPatientAttended(selectedBooking._id, {
+      patientid: patientid || null,
+      birthDate: patientBirthDate,
+      forename: patientForename,
+      surname: patientSurname,
+      gender: patientGenderType,
+    })
       .then((res) => {
         setSaving(false);
         setRefreshData(!refreshData);
+        closePatientsModal();
       })
       .catch((err) => {
         console.log(err);
@@ -1797,10 +1850,8 @@ const isValidPhone = (phone) => {
                       </li>
 
                       <li style={{ marginBottom: "10px" }}>
-
                         <Grid container spacing={2}>
                           <Grid item md={6}>
-
                             <span className={classes.infoTitle}>GENDER</span>
                             <span
                               hidden={
@@ -1833,50 +1884,44 @@ const isValidPhone = (phone) => {
                                 }}
                               ></TextField>
                             </span>
-
                           </Grid>
                           <Grid item md={6}>
-                              <span className={classes.infoTitle}>
-                                DOB
-                              </span>
+                            <span className={classes.infoTitle}>DOB</span>
 
-                              <span
-                                hidden={
+                            <span
+                              hidden={
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              }
+                              className={classes.infoData}
+                            >
+                              {FormatDateFromString(booking.birthDate)}
+                            </span>
+                            <span
+                              hidden={
+                                !(
                                   editMode.edit &&
                                   editMode.person._id === booking._id
-                                }
-                                className={classes.infoData}
-                              >
-                                {FormatDateFromString(booking.birthDate)}
-                              </span>
-                              <span
-                                hidden={
-                                  !(
-                                    editMode.edit &&
-                                    editMode.person._id === booking._id
-                                  )
-                                }
-                                className={classes.infoData}
-                              >
-                                <TextField
-                                  fullWidth
-                                  error={validationError.birthDateError}
-                                  className={classes.TextBox}
-                                  value={birthDate}
-                                  onChange={birthDateChanged}
-                                  inputProps={{
-                                    style: {
-                                      padding: 0,
-                                    },
-                                  }}
-                                ></TextField>
-                              </span>
+                                )
+                              }
+                              className={classes.infoData}
+                            >
+                              <TextField
+                                fullWidth
+                                error={validationError.birthDateError}
+                                className={classes.TextBox}
+                                value={birthDate}
+                                onChange={birthDateChanged}
+                                inputProps={{
+                                  style: {
+                                    padding: 0,
+                                  },
+                                }}
+                              ></TextField>
+                            </span>
                           </Grid>
                         </Grid>
-
                       </li>
-
-
 
                       <li className={classes.li}>
                         <Grid container spacing={2}>
@@ -1979,9 +2024,7 @@ const isValidPhone = (phone) => {
                               color="default"
                               disabled={saving}
                               style={{ width: "300px" }}
-                              onClick={(event) =>
-                                changeToPatientAttended(event, booking._id)
-                              }
+                              onClick={(event) => openPatientsModal(booking)}
                             >
                               Change To Patient Attended
                             </Button>
@@ -2572,6 +2615,98 @@ const isValidPhone = (phone) => {
               onClose={handleClodeBloodReportDialog}
             />
           </Dialog>
+
+
+          <Dialog
+            open={isFindPatientModalShow}
+            onClose={closePatientsModal}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle style={{ color: "#999" }} id="alert-dialog-title">
+              {"Find Patient"}
+            </DialogTitle>
+            <DialogContent>
+              <SearchPatientTableForSelecting
+                data={selectedBooking}
+                select={changeToPatientAttended}
+              />
+              <DialogContentText
+                style={{ color: "#333", fontWeight: "400", marginTop: "32px" }}
+                id="alert-dialog-description"
+              >
+                Do you want to create a new patient ?
+              </DialogContentText>
+              <FormControl fullWidth style={{ marginBottom: "12px" }}>
+                <TextField
+                  id="outlined-basic"
+                  label="Surname"
+                  variant="outlined"
+                  value={patientSurname}
+                  onChange={handleSurnameChange}
+                />
+              </FormControl>
+              <FormControl
+                fullWidth
+                spacing={3}
+                style={{ marginBottom: "12px" }}
+              >
+                <TextField
+                  id="outlined-basic"
+                  label="Forename"
+                  variant="outlined"
+                  value={patientForename}
+                  onChange={handleForenameChange}
+                />
+              </FormControl>
+              <FormControl
+                fullWidth
+                spacing={3}
+                style={{ marginBottom: "12px" }}
+              >
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Gender"
+                  value={patientGenderType}
+                  onChange={handleGenderChange}
+                >
+                  <MenuItem value="male">Male</MenuItem>
+                  <MenuItem value="female">Female</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl
+                fullWidth
+                spacing={3}
+                style={{ marginBottom: "12px" }}
+              >
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    variant="inline"
+                    format="dd/MM/yyyy"
+                    margin="normal"
+                    id="date-picker-from"
+                    label="Birth date"
+                    value={patientBirthDate}
+                    onChange={handleBirthDateChange}
+                  />
+                </MuiPickersUtilsProvider>
+              </FormControl>
+              <Button
+                onClick={changeToPatientAttended}
+                color="secondary"
+                autoFocus
+              >
+                Save
+              </Button>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closePatientsModal} color="default">
+                Back
+              </Button>
+            </DialogActions>
+          </Dialog>
+
 
           <Dialog
             open={openUndoPayDialog}

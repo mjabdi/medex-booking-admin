@@ -466,6 +466,26 @@ export default function BookingDialog(props) {
   const [openUndoPayDialog, setOpenUndoPayDialog] = React.useState(false);
 
   const [openTimeStampDialog, setOpenTimeStampDialog] = React.useState(false);
+ const [isFindPatientModalShow, setFindPatientModalShow] = React.useState(null);
+ const [selectedBookingId, setSelectedBookingId] = React.useState(null);
+
+ const handleBirthDateChange = (event, date) => {
+   setPatientBirthDate(date);
+ };
+ const handleGenderChange = (event, data) => {
+   setPatientGenderType(data.props.value);
+ };
+ const handleSurnameChange = (event) => {
+   setPatientSurname(event.target.value);
+ };
+ const handleForenameChange = (event) => {
+   setPatientForename(event.target.value);
+ };
+
+ const [patientBirthDate, setPatientBirthDate] = React.useState(null);
+ const [patientGenderType, setPatientGenderType] = React.useState(null);
+ const [patientForename, setPatientForename] = React.useState(null);
+ const [patientSurname, setPatientSurname] = React.useState(null);
 
   const [invoice, setInvoice] = React.useState(null);
   const [invoiceLoaded, setInvoiceLoaded] = React.useState(false);
@@ -907,12 +927,37 @@ export default function BookingDialog(props) {
       });
   };
 
-  const changeToPatientAttended = (event, id) => {
+  const openPatientsModal = (booking) => {
+    setFindPatientModalShow(true);
+    setSelectedBooking(booking);
+    setPatientBirthDate(booking.birthDate);
+    setPatientSurname(booking.surname);
+    setPatientForename(booking.forename);
+    setPatientGenderType(booking.gender);
+  };
+
+  const closePatientsModal = () => {
+    setFindPatientModalShow(false);
+    setSelectedBookingId(null);
+    setPatientBirthDate(null);
+    setPatientSurname(null);
+    setPatientForename(null);
+    setPatientGenderType(null);
+  };
+
+  const changeToPatientAttended = (event, patientid) => {
     setSaving(true);
-    BookService.changeToPatientAttended(id)
+    BookService.changeToPatientAttended(selectedBooking._id, {
+      patientid: patientid || null,
+      birthDate: patientBirthDate,
+      forename: patientForename,
+      surname: patientSurname,
+      gender: patientGenderType,
+    })
       .then((res) => {
         setSaving(false);
         setRefreshData(!refreshData);
+        closePatientsModal();
       })
       .catch((err) => {
         console.log(err);
@@ -1399,7 +1444,7 @@ const isValidPhone = (phone) => {
                 </span>
               </div> */}
 
-            <div
+              <div
                 style={{
                   position: "absolute",
                   top: "25x",
@@ -1435,14 +1480,14 @@ const isValidPhone = (phone) => {
                     top: "25x",
                     left: "770px",
                     // border: "1px solid #69c9ab",
-                    borderRadius:"0px 4px 4px 0px",
+                    borderRadius: "0px 4px 4px 0px",
                     background: `"#fff"`,
                     fontSize: "0.8rem",
-                    fontWeight:"500",
-                    backgroundColor:"#e84331",
-                    padding:"0px 2px",
-                    color:"#fff"
-                  }}      
+                    fontWeight: "500",
+                    backgroundColor: "#e84331",
+                    padding: "0px 2px",
+                    color: "#fff",
+                  }}
                 >
                   saving
                 </div>
@@ -1479,8 +1524,6 @@ const isValidPhone = (phone) => {
                 </div>
               )}
 
-
-
               <div
                 style={{
                   position: "absolute",
@@ -1504,7 +1547,7 @@ const isValidPhone = (phone) => {
 
               <Grid
                 container
-                style={{paddingTop:"60px"}}
+                style={{ paddingTop: "60px" }}
                 direction="row"
                 justify="center"
                 spacing={2}
@@ -2274,9 +2317,7 @@ const isValidPhone = (phone) => {
                               color="default"
                               disabled={saving}
                               style={{ width: "300px" }}
-                              onClick={(event) =>
-                                changeToPatientAttended(event, booking._id)
-                              }
+                              onClick={(event) => openPatientsModal(booking)}
                             >
                               Change To Patient Attended
                             </Button>
@@ -2287,34 +2328,40 @@ const isValidPhone = (phone) => {
                           ) &&
                           !booking.deleted && (
                             <React.Fragment>
-                            <Button
-                              variant="outlined"
-                              color="secondary"
-                              disabled={saving}
-                              style={{ width: "300px" }}
-                              onClick={(event) =>
-                                changeToPatientAttended(event, booking._id)
-                              }
-                            >
-                              Change Back To Patient Attended
-                            </Button>
+                              <Button
+                                variant="outlined"
+                                color="secondary"
+                                disabled={saving}
+                                style={{ width: "300px" }}
+                                onClick={(event) =>
+                                  changeToPatientAttended(event, booking._id)
+                                }
+                              >
+                                Change Back To Patient Attended
+                              </Button>
 
-                            <Button
-                              variant="outlined"
-                              color="primary"
-                              startIcon={<ReportIcon />}
-                              endIcon={ (!!booking.reportData && !!JSON.parse(booking.reportData) && JSON.parse(booking.reportData).find(item => !!item.value)) ? <TickIcon style={{color:"green"}}/> : <NotIcon style={{color:"red"}}/>}  
-                              disabled={saving}
-                              style={{ width: "300px", marginLeft:"20px" }}
-                              onClick={() => ShowReportDataDialog()}
-                            >
-                              Report Details...
-                            </Button>
-
-
-
+                              <Button
+                                variant="outlined"
+                                color="primary"
+                                startIcon={<ReportIcon />}
+                                endIcon={
+                                  !!booking.reportData &&
+                                  !!JSON.parse(booking.reportData) &&
+                                  JSON.parse(booking.reportData).find(
+                                    (item) => !!item.value
+                                  ) ? (
+                                    <TickIcon style={{ color: "green" }} />
+                                  ) : (
+                                    <NotIcon style={{ color: "red" }} />
+                                  )
+                                }
+                                disabled={saving}
+                                style={{ width: "300px", marginLeft: "20px" }}
+                                onClick={() => ShowReportDataDialog()}
+                              >
+                                Report Details...
+                              </Button>
                             </React.Fragment>
-
                           )}
                       </li>
 
@@ -2672,22 +2719,19 @@ const isValidPhone = (phone) => {
                                 alignItems="center"
                               >
                                 <Grid item>
-                                  Operator:{" "}
-                                  <strong>
-                                    {
-                                      "PAYPAL"
-                                    }
-                                  </strong>
+                                  Operator: <strong>{"PAYPAL"}</strong>
                                 </Grid>
 
                                 <Grid item>
                                   Payer Name:{" "}
                                   <strong>
-                                    {
-                                      `${JSON.parse(booking.paymentInfo)
-                                      .payer?.name.given_name} ${JSON.parse(booking.paymentInfo)
-                                        .payer?.name.surname } `
-                                    }
+                                    {`${
+                                      JSON.parse(booking.paymentInfo).payer
+                                        ?.name.given_name
+                                    } ${
+                                      JSON.parse(booking.paymentInfo).payer
+                                        ?.name.surname
+                                    } `}
                                   </strong>
                                 </Grid>
 
@@ -2702,7 +2746,6 @@ const isValidPhone = (phone) => {
                                 </Grid>
                               </Grid>
                             )}
-
                           </div>
                         </li>
                       )}
@@ -2716,9 +2759,12 @@ const isValidPhone = (phone) => {
                               ? classes.infoDataChargesHigher
                               : classes.infoDataCharges
                           }
-                        >{`£${(booking.OTCCharges && booking.OTCCharges > 0 ? booking.OTCCharges  : (invoice ? invoice.grandTotal - (booking.deposit || 0) : 0) ).toLocaleString(
-                          "en-GB"
-                        )}`}</span>
+                        >{`£${(booking.OTCCharges && booking.OTCCharges > 0
+                          ? booking.OTCCharges
+                          : invoice
+                          ? invoice.grandTotal - (booking.deposit || 0)
+                          : 0
+                        ).toLocaleString("en-GB")}`}</span>
                         {!(
                           editMode.edit && editMode.person._id === booking._id
                         ) &&
@@ -2826,7 +2872,6 @@ const isValidPhone = (phone) => {
                         </li>
                       )}
 
-
                       <li className={classes.li}>
                         <div
                           style={{
@@ -2842,7 +2887,10 @@ const isValidPhone = (phone) => {
                             alignItems="center"
                           >
                             <Grid item>
-                              <span className={classes.infoTitle} style={{color:"#2a422a"}}>
+                              <span
+                                className={classes.infoTitle}
+                                style={{ color: "#2a422a" }}
+                              >
                                 Ask for Review By EMAIL
                               </span>
                             </Grid>
@@ -2855,7 +2903,7 @@ const isValidPhone = (phone) => {
                                 )}
                               </span>
                             </Grid>
-                            <Grid item xs={4} style={{paddingLeft:"20px"}}>
+                            <Grid item xs={4} style={{ paddingLeft: "20px" }}>
                               <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">
                                   Patient Source
@@ -2877,16 +2925,17 @@ const isValidPhone = (phone) => {
                               </FormControl>
                             </Grid>
                             <Grid item xs={3}>
-
-                            <Button
-                              variant="contained"
-                              disabled = {smsSending || !isValidPhone(booking.email)}
-                              color="primary"
-                              className={classes.PayButton}
-                              onClick={SendSMS}
-                            >
-                              Send EMAIL
-                            </Button>
+                              <Button
+                                variant="contained"
+                                disabled={
+                                  smsSending || !isValidPhone(booking.email)
+                                }
+                                color="primary"
+                                className={classes.PayButton}
+                                onClick={SendSMS}
+                              >
+                                Send EMAIL
+                              </Button>
                             </Grid>
 
                             {/* <Grid item xs={12} style={{paddingTop:"20px"}}>
@@ -2904,9 +2953,6 @@ const isValidPhone = (phone) => {
                           </Grid>
                         </div>
                       </li>
-
-
-
 
                       {/* <li className={classes.li} style={{ marginTop: "20px" }}>
                         <span className={classes.infoTitle}>TOTAL CHARGES</span>{" "}
@@ -3176,6 +3222,98 @@ const isValidPhone = (phone) => {
               <CircularProgress color="inherit" />
             </Backdrop>
           </Dialog>
+
+
+          <Dialog
+            open={isFindPatientModalShow}
+            onClose={closePatientsModal}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle style={{ color: "#999" }} id="alert-dialog-title">
+              {"Find Patient"}
+            </DialogTitle>
+            <DialogContent>
+              <SearchPatientTableForSelecting
+                data={selectedBooking}
+                select={changeToPatientAttended}
+              />
+              <DialogContentText
+                style={{ color: "#333", fontWeight: "400", marginTop: "32px" }}
+                id="alert-dialog-description"
+              >
+                Do you want to create a new patient ?
+              </DialogContentText>
+              <FormControl fullWidth style={{ marginBottom: "12px" }}>
+                <TextField
+                  id="outlined-basic"
+                  label="Surname"
+                  variant="outlined"
+                  value={patientSurname}
+                  onChange={handleSurnameChange}
+                />
+              </FormControl>
+              <FormControl
+                fullWidth
+                spacing={3}
+                style={{ marginBottom: "12px" }}
+              >
+                <TextField
+                  id="outlined-basic"
+                  label="Forename"
+                  variant="outlined"
+                  value={patientForename}
+                  onChange={handleForenameChange}
+                />
+              </FormControl>
+              <FormControl
+                fullWidth
+                spacing={3}
+                style={{ marginBottom: "12px" }}
+              >
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Gender"
+                  value={patientGenderType}
+                  onChange={handleGenderChange}
+                >
+                  <MenuItem value="male">Male</MenuItem>
+                  <MenuItem value="female">Female</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl
+                fullWidth
+                spacing={3}
+                style={{ marginBottom: "12px" }}
+              >
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    variant="inline"
+                    format="dd/MM/yyyy"
+                    margin="normal"
+                    id="date-picker-from"
+                    label="Birth date"
+                    value={patientBirthDate}
+                    onChange={handleBirthDateChange}
+                  />
+                </MuiPickersUtilsProvider>
+              </FormControl>
+              <Button
+                onClick={changeToPatientAttended}
+                color="secondary"
+                autoFocus
+              >
+                Save
+              </Button>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closePatientsModal} color="default">
+                Back
+              </Button>
+            </DialogActions>
+          </Dialog>
+
 
           <Dialog
             open={openTBCDialog}

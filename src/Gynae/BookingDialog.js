@@ -2,6 +2,13 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import GlobalState from "./../GlobalState";
 import Grid from "@material-ui/core/Grid";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+import SearchPatientTableForSelecting from "../Admin/SearchPatientTableForSelecting";
 import {
   Button,
   Checkbox,
@@ -16,7 +23,7 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
 } from "@material-ui/core";
 import PDFService from "./services/PDFService";
 
@@ -57,11 +64,10 @@ import { CalendarColors } from "../Admin/calendar-admin/colors";
 import InvoiceService from "../services/InvoiceService";
 import InvoiceDialog from "../InvoiceDialog";
 
-import SearchIcon from '@material-ui/icons/Search';
+import SearchIcon from "@material-ui/icons/Search";
 import BloodReportDialog from "../Blood/BloodReportDialog";
 import { SaveAlt } from "@material-ui/icons";
-import * as dateformat from "dateformat"
-
+import * as dateformat from "dateformat";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -436,7 +442,27 @@ export default function BookingDialog(props) {
 
   const [openUndoPayDialog, setOpenUndoPayDialog] = React.useState(false);
 
-  const [openTimeStampDialog, setOpenTimeStampDialog] = React.useState(false);
+  const [isFindPatientModalShow, setFindPatientModalShow] =
+    React.useState(null);
+  const [selectedBookingId, setSelectedBookingId] = React.useState(null);
+
+  const handleBirthDateChange = (event, date) => {
+    setPatientBirthDate(date);
+  };
+  const handleGenderChange = (event, data) => {
+    setPatientGenderType(data.props.value);
+  };
+  const handleSurnameChange = (event) => {
+    setPatientSurname(event.target.value);
+  };
+  const handleForenameChange = (event) => {
+    setPatientForename(event.target.value);
+  };
+
+  const [patientBirthDate, setPatientBirthDate] = React.useState(null);
+  const [patientGenderType, setPatientGenderType] = React.useState(null);
+  const [patientForename, setPatientForename] = React.useState(null);
+  const [patientSurname, setPatientSurname] = React.useState(null);
 
   const handleCloseUndoPayDialog = () => {
     setOpenUndoPayDialog(false);
@@ -720,12 +746,37 @@ export default function BookingDialog(props) {
       });
   };
 
-  const changeToPatientAttended = (event, id) => {
+  const openPatientsModal = (booking) => {
+    setFindPatientModalShow(true);
+    setSelectedBooking(booking);
+    setPatientBirthDate(booking.birthDate);
+    setPatientSurname(booking.surname);
+    setPatientForename(booking.forename);
+    setPatientGenderType(booking.gender);
+  };
+
+  const closePatientsModal = () => {
+    setFindPatientModalShow(false);
+    setSelectedBookingId(null);
+    setPatientBirthDate(null);
+    setPatientSurname(null);
+    setPatientForename(null);
+    setPatientGenderType(null);
+  };
+
+  const changeToPatientAttended = (event, patientid) => {
     setSaving(true);
-    BookService.changeToPatientAttended(id)
+    BookService.changeToPatientAttended(selectedBooking._id, {
+      patientid: patientid || null,
+      birthDate: patientBirthDate,
+      forename: patientForename,
+      surname: patientSurname,
+      gender: patientGenderType,
+    })
       .then((res) => {
         setSaving(false);
         setRefreshData(!refreshData);
+        closePatientsModal();
       })
       .catch((err) => {
         console.log(err);
@@ -891,37 +942,37 @@ export default function BookingDialog(props) {
       fetchInvoice();
       fetchBloodReports();
 
-      setClinicNotes(props.booking.clinicNotes || "")
-      setInitialClinicNotes(props.booking.clinicNotes || "")
-      setNotesSaving(false)
-
+      setClinicNotes(props.booking.clinicNotes || "");
+      setInitialClinicNotes(props.booking.clinicNotes || "");
+      setNotesSaving(false);
     }
   }, [props.booking, props.open]);
 
-  const [bloodReports, setBloodReports] = React.useState(null)
-  const [selectedBloodReport, setSelectedBloodReport] = React.useState(null)
-  const [bloodReportDialogOpen, setBloodReportDialogOpen] = React.useState(null)
+  const [bloodReports, setBloodReports] = React.useState(null);
+  const [selectedBloodReport, setSelectedBloodReport] = React.useState(null);
+  const [bloodReportDialogOpen, setBloodReportDialogOpen] =
+    React.useState(null);
   const fetchBloodReports = async () => {
-    setBloodReports(null)
+    setBloodReports(null);
     try {
-      const res = await BookService.getBloodReportsByBookingId(props.booking._id)
+      const res = await BookService.getBloodReportsByBookingId(
+        props.booking._id
+      );
       if (res.data && res.data.result && res.data.result.length > 0) {
-        setBloodReports(res.data.result)
+        setBloodReports(res.data.result);
       }
+    } catch (err) {
+      console.error(err);
     }
-    catch (err) {
-      console.error(err)
-    }
-  }
+  };
   const handleClodeBloodReportDialog = () => {
-    setBloodReportDialogOpen(false)
-    setSelectedBloodReport(null)
-  }
+    setBloodReportDialogOpen(false);
+    setSelectedBloodReport(null);
+  };
   const showBloodReportClicked = (bloodReport) => {
-    setSelectedBloodReport(bloodReport)
-    setBloodReportDialogOpen(true)
-  }
-
+    setSelectedBloodReport(bloodReport);
+    setBloodReportDialogOpen(true);
+  };
 
   const handleCloseInvoiceDialog = (refresh) => {
     setOpenInvoiceDialog(false);
@@ -965,16 +1016,14 @@ export default function BookingDialog(props) {
   };
 
   const getTotalPrice = (items) => {
-    let sum = 0
-  
-    items.forEach(item => {
-      sum += parseFloat(item.price)
-    })
-  
-    return sum
-  
-  }
+    let sum = 0;
 
+    items.forEach((item) => {
+      sum += parseFloat(item.price);
+    });
+
+    return sum;
+  };
 
   const [clinicNotes, setClinicNotes] = React.useState("");
   const [initialClinicNotes, setInitialClinicNotes] = React.useState("");
@@ -988,15 +1037,16 @@ export default function BookingDialog(props) {
   const saveNotesClicked = async () => {
     try {
       setNotesSaving(true);
-      const res = await BookService.setClinicNotes(props.booking._id, clinicNotes)
-      if (res && res.data && res.data.status && res.data.status === "OK")
-      {
-        setInitialClinicNotes(clinicNotes)
-        setNotesSaving(false)
+      const res = await BookService.setClinicNotes(
+        props.booking._id,
+        clinicNotes
+      );
+      if (res && res.data && res.data.status && res.data.status === "OK") {
+        setInitialClinicNotes(clinicNotes);
+        setNotesSaving(false);
         setRefreshData(!refreshData);
-      }else
-      {
-        setNotesSaving(false)
+      } else {
+        setNotesSaving(false);
       }
     } catch (err) {
       console.error(err);
@@ -1004,149 +1054,140 @@ export default function BookingDialog(props) {
     }
   };
 
-  const [isPrinting, setPrinting] = useState(false)
+  const [isPrinting, setPrinting] = useState(false);
   const printLabel = async () => {
     try {
-      setPrinting(true)
-  
-      const now = new Date()
-      const dateStr = dateformat(now, "yyyy-mm-dd")
-      const timeStr = dateformat(now, "HH:MM:ss")
-      let surname = props.booking.fullname?.trim().split(' ').slice(-1).join(' ').toUpperCase()
-      if (!surname || surname.trim().length === 0)
-      {
-        surname = "--"
+      setPrinting(true);
+
+      const now = new Date();
+      const dateStr = dateformat(now, "yyyy-mm-dd");
+      const timeStr = dateformat(now, "HH:MM:ss");
+      let surname = props.booking.fullname
+        ?.trim()
+        .split(" ")
+        .slice(-1)
+        .join(" ")
+        .toUpperCase();
+      if (!surname || surname.trim().length === 0) {
+        surname = "--";
       }
-  
-      let forename = props.booking.fullname?.trim().split(' ').slice(0, -1).join(' ').toUpperCase()
-      if (!forename || forename.trim().length === 0)
-      {
-        forename = "--"
+
+      let forename = props.booking.fullname
+        ?.trim()
+        .split(" ")
+        .slice(0, -1)
+        .join(" ")
+        .toUpperCase();
+      if (!forename || forename.trim().length === 0) {
+        forename = "--";
       }
-  
-      let dob = props.booking.birthDate
-      if (!dob || dob.trim().length === 0)
-      {
-        dob = "--"
+
+      let dob = props.booking.birthDate;
+      if (!dob || dob.trim().length === 0) {
+        dob = "--";
       }
-  
+
       const element = document.createElement("a");
-      const file = new Blob([`Text_3=${surname}`,
-                             "\n",
-                             `Text_3_1=${forename}`,
-                              "\n",
-                              `Text_3_1_1=${convertGender(props.booking.gender)}`,
-                              "\n",
-                              `Text_3_1_1_1=${convertDate(dob)}`,
-                              "\n",
-                              `Text_3_1_1_2=${convertDate(dateStr)}`,
-                              "\n",
-                              `Text_3_1_1_2_1=${timeStr}`,
-                              "\n",
-                              `Text_3_1_1_2_2=${props.booking.bookingRef}`,
-                              "\n"
-                            ],    
-                  {type: 'text/plain;charset=utf-8'});
+      const file = new Blob(
+        [
+          `Text_3=${surname}`,
+          "\n",
+          `Text_3_1=${forename}`,
+          "\n",
+          `Text_3_1_1=${convertGender(props.booking.gender)}`,
+          "\n",
+          `Text_3_1_1_1=${convertDate(dob)}`,
+          "\n",
+          `Text_3_1_1_2=${convertDate(dateStr)}`,
+          "\n",
+          `Text_3_1_1_2_1=${timeStr}`,
+          "\n",
+          `Text_3_1_1_2_2=${props.booking.bookingRef}`,
+          "\n",
+        ],
+        { type: "text/plain;charset=utf-8" }
+      );
       element.href = URL.createObjectURL(file);
       element.download = `${props.booking.fullname}.values`;
       document.body.appendChild(element);
       element.click();
-  
-      setPrinting(false)
-  
-    } catch (err) {
-      setPrinting(false)
-    }
-  
-  
-    function convertGender(str){
-      if (str === "M")
-        return "Male"
-      else if (str === "F")
-        return "Female"
-      else
-        return "--"    
-    }
-  
-    function convertDate(str) {
-  
-      if (!str || str.length != 10) {
-          return ""
-      }
-      return `${str.substr(8, 2)}-${str.substr(5, 2)}-${str.substr(0, 4)}`
-    }
-    
-  };
 
+      setPrinting(false);
+    } catch (err) {
+      setPrinting(false);
+    }
+
+    function convertGender(str) {
+      if (str === "M") return "Male";
+      else if (str === "F") return "Female";
+      else return "--";
+    }
+
+    function convertDate(str) {
+      if (!str || str.length != 10) {
+        return "";
+      }
+      return `${str.substr(8, 2)}-${str.substr(5, 2)}-${str.substr(0, 4)}`;
+    }
+  };
 
   //***************************** */
 
-
   /////********************** REVIEW SMS */
 
-const smsTypes = [
-  {value: 1, text: "Medical Express Clinic"},
-]
+  const smsTypes = [{ value: 1, text: "Medical Express Clinic" }];
 
-const smsMessageArray = [
-  `It was great to see and treat you at the Medical Express Clinic, Please let us know how you got on by clicking here: https://g.page/r/CZcAyTF67Ec0EBM/review`,
-]
+  const smsMessageArray = [
+    `It was great to see and treat you at the Medical Express Clinic, Please let us know how you got on by clicking here: https://g.page/r/CZcAyTF67Ec0EBM/review`,
+  ];
 
-const [smsType, setSmstype] = useState(1)
-const smsTypeChanged = (event) => {
-  setSmstype(event.target.value)
-  setSmsMessage(smsMessageArray[event.target.value-1])
-}
+  const [smsType, setSmstype] = useState(1);
+  const smsTypeChanged = (event) => {
+    setSmstype(event.target.value);
+    setSmsMessage(smsMessageArray[event.target.value - 1]);
+  };
 
-const [smsSending, setSmsSending] = useState(false)
+  const [smsSending, setSmsSending] = useState(false);
 
-const SendSMS = async () => {
+  const SendSMS = async () => {
+    setSmsSending(true);
 
-  setSmsSending(true)
+    try {
+      const res = await BookService.sendReviewSMS(booking._id, smsMessage);
+      if (res && res.data && res.data.status === "OK") {
+        setBooking((r) => {
+          return { ...r, smsSent: true };
+        });
+        setState((state) => ({
+          ...state,
+          bookingDialogDataChanged: !state.bookingDialogDataChanged
+            ? true
+            : false,
+        }));
+      }
 
-  try{
-
-    const res =await BookService.sendReviewSMS(booking._id, smsMessage)
-    if (res && res.data && res.data.status === "OK")
-    {
-      setBooking(r => { return {...r, smsSent: true}})
-      setState((state) => ({
-        ...state,
-        bookingDialogDataChanged: !state.bookingDialogDataChanged
-          ? true
-          : false,
-      }));
-
+      setSmsSending(false);
+    } catch (err) {
+      console.error(err);
+      setSmsSending(false);
+      setBooking((r) => {
+        return { ...r, smsSent: false };
+      });
     }
+  };
 
-    setSmsSending(false)
-    
+  const [smsMessage, setSmsMessage] = useState(smsMessageArray[0]);
+  const smsMessageChanged = (event) => {
+    setSmsMessage(event.target.value);
+  };
 
-  }catch(err)
-  {
-    console.error(err)
-    setSmsSending(false)
-    setBooking(r => { return {...r, smsSent: false}})
-  }
- 
-
-}
-
-const [smsMessage, setSmsMessage] = useState(smsMessageArray[0])
-const smsMessageChanged = (event) => {
-  setSmsMessage(event.target.value)
-}
-
-const isValidPhone = (phone) => {
-  if (!phone || phone.length < 7)
-  {
-    return false
-  }else
-  {
-    return true
-  }
-}
-
+  const isValidPhone = (phone) => {
+    if (!phone || phone.length < 7) {
+      return false;
+    } else {
+      return true;
+    }
+  };
 
   return (
     <React.Fragment>
@@ -1200,7 +1241,6 @@ const isValidPhone = (phone) => {
                 </span>
               </div>
 
-
               <div
                 style={{
                   position: "absolute",
@@ -1237,14 +1277,14 @@ const isValidPhone = (phone) => {
                     top: "25x",
                     left: "770px",
                     // border: "1px solid #69c9ab",
-                    borderRadius:"0px 4px 4px 0px",
+                    borderRadius: "0px 4px 4px 0px",
                     background: `"#fff"`,
                     fontSize: "0.8rem",
-                    fontWeight:"500",
-                    backgroundColor:"#e84331",
-                    padding:"0px 2px",
-                    color:"#fff"
-                  }}      
+                    fontWeight: "500",
+                    backgroundColor: "#e84331",
+                    padding: "0px 2px",
+                    color: "#fff",
+                  }}
                 >
                   saving
                 </div>
@@ -1281,8 +1321,6 @@ const isValidPhone = (phone) => {
                 </div>
               )}
 
-
-
               <div
                 style={{
                   position: "absolute",
@@ -1299,8 +1337,7 @@ const isValidPhone = (phone) => {
 
               <Grid
                 container
-                style={{paddingTop:"60px"}}
-
+                style={{ paddingTop: "60px" }}
                 direction="row"
                 justify="center"
                 spacing={2}
@@ -1311,9 +1348,9 @@ const isValidPhone = (phone) => {
                     style={
                       booking.deleted
                         ? {
-                          paddingBottom: "5px",
-                          textDecoration: "line-through",
-                        }
+                            paddingBottom: "5px",
+                            textDecoration: "line-through",
+                          }
                         : {}
                     }
                   >
@@ -1328,17 +1365,17 @@ const isValidPhone = (phone) => {
                         style={
                           booking.tr
                             ? {
-                              padding: 0,
-                              margin: 0,
-                              color: "#fff",
-                              fontSize: 25,
-                            }
+                                padding: 0,
+                                margin: 0,
+                                color: "#fff",
+                                fontSize: 25,
+                              }
                             : {
-                              padding: 0,
-                              margin: 0,
-                              color: "#333",
-                              fontSize: 25,
-                            }
+                                padding: 0,
+                                margin: 0,
+                                color: "#333",
+                                fontSize: 25,
+                              }
                         }
                       />
                     </Tooltip>
@@ -1913,9 +1950,7 @@ const isValidPhone = (phone) => {
                               color="default"
                               disabled={saving}
                               style={{ width: "300px" }}
-                              onClick={(event) =>
-                                changeToPatientAttended(event, booking._id)
-                              }
+                              onClick={(event) => openPatientsModal(booking)}
                             >
                               Change To Patient Attended
                             </Button>
@@ -1941,7 +1976,6 @@ const isValidPhone = (phone) => {
                             "Preparing for print"}
                         </Button>
                       </li>
-
 
                       <li hidden={booking.deleted || editMode.edit}>
                         <Button
@@ -2274,24 +2308,51 @@ const isValidPhone = (phone) => {
                         </div>
                       </li>
 
-                      {invoice &&
-                        <li style={{lineHeight:"0.5rem", border:"1px dashed #999", padding:"0px 10px", marginBottom:"10px", marginTop:"-10px"}}>
-                          {invoice.items.map(item => (
+                      {invoice && (
+                        <li
+                          style={{
+                            lineHeight: "0.5rem",
+                            border: "1px dashed #999",
+                            padding: "0px 10px",
+                            marginBottom: "10px",
+                            marginTop: "-10px",
+                          }}
+                        >
+                          {invoice.items.map((item) => (
                             <p>
-                              <span style={{width:"110px", display:"inline-block"}}> {item.code} </span>
+                              <span
+                                style={{
+                                  width: "110px",
+                                  display: "inline-block",
+                                }}
+                              >
+                                {" "}
+                                {item.code}{" "}
+                              </span>
                               <span> £{item.price}</span>
-                            </p>  
+                            </p>
                           ))}
 
-                            <p>
-                              <span style={{width:"110px", display:"inline-block", fontWeight:"500"}}> TOTAL </span>
-                              <span style={{fontWeight:"600", color:"green"}}> £{ getTotalPrice(invoice.items)}</span>
-                            </p>  
-
+                          <p>
+                            <span
+                              style={{
+                                width: "110px",
+                                display: "inline-block",
+                                fontWeight: "500",
+                              }}
+                            >
+                              {" "}
+                              TOTAL{" "}
+                            </span>
+                            <span style={{ fontWeight: "600", color: "green" }}>
+                              {" "}
+                              £{getTotalPrice(invoice.items)}
+                            </span>
+                          </p>
                         </li>
-                      }
+                      )}
 
-<li className={classes.li}>
+                      <li className={classes.li}>
                         <div
                           style={{
                             border: "1px dashed #285927",
@@ -2306,7 +2367,10 @@ const isValidPhone = (phone) => {
                             alignItems="center"
                           >
                             <Grid item>
-                              <span className={classes.infoTitle} style={{color:"#2a422a"}}>
+                              <span
+                                className={classes.infoTitle}
+                                style={{ color: "#2a422a" }}
+                              >
                                 Ask for Review By EMAIL
                               </span>
                             </Grid>
@@ -2319,7 +2383,7 @@ const isValidPhone = (phone) => {
                                 )}
                               </span>
                             </Grid>
-                            <Grid item xs={4} style={{paddingLeft:"20px"}}>
+                            <Grid item xs={4} style={{ paddingLeft: "20px" }}>
                               <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">
                                   Patient Source
@@ -2341,16 +2405,17 @@ const isValidPhone = (phone) => {
                               </FormControl>
                             </Grid>
                             <Grid item xs={3}>
-
-                            <Button
-                              variant="contained"
-                              disabled = {smsSending || !isValidPhone(booking.email)}
-                              color="primary"
-                              className={classes.PayButton}
-                              onClick={SendSMS}
-                            >
-                              Send EMAIL
-                            </Button>
+                              <Button
+                                variant="contained"
+                                disabled={
+                                  smsSending || !isValidPhone(booking.email)
+                                }
+                                color="primary"
+                                className={classes.PayButton}
+                                onClick={SendSMS}
+                              >
+                                Send EMAIL
+                              </Button>
                             </Grid>
 
                             {/* <Grid item xs={12} style={{paddingTop:"20px"}}>
@@ -2369,7 +2434,6 @@ const isValidPhone = (phone) => {
                         </div>
                       </li>
 
-
                       {bloodReports && bloodReports.length > 0 && (
                         <React.Fragment>
                           <Divider />
@@ -2377,25 +2441,35 @@ const isValidPhone = (phone) => {
                             <div style={{ padding: "20px" }}>
                               <Grid container spacing={2} alignItems="center">
                                 <Grid item xs={12}>
-                                  <div style={{ color: "#dc2626", fontWeight: "600", fontSize: "1rem" }}>
+                                  <div
+                                    style={{
+                                      color: "#dc2626",
+                                      fontWeight: "600",
+                                      fontSize: "1rem",
+                                    }}
+                                  >
                                     Blood Results :
-                                    </div>
+                                  </div>
                                 </Grid>
-                                {bloodReports.map(report => (
+                                {bloodReports.map((report) => (
                                   <Grid item>
-                                    <Button onClick={() => showBloodReportClicked(report)} startIcon={<SearchIcon />} style={{ color: "#dc2626" }} variant="outlined">
+                                    <Button
+                                      onClick={() =>
+                                        showBloodReportClicked(report)
+                                      }
+                                      startIcon={<SearchIcon />}
+                                      style={{ color: "#dc2626" }}
+                                      variant="outlined"
+                                    >
                                       {report.filename}
                                     </Button>
                                   </Grid>
                                 ))}
-
                               </Grid>
                             </div>
                           </li>
                         </React.Fragment>
                       )}
-
-
                     </ul>
                   </div>
                 </Grid>
@@ -2427,7 +2501,6 @@ const isValidPhone = (phone) => {
               open={bloodReportDialogOpen}
               onClose={handleClodeBloodReportDialog}
             />
-
           </Dialog>
 
           <Dialog
@@ -2453,6 +2526,96 @@ const isValidPhone = (phone) => {
               </Button>
               <Button onClick={undoPaymentClicked} color="secondary" autoFocus>
                 Yes, Undo Payment
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          <Dialog
+            open={isFindPatientModalShow}
+            onClose={closePatientsModal}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle style={{ color: "#999" }} id="alert-dialog-title">
+              {"Find Patient"}
+            </DialogTitle>
+            <DialogContent>
+              <SearchPatientTableForSelecting
+                data={selectedBooking}
+                select={changeToPatientAttended}
+              />
+              <DialogContentText
+                style={{ color: "#333", fontWeight: "400", marginTop: "32px" }}
+                id="alert-dialog-description"
+              >
+                Do you want to create a new patient ?
+              </DialogContentText>
+              <FormControl fullWidth style={{ marginBottom: "12px" }}>
+                <TextField
+                  id="outlined-basic"
+                  label="Surname"
+                  variant="outlined"
+                  value={patientSurname}
+                  onChange={handleSurnameChange}
+                />
+              </FormControl>
+              <FormControl
+                fullWidth
+                spacing={3}
+                style={{ marginBottom: "12px" }}
+              >
+                <TextField
+                  id="outlined-basic"
+                  label="Forename"
+                  variant="outlined"
+                  value={patientForename}
+                  onChange={handleForenameChange}
+                />
+              </FormControl>
+              <FormControl
+                fullWidth
+                spacing={3}
+                style={{ marginBottom: "12px" }}
+              >
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Gender"
+                  value={patientGenderType}
+                  onChange={handleGenderChange}
+                >
+                  <MenuItem value="male">Male</MenuItem>
+                  <MenuItem value="female">Female</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl
+                fullWidth
+                spacing={3}
+                style={{ marginBottom: "12px" }}
+              >
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    variant="inline"
+                    format="dd/MM/yyyy"
+                    margin="normal"
+                    id="date-picker-from"
+                    label="Birth date"
+                    value={patientBirthDate}
+                    onChange={handleBirthDateChange}
+                  />
+                </MuiPickersUtilsProvider>
+              </FormControl>
+              <Button
+                onClick={changeToPatientAttended}
+                color="secondary"
+                autoFocus
+              >
+                Save
+              </Button>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closePatientsModal} color="default">
+                Back
               </Button>
             </DialogActions>
           </Dialog>

@@ -2,272 +2,242 @@ import API from './api';
 import axiosRetry from 'axios-retry';
 
 export default class BookService {
+  static sendReviewSMS = (bookingId, message) => {
+    return API.post(`/api/blood/book/sendreviewsms`, {
+      id: bookingId,
+      message,
+    });
+  };
 
-   static sendReviewSMS = (bookingId, message) => {
-      return API.post(`/api/blood/book/sendreviewsms`, {id: bookingId, message});
-   }
+  static setClinicNotes = (bookingId, notes) => {
+    return API.post(`/api/blood/book/setclinicnotes`, { bookingId, notes });
+  };
 
+  static getAllCodes = () => {
+    return API.get(`/api/medex/invoice/getallbloodcodesadmin`);
+  };
 
-   static setClinicNotes = (bookingId, notes) =>
-   {
-      return API.post(`/api/blood/book/setclinicnotes`, {bookingId, notes});
-   }
+  static getBloodReportsByBookingId = (bookingId) => {
+    return API.get(
+      `/api/blood/book/getbloodreportsbybookingid?id=${bookingId}`
+    );
+  };
 
+  static getNewBloodResultsCount = () => {
+    return API.get(`/api/blood/book/getnewbloodresultscount`);
+  };
 
-   static getAllCodes = () =>
-   {
-       return API.get(`/api/medex/invoice/getallbloodcodesadmin`)
-   }
+  static getSentBloodReports = () => {
+    return API.get(`/api/blood/book/getsentbloodreports`);
+  };
 
-   
-   static getBloodReportsByBookingId = (bookingId) =>
-   {
-      return API.get(`/api/blood/book/getbloodreportsbybookingid?id=${bookingId}`);
-   }
+  static getArchivedBloodReports = () => {
+    return API.get(`/api/blood/book/getarchivedbloodreports`);
+  };
 
+  static getNewMatchedBloodReports = () => {
+    return API.get(`/api/blood/book/getnewmatchedbloodreports`);
+  };
 
-   
+  static getArchivedMatchedBloodReports = () => {
+    return API.get(`/api/blood/book/getarchivedmatchedbloodreports`);
+  };
 
-   static getNewBloodResultsCount = () =>
-   {
-      return API.get(`/api/blood/book/getnewbloodresultscount`);
-   }
+  static getNewUnmatchedBloodReports = () => {
+    return API.get(`/api/blood/book/getnewunmatchedbloodreports`);
+  };
 
-   static getSentBloodReports = () =>
-   {
-      return API.get(`/api/blood/book/getsentbloodreports`);
-   }
+  static getArchivedUnmatchedBloodReports = () => {
+    return API.get(`/api/blood/book/getarchivedunmatchedbloodreports`);
+  };
 
+  static sendBloodReportEmail = (bloodreportId, email, notes) => {
+    return API.post(
+      `/api/blood/book/sendbloodreportemail?id=${bloodreportId}`,
+      { email, notes }
+    );
+  };
 
-   static getArchivedBloodReports = () =>
-   {
-      return API.get(`/api/blood/book/getarchivedbloodreports`);
-   }
+  static updateBloodReport = (bloodreportId, email, notes) => {
+    return API.post(`/api/blood/book/updatebloodreport?id=${bloodreportId}`, {
+      email,
+      notes,
+    });
+  };
 
-   static getNewMatchedBloodReports = () =>
-   {
-      return API.get(`/api/blood/book/getnewmatchedbloodreports`);
-   }
+  static archiveBloodReport = (bloodreportId) => {
+    return API.post(`/api/blood/book/archivebloodreport?id=${bloodreportId}`);
+  };
 
-   static getArchivedMatchedBloodReports = () =>
-   {
-      return API.get(`/api/blood/book/getarchivedmatchedbloodreports`);
-   }
+  static unArchiveBloodReport = (bloodreportId) => {
+    return API.post(`/api/blood/book/unarchivebloodreport?id=${bloodreportId}`);
+  };
 
-   static getNewUnmatchedBloodReports = () =>
-   {
-      return API.get(`/api/blood/book/getnewunmatchedbloodreports`);
-   }
+  static addNewBooking = (payload) => {
+    return API.post(`/api/blood/book/addnewbooking`, payload);
+  };
 
-   static getArchivedUnmatchedBloodReports = () =>
-   {
-      return API.get(`/api/blood/book/getarchivedunmatchedbloodreports`);
-   }
+  static sendRegFormEmail = (bookingId) => {
+    return API.post(`/api/blood/book/sendregformemail?id=${bookingId}`);
+  };
 
-   static sendBloodReportEmail = (bloodreportId, email, notes) =>
-   {
-      return API.post(`/api/blood/book/sendbloodreportemail?id=${bloodreportId}`, {email, notes});
-   }
+  static sendForPrint = (bookingId) => {
+    return API.post(`/api/blood/book/sendforprint?id=${bookingId}`);
+  };
 
-   static updateBloodReport = (bloodreportId, email, notes) =>
-   {
-      return API.post(`/api/blood/book/updatebloodreport?id=${bloodreportId}`, {email, notes});
-   }
+  static changeDepositBooking = (bookingId, deposit) => {
+    return API.post(
+      `/api/blood/book/changedepositbooking?id=${bookingId}&deposit=${deposit}`
+    );
+  };
 
+  static manualRefundBooking = (bookingId) => {
+    return API.post(`/api/blood/payment/manualrefundpayment`, {
+      bookingId: bookingId,
+    });
+  };
 
-   static archiveBloodReport = (bloodreportId) =>
-   {
-      return API.post(`/api/blood/book/archivebloodreport?id=${bloodreportId}`);
-   }
+  static payBooking = (bookingId, price, paymentMethod, corporate) => {
+    return API.post(
+      `/api/blood/book/paybooking?id=${bookingId}&paymentmethod=${paymentMethod}&corporate=${corporate}&price=${price}`
+    );
+  };
 
-   static unArchiveBloodReport = (bloodreportId) =>
-   {
-      return API.post(`/api/blood/book/unarchivebloodreport?id=${bloodreportId}`);
-   }
+  static unPayBooking = (bookingId) => {
+    return API.post(`/api/blood/book/unpaybooking?id=${bookingId}`);
+  };
 
+  static getShouldRefundsCount = () => {
+    return API.get(`/api/blood/book/getshouldrefundscount`);
+  };
 
+  static refundBooking = (bookingId) => {
+    return API.post(`/api/blood/payment/refundpayment`, {
+      bookingId: bookingId,
+    });
+  };
 
+  static getBookingsStatsByDateStr = (dateStr) => {
+    return API.get(`/api/blood/book/getbookingsstatsbydatestr?date=${dateStr}`);
+  };
 
-   static addNewBooking = (payload) =>
-   {
-      return API.post(`/api/blood/book/addnewbooking`, payload);
-   }
-   
-   static sendRegFormEmail = (bookingId) =>
-   {
-      return API.post(`/api/blood/book/sendregformemail?id=${bookingId}`);
-   }
+  static getBookingsCountByDateStr = (dateStr) => {
+    return API.get(`/api/blood/book/getbookingscountbydatestr?date=${dateStr}`);
+  };
 
-   static sendForPrint = (bookingId) =>
-   {
-      return API.post(`/api/blood/book/sendforprint?id=${bookingId}`);
-   }
+  static getAllBookingsCountAll = () => {
+    return API.get(`/api/blood/book/getallbookingscountall`);
+  };
 
-   static changeDepositBooking = (bookingId, deposit) => {
-      return API.post(`/api/blood/book/changedepositbooking?id=${bookingId}&deposit=${deposit}`);
-   }
+  static getBookingsCountByDateStrandTime = (dateStr, time, source) => {
+    return API.get(
+      `/api/blood/book/getbookingscountbydatestrandtime?date=${dateStr}&time=${time}`,
+      { cancelToken: source.token }
+    );
+  };
 
-   static manualRefundBooking = (bookingId) =>
-   {
-      return API.post(`/api/blood/payment/manualrefundpayment`, {bookingId: bookingId});
-   }
+  static getBookingsByDateStrandTime = (dateStr, time) => {
+    return API.get(
+      `/api/blood/book/getbookingsbydatestrandtime?date=${dateStr}&time=${time}`
+    );
+  };
 
+  static getAllBookingsCountByDateStr = (dateStr) => {
+    return API.get(
+      `/api/blood/book/getallbookingscountbydatestr?date=${dateStr}`
+    );
+  };
 
+  static getAllBookingsCountByDateStrandTime = (dateStr, time, source) => {
+    return API.get(
+      `/api/blood/book/getallbookingscountbydatestrandtime?date=${dateStr}&time=${time}`,
+      { cancelToken: source.token }
+    );
+  };
 
-   static payBooking = (bookingId,price, paymentMethod, corporate) =>
-   {
-      return API.post(`/api/blood/book/paybooking?id=${bookingId}&paymentmethod=${paymentMethod}&corporate=${corporate}&price=${price}`);
-   }
+  static getAllBookingsByDateStrandTime = (dateStr, time) => {
+    return API.get(
+      `/api/blood/book/getallbookingsbydatestrandtime?date=${dateStr}&time=${time}`
+    );
+  };
 
-   static unPayBooking = (bookingId) =>
-   {
-      return API.post(`/api/blood/book/unpaybooking?id=${bookingId}`);
-   }
+  static changeBackToBookingMade = (id) => {
+    return API.post(`/api/blood/book/changebacktobookingmade?id=${id}`);
+  };
 
-   static getShouldRefundsCount = () =>
-   {
-      return API.get(`/api/blood/book/getshouldrefundscount`);
-   }  
+  static changeToPatientAttended = (id, payload) => {
+    return API.post(
+      `/api/blood/book/changetopatientattended?id=${id}`,
+      payload
+    );
+  };
 
-   static refundBooking = (bookingId) =>
-   {
-      return API.post(`/api/blood/payment/refundpayment`, {bookingId: bookingId});
-   }
+  static changeToCompleted = (id) => {
+    return API.post(`/api/blood/book/changetocompleted?id=${id}`);
+  };
 
-   static getBookingsStatsByDateStr = (dateStr) =>
-   {
-      return API.get(`/api/blood/book/getbookingsstatsbydatestr?date=${dateStr}`);
-   }
+  static updateBooking = (payload) => {
+    return API.post(`/api/blood/book/updatebookappointment`, payload);
+  };
 
-   static getBookingsCountByDateStr = (dateStr) =>
-   {
-      return API.get(`/api/blood/book/getbookingscountbydatestr?date=${dateStr}`);
-   }
+  static updateBookingTime = (payload) => {
+    return API.post(`/api/blood/book/updatebookappointmenttime`, payload);
+  };
 
-   static getAllBookingsCountAll = () =>
-   {
-      return API.get(`/api/blood/book/getallbookingscountall`);
-   }
+  static deleteBooking = (id) => {
+    return API.post(`/api/blood/book/deletebookappointment?id=${id}`);
+  };
 
-   static getBookingsCountByDateStrandTime = (dateStr, time, source) =>
-   {
-      return API.get(`/api/blood/book/getbookingscountbydatestrandtime?date=${dateStr}&time=${time}`, {cancelToken: source.token});
-   }
+  static unDeleteBooking = (id) => {
+    return API.post(`/api/blood/book/undeletebookappointment?id=${id}`);
+  };
 
-   static getBookingsByDateStrandTime = (dateStr, time) =>
-   {
-      return API.get(`/api/blood/book/getbookingsbydatestrandtime?date=${dateStr}&time=${time}`);
-   }
+  static getBookingsByRef = (ref) => {
+    return API.get(`/api/blood/book/getbookingsbyref?ref=${ref}`);
+  };
 
+  static getBookingById = (id) => {
+    return API.get(`/api/blood/book/getbookingbyid?id=${id}`);
+  };
 
-   static getAllBookingsCountByDateStr = (dateStr) =>
-   {
-      return API.get(`/api/blood/book/getallbookingscountbydatestr?date=${dateStr}`);
-   }
+  static getAllBookings = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/blood/book/getallbookings?limit=${limit}`);
+  };
 
-   static getAllBookingsCountByDateStrandTime = (dateStr, time, source) =>
-   {
-      return API.get(`/api/blood/book/getallbookingscountbydatestrandtime?date=${dateStr}&time=${time}`, {cancelToken: source.token});
-   }
+  static getDeletedBookings = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/blood/book/getdeletedbookings?limit=${limit}`);
+  };
 
-   static getAllBookingsByDateStrandTime = (dateStr, time) =>
-   {
-      return API.get(`/api/blood/book/getallbookingsbydatestrandtime?date=${dateStr}&time=${time}`);
-   }
+  static getTodayBookings = () => {
+    return API.get(`/api/blood/book/gettodaybookings`);
+  };
 
-   static changeBackToBookingMade = (id) =>
-   {
-      return API.post(`/api/blood/book/changebacktobookingmade?id=${id}`);
-   }
+  static getLiveBookings = () => {
+    return API.get(`/api/blood/book/getlivebookings`);
+  };
 
-   static changeToPatientAttended = (id) =>
-   {
-      return API.post(`/api/blood/book/changetopatientattended?id=${id}`);
-   }
+  static getCompletedBookings = (limit) => {
+    return API.get(`/api/blood/book/getcompletedbookings?limit=${limit}`);
+  };
 
-   static changeToCompleted = (id) =>
-   {
-      return API.post(`/api/blood/book/changetocompleted?id=${id}`);
-   }
+  static getOldBookings = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/blood/book/getoldbookings?limit=${limit}`);
+  };
 
+  static getFutureBookings = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/blood/book/getfuturebookings?limit=${limit}`);
+  };
 
-   static updateBooking = (payload) =>
-   {
-      return API.post(`/api/blood/book/updatebookappointment`, payload);
-   } 
+  static getRecentBookings = () => {
+    return API.get(`/api/blood/book/getrecentbookings`);
+  };
 
-   static updateBookingTime = (payload) =>
-   {
-      return API.post(`/api/blood/book/updatebookappointmenttime`, payload);
-   } 
-
-   static deleteBooking = (id) =>
-   {
-      return API.post(`/api/blood/book/deletebookappointment?id=${id}`);
-   } 
-
-   static unDeleteBooking = (id) =>
-   {
-      return API.post(`/api/blood/book/undeletebookappointment?id=${id}`);
-   } 
-   
-    static getBookingsByRef = (ref) =>
-    {
-       return API.get(`/api/blood/book/getbookingsbyref?ref=${ref}`);
-    }
-
-    static getBookingById = (id) =>
-    {
-       return API.get(`/api/blood/book/getbookingbyid?id=${id}`);
-    }
-
-    static getAllBookings = (limit) =>
-    {
-      if (!limit) limit = 25 
-      return API.get(`/api/blood/book/getallbookings?limit=${limit}`);
-    }
-
-    static getDeletedBookings= (limit) =>
-    {
-      if (!limit) limit = 25 
-       return API.get(`/api/blood/book/getdeletedbookings?limit=${limit}`);
-    }
-
-    static getTodayBookings= () =>
-    {
-       return API.get(`/api/blood/book/gettodaybookings`);
-    }
-
-    static getLiveBookings= () =>
-    {
-       return API.get(`/api/blood/book/getlivebookings`);
-    }
-
-    static getCompletedBookings= (limit) =>
-    {
-       return API.get(`/api/blood/book/getcompletedbookings?limit=${limit}`);
-    }
-
-    static getOldBookings= (limit) =>
-    {
-      if (!limit) limit = 25 
-       return API.get(`/api/blood/book/getoldbookings?limit=${limit}`);
-    }
-
-    static getFutureBookings= (limit) =>
-    {
-      if (!limit) limit = 25 
-       return API.get(`/api/blood/book/getfuturebookings?limit=${limit}`);
-    }
-
-    static getRecentBookings= () =>
-    {
-       return API.get(`/api/blood/book/getrecentbookings`);
-    }
-
-    static getRecentBookingsAll= (limit) =>
-    {
-      if (!limit) limit = 25 
-       return API.get(`/api/blood/book/getrecentbookingsall?limit=${limit}`);
-    }
+  static getRecentBookingsAll = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/blood/book/getrecentbookingsall?limit=${limit}`);
+  };
 }

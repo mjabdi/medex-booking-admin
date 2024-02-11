@@ -105,9 +105,9 @@ export default class BookService {
       return API.post(`/api/gynae/book/changebacktobookingmade?id=${id}`);
    }
 
-   static changeToPatientAttended = (id) =>
+   static changeToPatientAttended = (id, payload) =>
    {
-      return API.post(`/api/gynae/book/changetopatientattended?id=${id}`);
+      return API.post(`/api/gynae/book/changetopatientattended?id=${id}`, payload);
    }
 
    static updateBooking = (payload) =>

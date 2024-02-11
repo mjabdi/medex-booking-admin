@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import PatientService from "./services/PatientService";
 import BookingTableForPatient from './BookingTableForPatient'
@@ -228,21 +228,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchBookingTable(props) {
   const classes = useStyles();
-
+  // console.log(props.data.fullname)
   let columns = [];
   columns = [
     {
       field: "_id",
       headerName: " ",
-      width: 70,
+      width: 100,
       renderCell: (params) => {
         return (
           <React.Fragment>
             <Button
               color="primary"
-              onClick={(event) => openDetailsDialog(event, params.value)}
+              onClick={(event) => props.select(null, params.value)}
             >
-              <SearchIcon />
+              Select
             </Button>
           </React.Fragment>
         );
@@ -298,7 +298,6 @@ export default function SearchBookingTable(props) {
 
   const [filter, setFilter] = React.useState("");
 
-
   // const formatTimeStamp = (timeStamp) => {
   //   const todayStr = dateformat(new Date(), "yyyy-mm-dd");
   //   const timeStampStr = dateformat(timeStamp, "yyyy-mm-dd");
@@ -309,14 +308,14 @@ export default function SearchBookingTable(props) {
   //   }
   // };
 
-  const loadData = () => {
+  const loadData = (customFilter) => {
     var api = PatientService.searchAllPatients;
 
     setData({ patients: [], cachedPatients: [], isFetching: true });
 
     // console.log(props)
 
-    return api(filter)
+    return api(customFilter || filter)
       .then((res) => {
         // console.log(res)
         for (var i = 0; i < res.data.length; i++) {
@@ -353,14 +352,23 @@ export default function SearchBookingTable(props) {
   const [page, setPage] = React.useState(1);
 
   const [filterError, setFilterError] = React.useState(false);
-  const doSearch = () => {
-    if (!filter || filter.trim().length < 3) {
-      setFilterError(true);
-      return;
-    }
 
+  const doSearch = () => {
     loadData();
   };
+
+  useEffect(()=>{
+    const loadInitialData = async () => {
+      try {
+        loadData(
+          props.data.fullname || `${props.data.surname} ${props.data.forename}`
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    };    
+    loadInitialData();
+  },[])
 
   return (
     <React.Fragment>

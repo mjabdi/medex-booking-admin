@@ -2,260 +2,239 @@ import API from './api';
 import axiosRetry from 'axios-retry';
 
 export default class BookService {
+  static sendReviewSMS = (bookingId, message) => {
+    return API.post(`/api/screening/book/sendreviewsms`, {
+      id: bookingId,
+      message,
+    });
+  };
 
-   static sendReviewSMS = (bookingId, message) => {
-      return API.post(`/api/screening/book/sendreviewsms`, {id: bookingId, message});
-   }
-
-   static downloadPDFReport = (bookingId, reportData) =>
-   {
-      return API.post(`/api/screening/book/downloadpdfreport?id=${bookingId}`,{reportData: reportData},
+  static downloadPDFReport = (bookingId, reportData) => {
+    return API.post(
+      `/api/screening/book/downloadpdfreport?id=${bookingId}`,
+      { reportData: reportData },
       {
-         responseType: 'arraybuffer',
-         id: bookingId,
-         headers: {
-             Accept: 'application/pdf',
-         }
-      })
-   }
+        responseType: "arraybuffer",
+        id: bookingId,
+        headers: {
+          Accept: "application/pdf",
+        },
+      }
+    );
+  };
 
-   static getReportData = (bookingId) =>
-   {
-      return API.get(`/api/screening/book/getreportdata?id=${bookingId}`);
-   }
+  static getReportData = (bookingId) => {
+    return API.get(`/api/screening/book/getreportdata?id=${bookingId}`);
+  };
 
-   static setReportData = (bookingId, reportData) =>
-   {
-      return API.post(`/api/screening/book/setreportdata`, {bookingId, reportData});
-   }
+  static setReportData = (bookingId, reportData) => {
+    return API.post(`/api/screening/book/setreportdata`, {
+      bookingId,
+      reportData,
+    });
+  };
 
+  static setClinicNotes = (bookingId, notes) => {
+    return API.post(`/api/screening/book/setclinicnotes`, { bookingId, notes });
+  };
 
-   static setClinicNotes = (bookingId, notes) =>
-   {
-      return API.post(`/api/screening/book/setclinicnotes`, {bookingId, notes});
-   }
+  static getBloodReportsByBookingId = (bookingId) => {
+    return API.get(
+      `/api/blood/book/getbloodreportsbybookingid?id=${bookingId}`
+    );
+  };
 
+  static changeDepositBooking = (bookingId, deposit) => {
+    return API.post(
+      `/api/screening/book/changedepositbooking?id=${bookingId}&deposit=${deposit}`
+    );
+  };
 
+  static manualRefundBooking = (bookingId) => {
+    return API.post(`/api/screening/payment/manualrefundpayment`, {
+      bookingId: bookingId,
+    });
+  };
 
-   static getBloodReportsByBookingId = (bookingId) =>
-   {
-      return API.get(`/api/blood/book/getbloodreportsbybookingid?id=${bookingId}`);
-   }
+  static addNewBooking = (payload) => {
+    return API.post(`/api/screening/book/addnewbooking`, payload);
+  };
 
-   static changeDepositBooking = (bookingId, deposit) => {
-      return API.post(`/api/screening/book/changedepositbooking?id=${bookingId}&deposit=${deposit}`);
-   }
+  static sendForPrint = (bookingId) => {
+    return API.post(`/api/screening/book/sendforprint?id=${bookingId}`);
+  };
 
-   static manualRefundBooking = (bookingId) =>
-   {
-      return API.post(`/api/screening/payment/manualrefundpayment`, {bookingId: bookingId});
-   }
+  static sendRegFormEmail = (bookingId) => {
+    return API.post(`/api/screening/book/sendregformemail?id=${bookingId}`);
+  };
+  static payBooking = (bookingId, price, paymentMethod, corporate) => {
+    return API.post(
+      `/api/screening/book/paybooking?id=${bookingId}&paymentmethod=${paymentMethod}&corporate=${corporate}&price=${price}`
+    );
+  };
 
+  static unPayBooking = (bookingId) => {
+    return API.post(`/api/screening/book/unpaybooking?id=${bookingId}`);
+  };
 
-   static addNewBooking = (payload) =>
-   {
-      return API.post(`/api/screening/book/addnewbooking`, payload);
-   }
+  static getShouldRefundsCount = () => {
+    return API.get(`/api/screening/book/getshouldrefundscount?`);
+  };
 
+  static refundBooking = (bookingId) => {
+    return API.post(`/api/screening/payment/refundpayment`, {
+      bookingId: bookingId,
+    });
+  };
 
-   static sendForPrint = (bookingId) =>
-   {
-      return API.post(`/api/screening/book/sendforprint?id=${bookingId}`);
-   }
+  static getBookingsStatsByDateStr = (dateStr) => {
+    return API.get(
+      `/api/screening/book/getbookingsstatsbydatestr?date=${dateStr}`
+    );
+  };
 
+  static getBookingsCountByDateStr = (dateStr) => {
+    return API.get(
+      `/api/screening/book/getbookingscountbydatestr?date=${dateStr}`
+    );
+  };
 
-   static sendRegFormEmail = (bookingId) =>
-   {
-      return API.post(`/api/screening/book/sendregformemail?id=${bookingId}`);
-   }
-   static payBooking = (bookingId,price, paymentMethod, corporate) =>
-   {
-      return API.post(`/api/screening/book/paybooking?id=${bookingId}&paymentmethod=${paymentMethod}&corporate=${corporate}&price=${price}`);
-   }
+  static getAllBookingsCountAll = () => {
+    return API.get(`/api/screening/book/getallbookingscountall`);
+  };
 
-   static unPayBooking = (bookingId) =>
-   {
-      return API.post(`/api/screening/book/unpaybooking?id=${bookingId}`);
-   }
+  static getBookingsCountByDateStrandTime = (dateStr, time, source) => {
+    return API.get(
+      `/api/screening/book/getbookingscountbydatestrandtime?date=${dateStr}&time=${time}`,
+      { cancelToken: source.token }
+    );
+  };
 
-   static getShouldRefundsCount = () =>
-   {
-      return API.get(`/api/screening/book/getshouldrefundscount?`);
-   }
+  static getBookingsByDateStrandTime = (dateStr, time) => {
+    return API.get(
+      `/api/screening/book/getbookingsbydatestrandtime?date=${dateStr}&time=${time}`
+    );
+  };
 
-   
+  static getAllBookingsCountByDateStr = (dateStr) => {
+    return API.get(
+      `/api/screening/book/getallbookingscountbydatestr?date=${dateStr}`
+    );
+  };
 
-   static refundBooking = (bookingId) =>
-   {
-      return API.post(`/api/screening/payment/refundpayment`, {bookingId: bookingId});
-   }
+  static getAllBookingsCountByDateStrandTime = (dateStr, time, source) => {
+    return API.get(
+      `/api/screening/book/getallbookingscountbydatestrandtime?date=${dateStr}&time=${time}`,
+      { cancelToken: source.token }
+    );
+  };
 
-   static getBookingsStatsByDateStr = (dateStr) =>
-   {
-      return API.get(`/api/screening/book/getbookingsstatsbydatestr?date=${dateStr}`);
-   }
+  static getAllBookingsByDateStrandTime = (dateStr, time) => {
+    return API.get(
+      `/api/screening/book/getallbookingsbydatestrandtime?date=${dateStr}&time=${time}`
+    );
+  };
 
-   static getBookingsCountByDateStr = (dateStr) =>
-   {
-      return API.get(`/api/screening/book/getbookingscountbydatestr?date=${dateStr}`);
-   }
+  static changeBackToBookingMade = (id) => {
+    return API.post(`/api/screening/book/changebacktobookingmade?id=${id}`);
+  };
 
-   static getAllBookingsCountAll = () =>
-   {
-      return API.get(`/api/screening/book/getallbookingscountall`);
-   }
+  static changeToCompleted = (id) => {
+    return API.post(`/api/screening/book/changetocompleted?id=${id}`);
+  };
 
-   static getBookingsCountByDateStrandTime = (dateStr, time, source) =>
-   {
-      return API.get(`/api/screening/book/getbookingscountbydatestrandtime?date=${dateStr}&time=${time}`, {cancelToken: source.token});
-   }
+  static changeToPatientAttended = (id, payload) => {
+    return API.post(
+      `/api/screening/book/changetopatientattended?id=${id}`,
+      payload
+    );
+  };
 
-   static getBookingsByDateStrandTime = (dateStr, time) =>
-   {
-      return API.get(`/api/screening/book/getbookingsbydatestrandtime?date=${dateStr}&time=${time}`);
-   }
+  static updateBooking = (payload) => {
+    return API.post(`/api/screening/book/updatebookappointment`, payload);
+  };
 
+  static updateBookingTime = (payload) => {
+    return API.post(`/api/screening/book/updatebookappointmenttime`, payload);
+  };
 
-   static getAllBookingsCountByDateStr = (dateStr) =>
-   {
-      return API.get(`/api/screening/book/getallbookingscountbydatestr?date=${dateStr}`);
-   }
+  static deleteBooking = (id) => {
+    return API.post(`/api/screening/book/deletebookappointment?id=${id}`);
+  };
 
-   static getAllBookingsCountByDateStrandTime = (dateStr, time, source) =>
-   {
-      return API.get(`/api/screening/book/getallbookingscountbydatestrandtime?date=${dateStr}&time=${time}`, {cancelToken: source.token});
-   }
+  static unDeleteBooking = (id) => {
+    return API.post(`/api/screening/book/undeletebookappointment?id=${id}`);
+  };
 
-   static getAllBookingsByDateStrandTime = (dateStr, time) =>
-   {
-      return API.get(`/api/screening/book/getallbookingsbydatestrandtime?date=${dateStr}&time=${time}`);
-   }
+  static moveTBCFolder = (id) => {
+    return API.post(`/api/screening/book/movetbcfolder?id=${id}`);
+  };
 
-   static changeBackToBookingMade = (id) =>
-   {
-      return API.post(`/api/screening/book/changebacktobookingmade?id=${id}`);
-   }
+  static undoMoveTBCFolder = (id) => {
+    return API.post(`/api/screening/book/undomovetbcfolder?id=${id}`);
+  };
 
-   static changeToCompleted = (id) =>
-   {
-      return API.post(`/api/screening/book/changetocompleted?id=${id}`);
-   }
+  static confirmBooking = (id) => {
+    return API.post(
+      `/api/screening/book/confirmbookappointment?bookingId=${id}`
+    );
+  };
 
-   static changeToPatientAttended = (id) =>
-   {
-      return API.post(`/api/screening/book/changetopatientattended?id=${id}`);
-   }
+  static getBookingsByRef = (ref) => {
+    return API.get(`/api/screening/book/getbookingsbyref?ref=${ref}`);
+  };
 
-   static updateBooking = (payload) =>
-   {
-      return API.post(`/api/screening/book/updatebookappointment`, payload);
-   } 
+  static getBookingById = (id) => {
+    return API.get(`/api/screening/book/getbookingbyid?id=${id}`);
+  };
 
-   static updateBookingTime = (payload) =>
-   {
-      return API.post(`/api/screening/book/updatebookappointmenttime`, payload);
-   } 
+  static getAllBookings = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/screening/book/getallbookings?limit=${limit}`);
+  };
 
-   static deleteBooking = (id) =>
-   {
-      return API.post(`/api/screening/book/deletebookappointment?id=${id}`);
-   } 
+  static getDeletedBookings = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/screening/book/getdeletedbookings?limit=${limit}`);
+  };
 
-   static unDeleteBooking = (id) =>
-   {
-      return API.post(`/api/screening/book/undeletebookappointment?id=${id}`);
-   } 
+  static getTBCFolderBookings = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/screening/book/gettbcfolderbookings?limit=${limit}`);
+  };
 
+  static getTodayBookings = () => {
+    return API.get(`/api/screening/book/gettodaybookings`);
+  };
 
-   static moveTBCFolder = (id) =>
-   {
-      return API.post(`/api/screening/book/movetbcfolder?id=${id}`);
-   } 
+  static getLiveBookings = () => {
+    return API.get(`/api/screening/book/getlivebookings`);
+  };
 
-   static undoMoveTBCFolder = (id) =>
-   {
-      return API.post(`/api/screening/book/undomovetbcfolder?id=${id}`);
-   } 
+  static getCompletedBookings = (limit) => {
+    return API.get(`/api/screening/book/getcompletedbookings?limit=${limit}`);
+  };
 
+  static getOldBookings = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/screening/book/getoldbookings?limit=${limit}`);
+  };
 
-   static confirmBooking = (id) =>
-   {
-      return API.post(`/api/screening/book/confirmbookappointment?bookingId=${id}`);
-   } 
+  static getFutureBookings = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/screening/book/getfuturebookings?limit=${limit}`);
+  };
 
+  static getRecentBookings = () => {
+    return API.get(`/api/screening/book/getrecentbookings`);
+  };
 
-   
-    static getBookingsByRef = (ref) =>
-    {
-       return API.get(`/api/screening/book/getbookingsbyref?ref=${ref}`);
-    }
+  static getPendingBookings = () => {
+    return API.get(`/api/screening/book/getpendingbookings`);
+  };
 
-    static getBookingById = (id) =>
-    {
-       return API.get(`/api/screening/book/getbookingbyid?id=${id}`);
-    }
-
-    static getAllBookings = (limit) =>
-    {
-      if (!limit) limit = 25 
-      return API.get(`/api/screening/book/getallbookings?limit=${limit}`);
-    }
-
-    static getDeletedBookings= (limit) =>
-    {
-      if (!limit) limit = 25 
-       return API.get(`/api/screening/book/getdeletedbookings?limit=${limit}`);
-    }
-
-    static getTBCFolderBookings= (limit) =>
-    {
-      if (!limit) limit = 25 
-       return API.get(`/api/screening/book/gettbcfolderbookings?limit=${limit}`);
-    }
-
-
-    static getTodayBookings= () =>
-    {
-       return API.get(`/api/screening/book/gettodaybookings`);
-    }
-
-    static getLiveBookings= () =>
-    {
-       return API.get(`/api/screening/book/getlivebookings`);
-    }
-
-    static getCompletedBookings= (limit) =>
-    {
-       return API.get(`/api/screening/book/getcompletedbookings?limit=${limit}`);
-    }
-
-
-    static getOldBookings= (limit) =>
-    {
-      if (!limit) limit = 25 
-       return API.get(`/api/screening/book/getoldbookings?limit=${limit}`);
-    }
-
-    static getFutureBookings= (limit) =>
-    {
-      if (!limit) limit = 25 
-       return API.get(`/api/screening/book/getfuturebookings?limit=${limit}`);
-    }
-
-    static getRecentBookings= () =>
-    {
-       return API.get(`/api/screening/book/getrecentbookings`);
-    }
-
-    static getPendingBookings= () =>
-    {
-       return API.get(`/api/screening/book/getpendingbookings`);
-    }
-
-
-    static getRecentBookingsAll= (limit) =>
-    {
-      if (!limit) limit = 25 
-       return API.get(`/api/screening/book/getrecentbookingsall?limit=${limit}`);
-    }
+  static getRecentBookingsAll = (limit) => {
+    if (!limit) limit = 25;
+    return API.get(`/api/screening/book/getrecentbookingsall?limit=${limit}`);
+  };
 }
