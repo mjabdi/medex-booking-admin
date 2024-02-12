@@ -3235,9 +3235,34 @@ const isValidPhone = (phone) => {
           <Dialog
             open={isFindPatientModalShow}
             onClose={closePatientsModal}
+            maxWidth={"lg"}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
+            <DialogTitle style={{ color: "#999" }} id="alert-dialog-title">
+              {"Patient Data"}
+            </DialogTitle>
+            <DialogContent
+              style={{ display: "flex", justifyContent: "space-between", minHeight:"50px" }}
+            >
+              <div>
+                <div>Full Name:</div>
+                {selectedBooking?.fullname || (selectedBooking?.surname + ' ' + selectedBooking?.forename)}
+              </div>
+              <div>
+                <div>Birth Date:</div>
+                {selectedBooking?.birthDate}
+              </div>
+              <div>
+                <div>Gender:</div>
+                {selectedBooking?.gender}
+              </div>
+              <div>
+                <div>Email:</div>
+                {selectedBooking?.email}
+              </div>
+            </DialogContent>
+
             <DialogTitle style={{ color: "#999" }} id="alert-dialog-title">
               {"Find Patient"}
             </DialogTitle>
