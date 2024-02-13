@@ -404,10 +404,7 @@ export default function SearchBookingTable(props) {
      setBirthDateStr(dateformat(date, "yyyy-mm-dd"));
    };
      const [birthDateStr, setBirthDateStr] = useState(
-       dateformat(
-         null,
-         "yyyy-mm-dd"
-       )
+       null
      );
   const doSearch = () => {
     loadData();
