@@ -3035,6 +3035,7 @@ const isValidPhone = (phone) => {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Gender"
+                  placeholder="Gender"
                   value={patientGenderType}
                   onChange={handleGenderChange}
                 >

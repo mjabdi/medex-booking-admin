@@ -1924,7 +1924,6 @@ export default function BookingDialog(props) {
             </DialogActions>
           </Dialog>
 
-
           <Dialog
             open={isFindPatientModalShow}
             onClose={closePatientsModal}
@@ -1936,11 +1935,16 @@ export default function BookingDialog(props) {
               {"Patient Data"}
             </DialogTitle>
             <DialogContent
-              style={{ display: "flex", justifyContent: "space-between", minHeight:"50px" }}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                minHeight: "50px",
+              }}
             >
               <div>
                 <div>Full Name:</div>
-                {selectedBooking?.fullname || (selectedBooking?.surname + ' ' + selectedBooking?.forename)}
+                {selectedBooking?.fullname ||
+                  selectedBooking?.surname + " " + selectedBooking?.forename}
               </div>
               <div>
                 <div>Birth Date:</div>
@@ -2001,6 +2005,7 @@ export default function BookingDialog(props) {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Gender"
+                  placeholder="Gender"
                   value={patientGenderType}
                   onChange={handleGenderChange}
                 >
@@ -2039,7 +2044,6 @@ export default function BookingDialog(props) {
               </Button>
             </DialogActions>
           </Dialog>
-
 
           <Dialog
             open={openRefundDialog}

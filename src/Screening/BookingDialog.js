@@ -3231,7 +3231,6 @@ const isValidPhone = (phone) => {
             </Backdrop>
           </Dialog>
 
-
           <Dialog
             open={isFindPatientModalShow}
             onClose={closePatientsModal}
@@ -3243,11 +3242,16 @@ const isValidPhone = (phone) => {
               {"Patient Data"}
             </DialogTitle>
             <DialogContent
-              style={{ display: "flex", justifyContent: "space-between", minHeight:"50px" }}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                minHeight: "50px",
+              }}
             >
               <div>
                 <div>Full Name:</div>
-                {selectedBooking?.fullname || (selectedBooking?.surname + ' ' + selectedBooking?.forename)}
+                {selectedBooking?.fullname ||
+                  selectedBooking?.surname + " " + selectedBooking?.forename}
               </div>
               <div>
                 <div>Birth Date:</div>
@@ -3308,6 +3312,7 @@ const isValidPhone = (phone) => {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Gender"
+                  placeholder="Gender"
                   value={patientGenderType}
                   onChange={handleGenderChange}
                 >
@@ -3346,7 +3351,6 @@ const isValidPhone = (phone) => {
               </Button>
             </DialogActions>
           </Dialog>
-
 
           <Dialog
             open={openTBCDialog}

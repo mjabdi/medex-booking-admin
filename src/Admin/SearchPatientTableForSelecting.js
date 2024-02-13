@@ -1,7 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid } from "@material-ui/data-grid";
 import PatientService from "./services/PatientService";
 import BookingTableForPatient from './BookingTableForPatient'
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+
 import {
   Button,
   CircularProgress,
@@ -228,6 +235,31 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchBookingTable(props) {
   const classes = useStyles();
+
+  const getClassforClinic = (clinic) => {
+    switch (clinic) {
+      case "pcr":
+        return classes.PCRLabel;
+      case "gp":
+        return classes.GPLabel;
+      case "gynae":
+        return classes.GynaeLabel;
+      case "std":
+        return classes.STDLabel;
+      case "blood":
+        return classes.BloodLabel;
+      case "derma":
+        return classes.DermaLabel;
+      case "screening":
+        return classes.ScreeningLabel;
+      case "corporate":
+        return classes.CorporateLabel;
+
+      default:
+        return classes.clinicTitle;
+    }
+  };
+
   // console.log(props.data.fullname)
   let columns = [];
   columns = [
@@ -274,18 +306,33 @@ export default function SearchBookingTable(props) {
         return FormatDateFromString(params.value);
       },
     },
-    { field: "title", headerName: "Title", width: 100 },
-    { field: "phone", headerName: "Tel", width: 150 },
-    { field: "gender", headerName: "Gender", width: 100 },
-    { field: "email", headerName: "Email", width: 200 },
     {
-      field: "bookings",
-      headerName: "Booking Numbers",
+      field: "allbookings",
+      headerName: "Bookings Count",
       width: 170,
       valueFormatter: (params) => {
         return params.value?.length || 0;
       },
     },
+    {
+      field: "bookings",
+      headerName: "Last Booking Clinic",
+      align: "center",
+      width: 190,
+      renderCell: (params) => {
+        return (
+          <span className={getClassforClinic(Array.isArray(params.value) ? params.value[0].clinic : '')}>
+            {Array.isArray(params.value) && params.value[0].clinic
+              ? params.value[0].clinic?.toUpperCase()
+              : "N/A"}
+          </span>
+        );
+      },
+    },
+    { field: "gender", headerName: "Gender", width: 100 },
+    { field: "title", headerName: "Title", width: 100 },
+    { field: "phone", headerName: "Tel", width: 150 },
+    { field: "email", headerName: "Email", width: 200 },
   ];
   const [data, setData] = React.useState({
     bookings: [],
@@ -294,7 +341,7 @@ export default function SearchBookingTable(props) {
   });
   const [selectedBooking, setSelectedBooking] = React.useState(null);
   const [seeDetailsDialogOpen, setSeeDetailsDialogOpen] = React.useState(false);
-
+ const [birthDate, setBirthDate] = React.useState(null);
 
   const [filter, setFilter] = React.useState("");
 
@@ -308,14 +355,14 @@ export default function SearchBookingTable(props) {
   //   }
   // };
 
-  const loadData = (customFilter) => {
+  const loadData = (initialFilter, initialBirthDate) => {
     var api = PatientService.searchAllPatients;
 
     setData({ patients: [], cachedPatients: [], isFetching: true });
 
     // console.log(props)
 
-    return api(customFilter || filter)
+    return api(initialFilter || filter, initialBirthDate || birthDateStr)
       .then((res) => {
         // console.log(res)
         for (var i = 0; i < res.data.length; i++) {
@@ -352,7 +399,16 @@ export default function SearchBookingTable(props) {
   const [page, setPage] = React.useState(1);
 
   const [filterError, setFilterError] = React.useState(false);
-
+   const handleBirthDateChange = (date) => {
+     setBirthDate(date);
+     setBirthDateStr(dateformat(date, "yyyy-mm-dd"));
+   };
+     const [birthDateStr, setBirthDateStr] = useState(
+       dateformat(
+         null,
+         "yyyy-mm-dd"
+       )
+     );
   const doSearch = () => {
     loadData();
   };
@@ -361,7 +417,8 @@ export default function SearchBookingTable(props) {
     const loadInitialData = async () => {
       try {
         loadData(
-          props.data.fullname || `${props.data.surname} ${props.data.forename}`
+          props.data.fullname || `${props.data.surname} ${props.data.forename}`,
+          props.data.birthDate
         );
       } catch (err) {
         console.error(err);
@@ -375,55 +432,57 @@ export default function SearchBookingTable(props) {
       <Grid
         container
         direction="row"
-        justify="space-between"
         alignItems="flex-end"
       >
         <Grid item md={4}>
-          <div style={{ textAlign: "left", paddingLeft: "10px" }}>
-            <Grid
-              container
-              direction="row"
-              justify="flex-start"
-              alignItems="center"
-              spacing={4}
-            >
-              <Grid item>
-                <TextField
-                  error={filterError}
-                  variant="standard"
-                  value={filter}
-                  onChange={filterChanged}
-                  id="filter"
-                  label="Patient's Name"
-                  helperText={`You can search the patients by name ${
-                    filterError ? "- Please Enter at least 3 characters" : ""
-                  }`}
-                  name="filter"
-                  autoComplete="off"
-                  style={{ width: "250px" }}
-                  onKeyPress={(event) => {
-                    if (event.key === "Enter") {
-                      doSearch();
-                    }
-                  }}
+          <TextField
+            error={filterError}
+            variant="standard"
+            value={filter}
+            onChange={filterChanged}
+            id="filter"
+            label="Patient's Name"
+            helperText={`You can search the patients by name ${
+              filterError ? "- Please Enter at least 3 characters" : ""
+            }`}
+            name="filter"
+            autoComplete="off"
+            style={{ width: "250px" }}
+            onKeyPress={(event) => {
+              if (event.key === "Enter") {
+                doSearch();
+              }
+            }}
+          />
+        </Grid>
+        <Grid item md={4}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  variant="inline"
+                  format="dd/MM/yyyy"
+                  margin="normal"
+                  id="date-picker-from"
+                  label="Birth date"
+                  value={birthDate}
+                  onChange={handleBirthDateChange}
                 />
-              </Grid>
+              </MuiPickersUtilsProvider>
+          </MuiPickersUtilsProvider>
+        </Grid>
 
-              <Grid item>
-                <Button variant="contained" color="primary" onClick={doSearch}>
-                  Search
-                </Button>
-              </Grid>
+        <Grid item>
+          <Button variant="contained" color="primary" onClick={doSearch}>
+            Search
+          </Button>
+        </Grid>
 
-              <Grid item>
-                {data.isFetching && (
-                  <div style={{ width: "100%", paddingTop: "3px" }}>
-                    <CircularProgress color="primary" />
-                  </div>
-                )}
-              </Grid>
-            </Grid>
-          </div>
+        <Grid item>
+          {data.isFetching && (
+            <div style={{ width: "100%", paddingTop: "3px" }}>
+              <CircularProgress color="primary" />
+            </div>
+          )}
         </Grid>
 
         {data.isFetching && <div className={classes.HideNowRows}></div>}
@@ -494,7 +553,14 @@ export default function SearchBookingTable(props) {
               </Grid>
             </Grid>
             <Divider />
-            <div style={{ minHeight: 120, width: "100%", marginTop: "20px", marginBottom: "20px" }}>
+            <div
+              style={{
+                minHeight: 120,
+                width: "100%",
+                marginTop: "20px",
+                marginBottom: "20px",
+              }}
+            >
               <DataGrid
                 rows={[selectedBooking]}
                 columns={columns}
