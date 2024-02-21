@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import GlobalState from "../GlobalState";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
+import { getIsDoctor } from "../isDoctor";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -1496,200 +1497,223 @@ const isValidPhone = (phone) => {
                 <Grid item xs={12} md={12} key={`panel0`}>
                   <div className={classes.infoDetails}>
                     <ul className={classes.ul}>
-                      {/* Restore Functionality ******************************************* */}
-                      <li
-                        hidden={
-                          !(
-                            restoreMode.restore &&
-                            restoreMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <div
-                          style={{
-                            fontWeight: "500",
-                            paddingBottom: "5px",
-                            paddingLeft: "5px",
-                            fontSize: "16px",
-                            color: "#333",
-                          }}
-                        >
-                          Are you sure you want to restore this record?
-                        </div>
-                      </li>
+                      {!getIsDoctor() && (
+                        <React.Fragment>
+                          {/* Restore Functionality ******************************************* */}
+                          <li
+                            hidden={
+                              !(
+                                restoreMode.restore &&
+                                restoreMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <div
+                              style={{
+                                fontWeight: "500",
+                                paddingBottom: "5px",
+                                paddingLeft: "5px",
+                                fontSize: "16px",
+                                color: "#333",
+                              }}
+                            >
+                              Are you sure you want to restore this record?
+                            </div>
+                          </li>
 
-                      <li
-                        hidden={
-                          !booking.deleted ||
-                          (restoreMode.restore &&
-                            restoreMode.person._id === booking._id)
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            handleRestoreModeChanged(true, booking);
-                          }}
-                          className={classes.RestoreButton}
-                        >
-                          Restore This Record
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !booking.deleted ||
+                              (restoreMode.restore &&
+                                restoreMode.person._id === booking._id)
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              onClick={() => {
+                                handleRestoreModeChanged(true, booking);
+                              }}
+                              className={classes.RestoreButton}
+                            >
+                              Restore This Record
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            restoreMode.restore &&
-                            restoreMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          disabled={restoring}
-                          onClick={() => {
-                            handleRestoreModeChanged(false, booking);
-                          }}
-                          className={classes.SaveButton}
-                        >
-                          YES, Restore this!
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                restoreMode.restore &&
+                                restoreMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              disabled={restoring}
+                              onClick={() => {
+                                handleRestoreModeChanged(false, booking);
+                              }}
+                              className={classes.SaveButton}
+                            >
+                              YES, Restore this!
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            restoreMode.restore &&
-                            restoreMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="default"
-                          disabled={restoring}
-                          onClick={() => {
-                            handleRestoreModeChanged(false, null);
-                          }}
-                          className={classes.CancelButton}
-                        >
-                          Cancel
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                restoreMode.restore &&
+                                restoreMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="default"
+                              disabled={restoring}
+                              onClick={() => {
+                                handleRestoreModeChanged(false, null);
+                              }}
+                              className={classes.CancelButton}
+                            >
+                              Cancel
+                            </Button>
+                          </li>
 
-                      {/*  ******************************************************************* */}
+                          {/*  ******************************************************************* */}
+                          {/* Edit Functionality ******************************************* */}
 
-                      {/* Edit Functionality ******************************************* */}
+                          <li
+                            hidden={
+                              booking.deleted ||
+                              deleteMode.delete ||
+                              (editMode.edit &&
+                                editMode.person._id === booking._id)
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              onClick={() => {
+                                handleEditModeChanged(true, booking);
+                              }}
+                              className={classes.EditButton}
+                            >
+                              Edit Booking Info
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          booking.deleted ||
-                          deleteMode.delete ||
-                          (editMode.edit && editMode.person._id === booking._id)
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            handleEditModeChanged(true, booking);
-                          }}
-                          className={classes.EditButton}
-                        >
-                          Edit Booking Info
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              disabled={saving || !recordChanged}
+                              onClick={() => {
+                                handleEditModeChanged(false, booking);
+                              }}
+                              className={classes.SaveButton}
+                            >
+                              Save Changes
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            editMode.edit && editMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          disabled={saving || !recordChanged}
-                          onClick={() => {
-                            handleEditModeChanged(false, booking);
-                          }}
-                          className={classes.SaveButton}
-                        >
-                          Save Changes
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="default"
+                              disabled={saving}
+                              onClick={() => {
+                                handleEditModeChanged(false, null);
+                              }}
+                              className={classes.CancelButton}
+                            >
+                              Cancel
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            editMode.edit && editMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="default"
-                          disabled={saving}
-                          onClick={() => {
-                            handleEditModeChanged(false, null);
-                          }}
-                          className={classes.CancelButton}
-                        >
-                          Cancel
-                        </Button>
-                      </li>
+                          {/* ****************************************************************************************** */}
 
-                      {/* ****************************************************************************************** */}
+                          {/* Delete Functionality ******************************************* */}
 
-                      {/* Delete Functionality ******************************************* */}
+                          <li
+                            hidden={
+                              !(
+                                deleteMode.delete &&
+                                deleteMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <div
+                              style={{
+                                fontWeight: "600",
+                                paddingBottom: "5px",
+                                paddingLeft: "5px",
+                                fontSize: "16px",
+                              }}
+                            >
+                              Are you sure you want to delete this record?
+                            </div>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            deleteMode.delete &&
-                            deleteMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <div
-                          style={{
-                            fontWeight: "600",
-                            paddingBottom: "5px",
-                            paddingLeft: "5px",
-                            fontSize: "16px",
-                          }}
-                        >
-                          Are you sure you want to delete this record?
-                        </div>
-                      </li>
-
-                      <li
-                        hidden={
-                          props.deleteButtonDisabled ||
-                          booking.deleted ||
-                          editMode.edit ||
-                          (deleteMode.delete &&
-                            deleteMode.person._id === booking._id)
-                        }
-                      >
-                        {booking.OTCCharges > 0 && (
-                          <Tooltip title={"Paid Records Cannot be Deleted!"}>
-                            <div>
+                          <li
+                            hidden={
+                              props.deleteButtonDisabled ||
+                              booking.deleted ||
+                              editMode.edit ||
+                              (deleteMode.delete &&
+                                deleteMode.person._id === booking._id)
+                            }
+                          >
+                            {booking.OTCCharges > 0 && (
+                              <Tooltip
+                                title={"Paid Records Cannot be Deleted!"}
+                              >
+                                <div>
+                                  <Button
+                                    disabled={booking.OTCCharges > 0}
+                                    type="button"
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => {
+                                      handleDeleteModeChanged(true, booking);
+                                    }}
+                                    className={classes.DeleteButton}
+                                  >
+                                    Delete This Record
+                                  </Button>
+                                </div>
+                              </Tooltip>
+                            )}
+                            {booking.OTCCharges === 0 && (
                               <Button
                                 disabled={booking.OTCCharges > 0}
                                 type="button"
@@ -1703,72 +1727,56 @@ const isValidPhone = (phone) => {
                               >
                                 Delete This Record
                               </Button>
-                            </div>
-                          </Tooltip>
-                        )}
-                        {booking.OTCCharges === 0 && (
-                          <Button
-                            disabled={booking.OTCCharges > 0}
-                            type="button"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            onClick={() => {
-                              handleDeleteModeChanged(true, booking);
-                            }}
-                            className={classes.DeleteButton}
+                            )}
+                          </li>
+
+                          <li
+                            hidden={
+                              !(
+                                deleteMode.delete &&
+                                deleteMode.person._id === booking._id
+                              )
+                            }
                           >
-                            Delete This Record
-                          </Button>
-                        )}
-                      </li>
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              disabled={deleting}
+                              onClick={() => {
+                                handleDeleteModeChanged(false, booking);
+                              }}
+                              className={classes.SaveButton}
+                            >
+                              YES, Delete this!
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            deleteMode.delete &&
-                            deleteMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          disabled={deleting}
-                          onClick={() => {
-                            handleDeleteModeChanged(false, booking);
-                          }}
-                          className={classes.SaveButton}
-                        >
-                          YES, Delete this!
-                        </Button>
-                      </li>
-
-                      <li
-                        hidden={
-                          !(
-                            deleteMode.delete &&
-                            deleteMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="default"
-                          disabled={deleting}
-                          onClick={() => {
-                            handleDeleteModeChanged(false, null);
-                          }}
-                          className={classes.CancelButton}
-                        >
-                          Cancel
-                        </Button>
-                      </li>
-
+                          <li
+                            hidden={
+                              !(
+                                deleteMode.delete &&
+                                deleteMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="default"
+                              disabled={deleting}
+                              onClick={() => {
+                                handleDeleteModeChanged(false, null);
+                              }}
+                              className={classes.CancelButton}
+                            >
+                              Cancel
+                            </Button>
+                          </li>
+                        </React.Fragment>
+                      )}
                       {/* ****************************************************************************************** */}
 
                       <li className={classes.li}>
@@ -2100,7 +2108,8 @@ const isValidPhone = (phone) => {
                           ></TextField>
                         </span>
                       </li>
-
+{!getIsDoctor() && (
+                        <React.Fragment>
                       <li className={classes.li} style={{ paddingTop: "10px" }}>
                         <span className={classes.infoTitle}>STATUS</span>{" "}
                         {getStatusLabel(booking.status)}
@@ -2914,6 +2923,7 @@ const isValidPhone = (phone) => {
                               </Grid>
                             </div>
                           </li>
+                          </React.Fragment>)}
                         </React.Fragment>
                       )}
                     </ul>
@@ -2958,7 +2968,6 @@ const isValidPhone = (phone) => {
             />
           </Dialog>
 
-
           <Dialog
             open={isFindPatientModalShow}
             onClose={closePatientsModal}
@@ -2970,11 +2979,16 @@ const isValidPhone = (phone) => {
               {"Patient Data"}
             </DialogTitle>
             <DialogContent
-              style={{ display: "flex", justifyContent: "space-between", minHeight:"50px" }}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                minHeight: "50px",
+              }}
             >
               <div>
                 <div>Full Name:</div>
-                {selectedBooking?.fullname || (selectedBooking?.surname + ' ' + selectedBooking?.forename)}
+                {selectedBooking?.fullname ||
+                  selectedBooking?.surname + " " + selectedBooking?.forename}
               </div>
               <div>
                 <div>Birth Date:</div>
@@ -3074,7 +3088,6 @@ const isValidPhone = (phone) => {
               </Button>
             </DialogActions>
           </Dialog>
-
 
           <Dialog
             open={openUndoPayDialog}

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
+import { getIsDoctor } from "./isDoctor";
 
 import {
   Badge,
@@ -163,7 +164,8 @@ export default function MyMenu() {
         {state.role &&
           getMenuRole(state.role).map(
             (item) =>
-              !item.hidden && (
+              !item.hidden &&
+              !(item.doctorHide && getIsDoctor()) && (
                 // <ListItem button selected={selectedIndex === item.index} onClick={(event) => handleListItemClick(event, item.index)}>
                 // <ListItemIcon>
                 //     {item.icon}
@@ -230,8 +232,6 @@ export default function MyMenu() {
                             {state.shouldRefunsCountBlood}{" "}
                           </span>
                         )}
-
-
                     </Grid>
                   </div>
                 </React.Fragment>

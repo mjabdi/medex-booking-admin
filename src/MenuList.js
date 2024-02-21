@@ -146,28 +146,30 @@ export const MenuList_Reports = [
     id: `dashboard`,
     title: `Dashboard`,
     icon: <DashboardIcon />,
+    doctorHide: true,
   },
   {
     index: 1,
     id: `periodicReport`,
     title: `Periodic Report`,
     icon: <EventNoteIcon />,
+    doctorHide: true,
   },
   {
     index: 2,
     id: `searchInvoices`,
     title: `Search Invoices`,
     icon: <SearchIcon />,
+    doctorHide: true,
   },
   {
     index: 3,
     id: `corporates`,
     title: `Corporates List`,
     icon: <BusinessIcon />,
+    doctorHide: true,
   },
-
-
-]
+];
 
 
 //---------------
@@ -179,47 +181,52 @@ export const MenuList_Payment = [
     id: `dashboard`,
     title: `Dashboard`,
     icon: <DashboardIcon />,
+    doctorHide: true,
   },
   {
     index: 1,
     id: `paymentsTable`,
     title: `Payment Links`,
     icon: <LinkIcon />,
+    doctorHide: true,
   },
   {
     index: 2,
     id: `paidpaymentsTable`,
     title: `Successful Payments`,
     icon: <DoneOutlineIcon />,
+    doctorHide: true,
   },
   {
     index: 3,
     id: `latepaymentsTable`,
     title: `4 Hours Late`,
     icon: <HourglassEmptyIcon />,
+    doctorHide: true,
   },
-
 
   {
     index: 4,
     id: `notyetPaid`,
     title: `Not Yet Paid`,
     icon: <MoneyOffIcon />,
+    doctorHide: true,
   },
   {
     index: 5,
     id: `refundpaymentsTable`,
     title: `Refunded Payments`,
     icon: <KeyboardReturnIcon />,
+    doctorHide: true,
   },
   {
     index: 6,
     id: `deletedpaymentsTable`,
     title: `Deleted Records`,
     icon: <DeleteIcon />,
+    doctorHide: true,
   },
-
-]
+];
 
 
 //---------------
@@ -288,6 +295,7 @@ export const MenuList_Admin = [
     id: `offDays`,
     title: `Off Days`,
     icon: <EventBusyIcon />,
+    doctorHide: true,
   },
   {
     index: 12,
@@ -354,12 +362,14 @@ export const MenuList_Gynae = [
     id: `offDays`,
     title: `Off Days`,
     icon: <EventBusyIcon />,
+    doctorHide: true,
   },
   {
     index: 11,
     id: `workingHours`,
     title: `Working Hours`,
     icon: <AvTimerIcon />,
+    doctorHide: true,
   },
   {
     index: 12,
@@ -425,12 +435,14 @@ export const MenuList_GP = [
     id: `offDays`,
     title: `Off Days`,
     icon: <EventBusyIcon />,
+    doctorHide: true,
   },
   {
     index: 11,
     id: `workingHours`,
     title: `Working Hours`,
     icon: <AvTimerIcon />,
+    doctorHide: true,
   },
   {
     index: 12,
@@ -509,12 +521,14 @@ export const MenuList_STD = [
     id: `offDays`,
     title: `Off Days`,
     icon: <EventBusyIcon />,
+    doctorHide: true,
   },
   {
     index: 13,
     id: `workingHours`,
     title: `Working Hours`,
     icon: <AvTimerIcon />,
+    doctorHide: true,
   },
   {
     index: 14,
@@ -620,12 +634,14 @@ export const MenuList_Blood = [
     id: `offDays`,
     title: `Off Days`,
     icon: <EventBusyIcon />,
+    doctorHide: true,
   },
   {
     index: 17,
     id: `workingHours`,
     title: `Working Hours`,
     icon: <AvTimerIcon />,
+    doctorHide: true,
   },
   {
     index: 18,
@@ -728,12 +744,14 @@ export const MenuList_PCR = [
     id: `offDays`,
     title: `Off Days`,
     icon: <EventBusyIcon />,
+    doctorHide: true,
   },
   {
     index: 18,
     id: `workingHours`,
     title: `Working Hours`,
     icon: <AvTimerIcon />,
+    doctorHide: true,
   },
   {
     index: 19,
@@ -799,12 +817,14 @@ export const MenuList_Derma = [
     id: `offDays`,
     title: `Off Days`,
     icon: <EventBusyIcon />,
+    doctorHide: true,
   },
   {
     index: 11,
     id: `workingHours`,
     title: `Working Hours`,
     icon: <AvTimerIcon />,
+    doctorHide: true,
   },
   {
     index: 12,
@@ -890,12 +910,14 @@ export const MenuList_Screening = [
     id: `offDays`,
     title: `Off Days`,
     icon: <EventBusyIcon />,
+    doctorHide: true,
   },
   {
     index: 15,
     id: `workingHours`,
     title: `Working Hours`,
     icon: <AvTimerIcon />,
+    doctorHide: true,
   },
   {
     index: 16,
@@ -962,12 +984,14 @@ export const MenuList_Corporate = [
     id: `offDays`,
     title: `Off Days`,
     icon: <EventBusyIcon />,
+    doctorHide: true,
   },
   {
     index: 11,
     id: `workingHours`,
     title: `Working Hours`,
     icon: <AvTimerIcon />,
+    doctorHide: true,
   },
   {
     index: 12,

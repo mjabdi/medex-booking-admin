@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import GlobalState from "./../GlobalState";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
+import { getIsDoctor } from "../isDoctor";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -1423,204 +1424,228 @@ const isValidPhone = (phone) => {
                 <Grid item xs={12} md={12} key={`panel0`}>
                   <div className={classes.infoDetails}>
                     <ul className={classes.ul}>
-                      {/* Restore Functionality ******************************************* */}
-                      <li
-                        hidden={
-                          !(
-                            restoreMode.restore &&
-                            restoreMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <div
-                          style={{
-                            fontWeight: "500",
-                            paddingBottom: "5px",
-                            paddingLeft: "5px",
-                            fontSize: "16px",
-                            color: "#333",
-                          }}
-                        >
-                          Are you sure you want to restore this record?
-                        </div>
-                      </li>
+                      {!getIsDoctor() && (
+                        <React.Fragment>
+                          {/* Restore Functionality ******************************************* */}
+                          <li
+                            hidden={
+                              !(
+                                restoreMode.restore &&
+                                restoreMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <div
+                              style={{
+                                fontWeight: "500",
+                                paddingBottom: "5px",
+                                paddingLeft: "5px",
+                                fontSize: "16px",
+                                color: "#333",
+                              }}
+                            >
+                              Are you sure you want to restore this record?
+                            </div>
+                          </li>
 
-                      <li
-                        hidden={
-                          !booking.deleted ||
-                          (restoreMode.restore &&
-                            restoreMode.person._id === booking._id)
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            handleRestoreModeChanged(true, booking);
-                          }}
-                          className={classes.RestoreButton}
-                        >
-                          Restore This Record
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !booking.deleted ||
+                              (restoreMode.restore &&
+                                restoreMode.person._id === booking._id)
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              onClick={() => {
+                                handleRestoreModeChanged(true, booking);
+                              }}
+                              className={classes.RestoreButton}
+                            >
+                              Restore This Record
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            restoreMode.restore &&
-                            restoreMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          disabled={restoring}
-                          onClick={() => {
-                            handleRestoreModeChanged(false, booking);
-                          }}
-                          className={classes.SaveButton}
-                        >
-                          YES, Restore this!
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                restoreMode.restore &&
+                                restoreMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              disabled={restoring}
+                              onClick={() => {
+                                handleRestoreModeChanged(false, booking);
+                              }}
+                              className={classes.SaveButton}
+                            >
+                              YES, Restore this!
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            restoreMode.restore &&
-                            restoreMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="default"
-                          disabled={restoring}
-                          onClick={() => {
-                            handleRestoreModeChanged(false, null);
-                          }}
-                          className={classes.CancelButton}
-                        >
-                          Cancel
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                restoreMode.restore &&
+                                restoreMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="default"
+                              disabled={restoring}
+                              onClick={() => {
+                                handleRestoreModeChanged(false, null);
+                              }}
+                              className={classes.CancelButton}
+                            >
+                              Cancel
+                            </Button>
+                          </li>
 
-                      {/*  ******************************************************************* */}
+                          {/*  ******************************************************************* */}
 
-                      {/* Edit Functionality ******************************************* */}
+                          {/* Edit Functionality ******************************************* */}
 
-                      <li
-                        hidden={
-                          booking.deleted ||
-                          deleteMode.delete ||
-                          (editMode.edit && editMode.person._id === booking._id)
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            handleEditModeChanged(true, booking);
-                          }}
-                          className={classes.EditButton}
-                        >
-                          Edit Booking Info
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              booking.deleted ||
+                              deleteMode.delete ||
+                              (editMode.edit &&
+                                editMode.person._id === booking._id)
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              onClick={() => {
+                                handleEditModeChanged(true, booking);
+                              }}
+                              className={classes.EditButton}
+                            >
+                              Edit Booking Info
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            editMode.edit && editMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          disabled={saving || !recordChanged}
-                          onClick={() => {
-                            handleEditModeChanged(false, booking);
-                          }}
-                          className={classes.SaveButton}
-                        >
-                          Save Changes
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              disabled={saving || !recordChanged}
+                              onClick={() => {
+                                handleEditModeChanged(false, booking);
+                              }}
+                              className={classes.SaveButton}
+                            >
+                              Save Changes
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            editMode.edit && editMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="default"
-                          disabled={saving}
-                          onClick={() => {
-                            handleEditModeChanged(false, null);
-                          }}
-                          className={classes.CancelButton}
-                        >
-                          Cancel
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="default"
+                              disabled={saving}
+                              onClick={() => {
+                                handleEditModeChanged(false, null);
+                              }}
+                              className={classes.CancelButton}
+                            >
+                              Cancel
+                            </Button>
+                          </li>
 
-                      {/* ****************************************************************************************** */}
+                          {/* ****************************************************************************************** */}
 
-                      {/* Delete Functionality ******************************************* */}
+                          {/* Delete Functionality ******************************************* */}
 
-                      <li
-                        hidden={
-                          !(
-                            deleteMode.delete &&
-                            deleteMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <div
-                          style={{
-                            fontWeight: "600",
-                            paddingBottom: "5px",
-                            paddingLeft: "5px",
-                            fontSize: "16px",
-                          }}
-                        >
-                          Are you sure you want to delete this record?
-                        </div>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                deleteMode.delete &&
+                                deleteMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <div
+                              style={{
+                                fontWeight: "600",
+                                paddingBottom: "5px",
+                                paddingLeft: "5px",
+                                fontSize: "16px",
+                              }}
+                            >
+                              Are you sure you want to delete this record?
+                            </div>
+                          </li>
 
-                      <li
-                        hidden={
-                          props.deleteButtonDisabled ||
-                          booking.deleted ||
-                          editMode.edit ||
-                          (deleteMode.delete &&
-                            deleteMode.person._id === booking._id)
-                        }
-                      >
-                        {booking.OTCCharges > 0 && (
-                          <Tooltip title={"Paid Records Cannot be Deleted!"}>
-                            <div>
+                          <li
+                            hidden={
+                              props.deleteButtonDisabled ||
+                              booking.deleted ||
+                              editMode.edit ||
+                              (deleteMode.delete &&
+                                deleteMode.person._id === booking._id)
+                            }
+                          >
+                            {booking.OTCCharges > 0 && (
+                              <Tooltip
+                                title={"Paid Records Cannot be Deleted!"}
+                              >
+                                <div>
+                                  <Button
+                                    disabled={
+                                      booking.OTCCharges > 0 && !booking.prepaid
+                                    }
+                                    type="button"
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => {
+                                      handleDeleteModeChanged(true, booking);
+                                    }}
+                                    className={classes.DeleteButton}
+                                  >
+                                    Delete This Record
+                                  </Button>
+                                </div>
+                              </Tooltip>
+                            )}
+                            {booking.OTCCharges === 0 && (
                               <Button
-                                disabled={
-                                  booking.OTCCharges > 0 && !booking.prepaid
-                                }
+                                disabled={booking.OTCCharges > 0}
                                 type="button"
                                 fullWidth
                                 variant="contained"
@@ -1632,72 +1657,56 @@ const isValidPhone = (phone) => {
                               >
                                 Delete This Record
                               </Button>
-                            </div>
-                          </Tooltip>
-                        )}
-                        {booking.OTCCharges === 0 && (
-                          <Button
-                            disabled={booking.OTCCharges > 0}
-                            type="button"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            onClick={() => {
-                              handleDeleteModeChanged(true, booking);
-                            }}
-                            className={classes.DeleteButton}
+                            )}
+                          </li>
+
+                          <li
+                            hidden={
+                              !(
+                                deleteMode.delete &&
+                                deleteMode.person._id === booking._id
+                              )
+                            }
                           >
-                            Delete This Record
-                          </Button>
-                        )}
-                      </li>
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              disabled={deleting}
+                              onClick={() => {
+                                handleDeleteModeChanged(false, booking);
+                              }}
+                              className={classes.SaveButton}
+                            >
+                              YES, Delete this!
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            deleteMode.delete &&
-                            deleteMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          disabled={deleting}
-                          onClick={() => {
-                            handleDeleteModeChanged(false, booking);
-                          }}
-                          className={classes.SaveButton}
-                        >
-                          YES, Delete this!
-                        </Button>
-                      </li>
-
-                      <li
-                        hidden={
-                          !(
-                            deleteMode.delete &&
-                            deleteMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="default"
-                          disabled={deleting}
-                          onClick={() => {
-                            handleDeleteModeChanged(false, null);
-                          }}
-                          className={classes.CancelButton}
-                        >
-                          Cancel
-                        </Button>
-                      </li>
-
+                          <li
+                            hidden={
+                              !(
+                                deleteMode.delete &&
+                                deleteMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="default"
+                              disabled={deleting}
+                              onClick={() => {
+                                handleDeleteModeChanged(false, null);
+                              }}
+                              className={classes.CancelButton}
+                            >
+                              Cancel
+                            </Button>
+                          </li>
+                        </React.Fragment>
+                      )}
                       {/* ****************************************************************************************** */}
 
                       <li className={classes.li}>
@@ -1993,522 +2002,566 @@ const isValidPhone = (phone) => {
                           </Grid>
                         </Grid>
                       </li>
-
-                      <li className={classes.li} style={{ paddingTop: "20px" }}>
-                        <span className={classes.infoTitle}>STATUS</span>{" "}
-                        {getStatusLabel(booking.status)}
-                        {booking.status === "patient_attended" &&
-                          !(
-                            editMode.edit && editMode.person._id === booking._id
-                          ) &&
-                          !booking.deleted && (
-                            <Button
-                              variant="outlined"
-                              color="primary"
-                              disabled={saving}
-                              style={{ width: "300px" }}
-                              onClick={(event) =>
-                                changeBackToBookingMade(event, booking._id)
-                              }
-                            >
-                              Change Back To Booking Made
-                            </Button>
-                          )}
-                        {booking.status === "booked" &&
-                          !(
-                            editMode.edit && editMode.person._id === booking._id
-                          ) &&
-                          !booking.deleted && (
-                            <Button
-                              variant="outlined"
-                              color="default"
-                              disabled={saving}
-                              style={{ width: "300px" }}
-                              onClick={(event) => openPatientsModal(booking)}
-                            >
-                              Change To Patient Attended
-                            </Button>
-                          )}
-                      </li>
-
-                      <li hidden={booking.deleted || editMode.edit}>
-                        <Button
-                          disabled={isPrinting}
-                          startIcon={<PrintIcon />}
-                          type="button"
-                          fullWidth
-                          variant="outlined"
-                          color="primary"
-                          onClick={printLabel}
-                          className={classes.DownloadForm}
-                        >
-                          {!booking.printStatus && "Print LAB Label"}
-                          {booking.printStatus === "printed" &&
-                            "Print LAB Label Again"}
-                          {booking.printStatus === "printing" && "Printing"}
-                          {booking.printStatus === "preparing" &&
-                            "Preparing for print"}
-                        </Button>
-                      </li>
-
-                      <li hidden={booking.deleted || editMode.edit}>
-                        <Button
-                          disabled={!booking.formData}
-                          startIcon={<PrintIcon />}
-                          type="button"
-                          fullWidth
-                          variant="outlined"
-                          color="primary"
-                          onClick={() => {
-                            downloadRegForm(booking._id);
-                          }}
-                          className={classes.DownloadForm}
-                        >
-                          Download Registration Form
-                        </Button>
-                      </li>
-
-                      <li
-                        hidden={
-                          booking.deleted || editMode.edit || booking.formData
-                        }
-                      >
-                        <Button
-                          disabled={!booking.email || booking.email.length < 3}
-                          startIcon={<SendIcon />}
-                          type="button"
-                          fullWidth
-                          variant="outlined"
-                          color="primary"
-                          onClick={() => {
-                            sendRegForm(booking._id);
-                          }}
-                          className={classes.DownloadForm}
-                          style={{ position: "relative" }}
-                        >
-                          Send Registration Form Email
-                          {emailSent && (
-                            <div
-                              style={{
-                                position: "absolute",
-                                right: "10px",
-                                top: "5px",
-                                color: "#05ad19",
-                              }}
-                            >
-                              Email Sent
-                            </div>
-                          )}
-                        </Button>
-                      </li>
-
-                      <Divider />
-
-                      <li className={classes.li} style={{ marginTop: "20px" }}>
-                        <span className={classes.infoTitle}>INVOICE # : </span>{" "}
-                        <span style={{ paddingLeft: "0px" }}>
-                          {!invoiceLoaded && (
-                            <span className={classes.invoiceNumber}> ... </span>
-                          )}
-                          {invoiceLoaded && invoice && (
-                            <span className={classes.invoiceNumber}>
-                              {" "}
-                              {invoice.invoiceNumber}{" "}
-                            </span>
-                          )}
-                          {invoiceLoaded && !invoice && (
-                            <span
-                              className={classes.invoiceNumber}
-                              style={{ color: "red", fontSize: "0.9rem" }}
-                            >
-                              {" "}
-                              N/A{" "}
-                            </span>
-                          )}
-                        </span>
-                        {!(
-                          editMode.edit && editMode.person._id === booking._id
-                        ) &&
-                          !booking.deleted && (
-                            <React.Fragment>
-                              {invoiceLoaded && !invoice && (
+                      {!getIsDoctor() && (
+                        <React.Fragment>
+                          <li
+                            className={classes.li}
+                            style={{ paddingTop: "20px" }}
+                          >
+                            <span className={classes.infoTitle}>STATUS</span>{" "}
+                            {getStatusLabel(booking.status)}
+                            {booking.status === "patient_attended" &&
+                              !(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              ) &&
+                              !booking.deleted && (
                                 <Button
                                   variant="outlined"
                                   color="primary"
-                                  className={classes.PayButton}
-                                  onClick={() => OpenInvoiceDialog()}
+                                  disabled={saving}
+                                  style={{ width: "300px" }}
+                                  onClick={(event) =>
+                                    changeBackToBookingMade(event, booking._id)
+                                  }
                                 >
-                                  Issue Invoice
+                                  Change Back To Booking Made
                                 </Button>
                               )}
+                            {booking.status === "booked" &&
+                              !(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              ) &&
+                              !booking.deleted && (
+                                <Button
+                                  variant="outlined"
+                                  color="default"
+                                  disabled={saving}
+                                  style={{ width: "300px" }}
+                                  onClick={(event) =>
+                                    openPatientsModal(booking)
+                                  }
+                                >
+                                  Change To Patient Attended
+                                </Button>
+                              )}
+                          </li>
 
+                          <li hidden={booking.deleted || editMode.edit}>
+                            <Button
+                              disabled={isPrinting}
+                              startIcon={<PrintIcon />}
+                              type="button"
+                              fullWidth
+                              variant="outlined"
+                              color="primary"
+                              onClick={printLabel}
+                              className={classes.DownloadForm}
+                            >
+                              {!booking.printStatus && "Print LAB Label"}
+                              {booking.printStatus === "printed" &&
+                                "Print LAB Label Again"}
+                              {booking.printStatus === "printing" && "Printing"}
+                              {booking.printStatus === "preparing" &&
+                                "Preparing for print"}
+                            </Button>
+                          </li>
+
+                          <li hidden={booking.deleted || editMode.edit}>
+                            <Button
+                              disabled={!booking.formData}
+                              startIcon={<PrintIcon />}
+                              type="button"
+                              fullWidth
+                              variant="outlined"
+                              color="primary"
+                              onClick={() => {
+                                downloadRegForm(booking._id);
+                              }}
+                              className={classes.DownloadForm}
+                            >
+                              Download Registration Form
+                            </Button>
+                          </li>
+
+                          <li
+                            hidden={
+                              booking.deleted ||
+                              editMode.edit ||
+                              booking.formData
+                            }
+                          >
+                            <Button
+                              disabled={
+                                !booking.email || booking.email.length < 3
+                              }
+                              startIcon={<SendIcon />}
+                              type="button"
+                              fullWidth
+                              variant="outlined"
+                              color="primary"
+                              onClick={() => {
+                                sendRegForm(booking._id);
+                              }}
+                              className={classes.DownloadForm}
+                              style={{ position: "relative" }}
+                            >
+                              Send Registration Form Email
+                              {emailSent && (
+                                <div
+                                  style={{
+                                    position: "absolute",
+                                    right: "10px",
+                                    top: "5px",
+                                    color: "#05ad19",
+                                  }}
+                                >
+                                  Email Sent
+                                </div>
+                              )}
+                            </Button>
+                          </li>
+
+                          <Divider />
+
+                          <li
+                            className={classes.li}
+                            style={{ marginTop: "20px" }}
+                          >
+                            <span className={classes.infoTitle}>
+                              INVOICE # :{" "}
+                            </span>{" "}
+                            <span style={{ paddingLeft: "0px" }}>
+                              {!invoiceLoaded && (
+                                <span className={classes.invoiceNumber}>
+                                  {" "}
+                                  ...{" "}
+                                </span>
+                              )}
                               {invoiceLoaded && invoice && (
+                                <span className={classes.invoiceNumber}>
+                                  {" "}
+                                  {invoice.invoiceNumber}{" "}
+                                </span>
+                              )}
+                              {invoiceLoaded && !invoice && (
+                                <span
+                                  className={classes.invoiceNumber}
+                                  style={{ color: "red", fontSize: "0.9rem" }}
+                                >
+                                  {" "}
+                                  N/A{" "}
+                                </span>
+                              )}
+                            </span>
+                            {!(
+                              editMode.edit &&
+                              editMode.person._id === booking._id
+                            ) &&
+                              !booking.deleted && (
                                 <React.Fragment>
-                                  <Button
-                                    variant="outlined"
-                                    startIcon={<PrintIcon />}
-                                    color="primary"
-                                    className={classes.printInvoiceButton}
-                                    onClick={() => downloadInvoice(invoice._id)}
-                                  >
-                                    Download Invoice
-                                  </Button>
+                                  {invoiceLoaded && !invoice && (
+                                    <Button
+                                      variant="outlined"
+                                      color="primary"
+                                      className={classes.PayButton}
+                                      onClick={() => OpenInvoiceDialog()}
+                                    >
+                                      Issue Invoice
+                                    </Button>
+                                  )}
 
-                                  <Button
-                                    variant="outlined"
-                                    color="secondary"
-                                    className={classes.editInvoiceButton}
-                                    onClick={() => OpenInvoiceDialog()}
-                                  >
-                                    Edit Invoice
-                                  </Button>
+                                  {invoiceLoaded && invoice && (
+                                    <React.Fragment>
+                                      <Button
+                                        variant="outlined"
+                                        startIcon={<PrintIcon />}
+                                        color="primary"
+                                        className={classes.printInvoiceButton}
+                                        onClick={() =>
+                                          downloadInvoice(invoice._id)
+                                        }
+                                      >
+                                        Download Invoice
+                                      </Button>
 
-                                  <Button
-                                    disabled={
-                                      !booking.email || booking.email.length < 3
-                                    }
-                                    startIcon={<SendIcon />}
-                                    type="button"
-                                    variant="outlined"
-                                    color="primary"
-                                    onClick={() => {
-                                      sendInvoiceEmail(
-                                        invoice._id,
-                                        booking.email
-                                      );
-                                    }}
-                                    style={{
-                                      position: "relative",
-                                      marginLeft: "10px",
-                                      paddingRight: "130px",
-                                      fontSize: "0.8rem",
-                                    }}
-                                  >
-                                    Send Invoice By Email
-                                    {emailSentInvoice && (
-                                      <div
+                                      <Button
+                                        variant="outlined"
+                                        color="secondary"
+                                        className={classes.editInvoiceButton}
+                                        onClick={() => OpenInvoiceDialog()}
+                                      >
+                                        Edit Invoice
+                                      </Button>
+
+                                      <Button
+                                        disabled={
+                                          !booking.email ||
+                                          booking.email.length < 3
+                                        }
+                                        startIcon={<SendIcon />}
+                                        type="button"
+                                        variant="outlined"
+                                        color="primary"
+                                        onClick={() => {
+                                          sendInvoiceEmail(
+                                            invoice._id,
+                                            booking.email
+                                          );
+                                        }}
                                         style={{
-                                          position: "absolute",
-                                          right: "10px",
-                                          top: "5px",
-                                          color: "#05ad19",
+                                          position: "relative",
+                                          marginLeft: "10px",
+                                          paddingRight: "130px",
+                                          fontSize: "0.8rem",
                                         }}
                                       >
-                                        Email Sent
-                                      </div>
-                                    )}
-                                  </Button>
+                                        Send Invoice By Email
+                                        {emailSentInvoice && (
+                                          <div
+                                            style={{
+                                              position: "absolute",
+                                              right: "10px",
+                                              top: "5px",
+                                              color: "#05ad19",
+                                            }}
+                                          >
+                                            Email Sent
+                                          </div>
+                                        )}
+                                      </Button>
+                                    </React.Fragment>
+                                  )}
                                 </React.Fragment>
                               )}
-                            </React.Fragment>
-                          )}
-                      </li>
+                          </li>
 
-                      <li className={classes.li} style={{ marginTop: "20px" }}>
-                        <span className={classes.infoTitle}>TOTAL CHARGES</span>{" "}
-                        <span
-                          style={{
-                            paddingLeft: "15px",
-                            color: `${booking.prepaid ? "#f70a79" : ""} `,
-                          }}
-                          className={
-                            !booking.OTCCharges || booking.OTCCharges === 0
-                              ? classes.infoDataChargesHigher
-                              : classes.infoDataCharges
-                          }
-                        >{`£${booking.OTCCharges.toLocaleString(
-                          "en-GB"
-                        )}`}</span>
-                        {!(
-                          editMode.edit && editMode.person._id === booking._id
-                        ) &&
-                          !booking.paid &&
-                          !booking.deleted && (
-                            <Button
-                              variant="outlined"
-                              color="secondary"
-                              className={classes.PayButton}
-                              onClick={(event) => Pay()}
-                            >
-                              Pay
-                            </Button>
-                          )}
-                        {!booking.paid && booking.refund && (
-                          <React.Fragment>
-                            <span
-                              className={classes.PayLabel}
-                              style={{ color: "#e04209" }}
-                            >
-                              {" "}
-                              <UndoIcon
-                                className={classes.checkIconSmall}
-                                style={{ color: "#e04209" }}
-                              />{" "}
-                              Online payment has been refunded.
-                            </span>
-                          </React.Fragment>
-                        )}
-                        {!(
-                          editMode.edit && editMode.person._id === booking._id
-                        ) &&
-                          booking.paid &&
-                          (booking.prepaid ? (
-                            <React.Fragment>
-                              <span
-                                className={classes.PayLabel}
-                                style={{ color: "#f70a79" }}
-                              >
-                                {" "}
-                                <CheckIcon
-                                  className={classes.checkIconSmall}
-                                  style={{ color: "#f70a79" }}
-                                />{" "}
-                                Paid Online
-                              </span>
-                            </React.Fragment>
-                          ) : (
-                            <React.Fragment>
-                              <span className={classes.PayLabel}>
-                                {" "}
-                                <CheckIcon
-                                  className={classes.checkIconSmall}
-                                />{" "}
-                                Paid by {booking.paidBy}
-                                {booking.paidBy === "corporate"
-                                  ? ` "${booking.corporate}" `
-                                  : ""}
-                              </span>
-
-                              <Tooltip title="Undo Payment">
-                                <IconButton
-                                  onClick={() => setOpenUndoPayDialog(true)}
-                                >
-                                  <UndoIcon style={{ color: "red" }} />
-                                </IconButton>
-                              </Tooltip>
-                            </React.Fragment>
-                          ))}
-                      </li>
-
-                      {booking.paymentInfo && (
-                        <li>
-                          <div
-                            style={{
-                              position: "relative",
-                              border: "1px dashed #84b076",
-                              borderRadius: "8px",
-                              padding: "10px",
-                              marginBottom: "20px",
-                            }}
+                          <li
+                            className={classes.li}
+                            style={{ marginTop: "20px" }}
                           >
-                            <div
+                            <span className={classes.infoTitle}>
+                              TOTAL CHARGES
+                            </span>{" "}
+                            <span
                               style={{
-                                position: "absolute",
-                                top: "-10px",
-                                fontSize: "0.85em",
-                                background: "#fff",
-                                fontWeight: "600",
-                                color: "#32701d",
-                                padding: "0px 5px",
+                                paddingLeft: "15px",
+                                color: `${booking.prepaid ? "#f70a79" : ""} `,
                               }}
-                            >
-                              Payment Details
-                            </div>
-                            {JSON.parse(booking.paymentInfo).cardDetails ? (
-                              <Grid
-                                container
-                                spacing={4}
-                                justify="space-around"
-                                alignItems="center"
-                              >
-                                <Grid item>
-                                  cardBrand:{" "}
-                                  <strong>
-                                    {
-                                      JSON.parse(booking.paymentInfo)
-                                        .cardDetails?.card.cardBrand
-                                    }
-                                  </strong>
-                                </Grid>
-                                <Grid item>
-                                  expDate:{" "}
-                                  <strong>
-                                    {
-                                      JSON.parse(booking.paymentInfo)
-                                        .cardDetails?.card.expMonth
-                                    }
-                                    /
-                                    {
-                                      JSON.parse(booking.paymentInfo)
-                                        .cardDetails?.card.expYear
-                                    }
-                                  </strong>
-                                </Grid>
-                                <Grid item>
-                                  last4:{" "}
-                                  <strong>
-                                    {
-                                      JSON.parse(booking.paymentInfo)
-                                        .cardDetails?.card.last4
-                                    }
-                                  </strong>
-                                </Grid>
-                                <Grid item>
-                                  timeStamp:{" "}
-                                  <strong>
-                                    {JSON.parse(booking.paymentInfo).createdAt}
-                                  </strong>
-                                </Grid>
-                              </Grid>
-                            ) : (
-                              <Grid
-                                container
-                                spacing={4}
-                                justify="space-around"
-                                alignItems="center"
-                              >
-                                <Grid item>
-                                  Operator: <strong>{"PAYPAL"}</strong>
-                                </Grid>
-
-                                <Grid item>
-                                  Payer Name:{" "}
-                                  <strong>
-                                    {`${
-                                      JSON.parse(booking.paymentInfo).payer
-                                        ?.name.given_name
-                                    } ${
-                                      JSON.parse(booking.paymentInfo).payer
-                                        ?.name.surname
-                                    } `}
-                                  </strong>
-                                </Grid>
-
-                                <Grid item>
-                                  timeStamp:{" "}
-                                  <strong>
-                                    {
-                                      JSON.parse(booking.paymentInfo)
-                                        .create_time
-                                    }
-                                  </strong>
-                                </Grid>
-                              </Grid>
+                              className={
+                                !booking.OTCCharges || booking.OTCCharges === 0
+                                  ? classes.infoDataChargesHigher
+                                  : classes.infoDataCharges
+                              }
+                            >{`£${booking.OTCCharges.toLocaleString(
+                              "en-GB"
+                            )}`}</span>
+                            {!(
+                              editMode.edit &&
+                              editMode.person._id === booking._id
+                            ) &&
+                              !booking.paid &&
+                              !booking.deleted && (
+                                <Button
+                                  variant="outlined"
+                                  color="secondary"
+                                  className={classes.PayButton}
+                                  onClick={(event) => Pay()}
+                                >
+                                  Pay
+                                </Button>
+                              )}
+                            {!booking.paid && booking.refund && (
+                              <React.Fragment>
+                                <span
+                                  className={classes.PayLabel}
+                                  style={{ color: "#e04209" }}
+                                >
+                                  {" "}
+                                  <UndoIcon
+                                    className={classes.checkIconSmall}
+                                    style={{ color: "#e04209" }}
+                                  />{" "}
+                                  Online payment has been refunded.
+                                </span>
+                              </React.Fragment>
                             )}
-                          </div>
-                        </li>
-                      )}
+                            {!(
+                              editMode.edit &&
+                              editMode.person._id === booking._id
+                            ) &&
+                              booking.paid &&
+                              (booking.prepaid ? (
+                                <React.Fragment>
+                                  <span
+                                    className={classes.PayLabel}
+                                    style={{ color: "#f70a79" }}
+                                  >
+                                    {" "}
+                                    <CheckIcon
+                                      className={classes.checkIconSmall}
+                                      style={{ color: "#f70a79" }}
+                                    />{" "}
+                                    Paid Online
+                                  </span>
+                                </React.Fragment>
+                              ) : (
+                                <React.Fragment>
+                                  <span className={classes.PayLabel}>
+                                    {" "}
+                                    <CheckIcon
+                                      className={classes.checkIconSmall}
+                                    />{" "}
+                                    Paid by {booking.paidBy}
+                                    {booking.paidBy === "corporate"
+                                      ? ` "${booking.corporate}" `
+                                      : ""}
+                                  </span>
 
-                      {invoice && (
-                        <li
-                          style={{
-                            lineHeight: "0.5rem",
-                            border: "1px dashed #999",
-                            padding: "0px 10px",
-                            marginBottom: "10px",
-                            marginTop: "-10px",
-                          }}
-                        >
-                          {invoice.items.map((item) => (
-                            <p>
-                              <span
+                                  <Tooltip title="Undo Payment">
+                                    <IconButton
+                                      onClick={() => setOpenUndoPayDialog(true)}
+                                    >
+                                      <UndoIcon style={{ color: "red" }} />
+                                    </IconButton>
+                                  </Tooltip>
+                                </React.Fragment>
+                              ))}
+                          </li>
+
+                          {booking.paymentInfo && (
+                            <li>
+                              <div
                                 style={{
-                                  width: "125px",
-                                  display: "inline-block",
+                                  position: "relative",
+                                  border: "1px dashed #84b076",
+                                  borderRadius: "8px",
+                                  padding: "10px",
+                                  marginBottom: "20px",
                                 }}
                               >
-                                {" "}
-                                {item.code}{" "}
-                              </span>
-                              <span> £{item.price}</span>
-                            </p>
-                          ))}
+                                <div
+                                  style={{
+                                    position: "absolute",
+                                    top: "-10px",
+                                    fontSize: "0.85em",
+                                    background: "#fff",
+                                    fontWeight: "600",
+                                    color: "#32701d",
+                                    padding: "0px 5px",
+                                  }}
+                                >
+                                  Payment Details
+                                </div>
+                                {JSON.parse(booking.paymentInfo).cardDetails ? (
+                                  <Grid
+                                    container
+                                    spacing={4}
+                                    justify="space-around"
+                                    alignItems="center"
+                                  >
+                                    <Grid item>
+                                      cardBrand:{" "}
+                                      <strong>
+                                        {
+                                          JSON.parse(booking.paymentInfo)
+                                            .cardDetails?.card.cardBrand
+                                        }
+                                      </strong>
+                                    </Grid>
+                                    <Grid item>
+                                      expDate:{" "}
+                                      <strong>
+                                        {
+                                          JSON.parse(booking.paymentInfo)
+                                            .cardDetails?.card.expMonth
+                                        }
+                                        /
+                                        {
+                                          JSON.parse(booking.paymentInfo)
+                                            .cardDetails?.card.expYear
+                                        }
+                                      </strong>
+                                    </Grid>
+                                    <Grid item>
+                                      last4:{" "}
+                                      <strong>
+                                        {
+                                          JSON.parse(booking.paymentInfo)
+                                            .cardDetails?.card.last4
+                                        }
+                                      </strong>
+                                    </Grid>
+                                    <Grid item>
+                                      timeStamp:{" "}
+                                      <strong>
+                                        {
+                                          JSON.parse(booking.paymentInfo)
+                                            .createdAt
+                                        }
+                                      </strong>
+                                    </Grid>
+                                  </Grid>
+                                ) : (
+                                  <Grid
+                                    container
+                                    spacing={4}
+                                    justify="space-around"
+                                    alignItems="center"
+                                  >
+                                    <Grid item>
+                                      Operator: <strong>{"PAYPAL"}</strong>
+                                    </Grid>
 
-                          <p>
-                            <span
+                                    <Grid item>
+                                      Payer Name:{" "}
+                                      <strong>
+                                        {`${
+                                          JSON.parse(booking.paymentInfo).payer
+                                            ?.name.given_name
+                                        } ${
+                                          JSON.parse(booking.paymentInfo).payer
+                                            ?.name.surname
+                                        } `}
+                                      </strong>
+                                    </Grid>
+
+                                    <Grid item>
+                                      timeStamp:{" "}
+                                      <strong>
+                                        {
+                                          JSON.parse(booking.paymentInfo)
+                                            .create_time
+                                        }
+                                      </strong>
+                                    </Grid>
+                                  </Grid>
+                                )}
+                              </div>
+                            </li>
+                          )}
+
+                          {invoice && (
+                            <li
                               style={{
-                                width: "125px",
-                                display: "inline-block",
-                                fontWeight: "500",
+                                lineHeight: "0.5rem",
+                                border: "1px dashed #999",
+                                padding: "0px 10px",
+                                marginBottom: "10px",
+                                marginTop: "-10px",
                               }}
                             >
-                              {" "}
-                              TOTAL{" "}
-                            </span>
-                            <span style={{ fontWeight: "600", color: "green" }}>
-                              {" "}
-                              £{getTotalPrice(invoice.items)}
-                            </span>
-                          </p>
-                        </li>
-                      )}
+                              {invoice.items.map((item) => (
+                                <p>
+                                  <span
+                                    style={{
+                                      width: "125px",
+                                      display: "inline-block",
+                                    }}
+                                  >
+                                    {" "}
+                                    {item.code}{" "}
+                                  </span>
+                                  <span> £{item.price}</span>
+                                </p>
+                              ))}
 
-                      <li className={classes.li}>
-                        <div
-                          style={{
-                            border: "1px dashed #285927",
-                            background: "#fafffa",
-                            padding: "10px",
-                          }}
-                        >
-                          <Grid
-                            container
-                            direction="row"
-                            justifyContent="flex-start"
-                            alignItems="center"
-                          >
-                            <Grid item>
-                              <span
-                                className={classes.infoTitle}
-                                style={{ color: "#2a422a" }}
-                              >
-                                Ask for Review By EMAIL
-                              </span>
-                            </Grid>
-                            <Grid item>
-                              <span>
-                                {booking.smsSent ? (
-                                  <CheckIcon className={classes.checkIcon} />
-                                ) : (
-                                  <CloseIcon className={classes.closeIcon} />
-                                )}
-                              </span>
-                            </Grid>
-                            <Grid item xs={4} style={{ paddingLeft: "20px" }}>
-                              <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">
-                                  Patient Source
-                                </InputLabel>
-                                <Select
-                                  labelId="demo-simple-select-label"
-                                  id="demo-simple-select"
-                                  value={smsType}
-                                  onChange={smsTypeChanged}
-                                  label="Source"
-                                  fullWidth
+                              <p>
+                                <span
+                                  style={{
+                                    width: "125px",
+                                    display: "inline-block",
+                                    fontWeight: "500",
+                                  }}
                                 >
-                                  {smsTypes.map((element) => (
-                                    <MenuItem
-                                      value={element.value}
-                                    >{`${element.text}`}</MenuItem>
-                                  ))}
-                                </Select>
-                              </FormControl>
-                            </Grid>
-                            <Grid item xs={3}>
-                              <Button
-                                variant="contained"
-                                disabled={
-                                  smsSending || !isValidPhone(booking.email)
-                                }
-                                color="primary"
-                                className={classes.PayButton}
-                                onClick={SendSMS}
+                                  {" "}
+                                  TOTAL{" "}
+                                </span>
+                                <span
+                                  style={{ fontWeight: "600", color: "green" }}
+                                >
+                                  {" "}
+                                  £{getTotalPrice(invoice.items)}
+                                </span>
+                              </p>
+                            </li>
+                          )}
+
+                          <li className={classes.li}>
+                            <div
+                              style={{
+                                border: "1px dashed #285927",
+                                background: "#fafffa",
+                                padding: "10px",
+                              }}
+                            >
+                              <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="center"
                               >
-                                Send EMAIL
-                              </Button>
-                            </Grid>
-                            {/* 
+                                <Grid item>
+                                  <span
+                                    className={classes.infoTitle}
+                                    style={{ color: "#2a422a" }}
+                                  >
+                                    Ask for Review By EMAIL
+                                  </span>
+                                </Grid>
+                                <Grid item>
+                                  <span>
+                                    {booking.smsSent ? (
+                                      <CheckIcon
+                                        className={classes.checkIcon}
+                                      />
+                                    ) : (
+                                      <CloseIcon
+                                        className={classes.closeIcon}
+                                      />
+                                    )}
+                                  </span>
+                                </Grid>
+                                <Grid
+                                  item
+                                  xs={4}
+                                  style={{ paddingLeft: "20px" }}
+                                >
+                                  <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">
+                                      Patient Source
+                                    </InputLabel>
+                                    <Select
+                                      labelId="demo-simple-select-label"
+                                      id="demo-simple-select"
+                                      value={smsType}
+                                      onChange={smsTypeChanged}
+                                      label="Source"
+                                      fullWidth
+                                    >
+                                      {smsTypes.map((element) => (
+                                        <MenuItem
+                                          value={element.value}
+                                        >{`${element.text}`}</MenuItem>
+                                      ))}
+                                    </Select>
+                                  </FormControl>
+                                </Grid>
+                                <Grid item xs={3}>
+                                  <Button
+                                    variant="contained"
+                                    disabled={
+                                      smsSending || !isValidPhone(booking.email)
+                                    }
+                                    color="primary"
+                                    className={classes.PayButton}
+                                    onClick={SendSMS}
+                                  >
+                                    Send EMAIL
+                                  </Button>
+                                </Grid>
+                                {/* 
                             <Grid item xs={12} style={{paddingTop:"20px"}}>
 
                               <TextField
@@ -2521,11 +2574,11 @@ const isValidPhone = (phone) => {
                               ></TextField>
 
                             </Grid> */}
-                          </Grid>
-                        </div>
-                      </li>
+                              </Grid>
+                            </div>
+                          </li>
 
-                      {/* <li className={classes.li}>
+                          {/* <li className={classes.li}>
                         <div
                           style={{
                             borderTop: "1px solid #ddd",
@@ -2547,40 +2600,46 @@ const isValidPhone = (phone) => {
                         </div>
                       </li> */}
 
-                      {bloodReports && bloodReports.length > 0 && (
-                        <React.Fragment>
-                          <Divider />
-                          <li>
-                            <div style={{ padding: "20px" }}>
-                              <Grid container spacing={2} alignItems="center">
-                                <Grid item xs={12}>
-                                  <div
-                                    style={{
-                                      color: "#dc2626",
-                                      fontWeight: "600",
-                                      fontSize: "1rem",
-                                    }}
+                          {bloodReports && bloodReports.length > 0 && (
+                            <React.Fragment>
+                              <Divider />
+                              <li>
+                                <div style={{ padding: "20px" }}>
+                                  <Grid
+                                    container
+                                    spacing={2}
+                                    alignItems="center"
                                   >
-                                    Blood Results :
-                                  </div>
-                                </Grid>
-                                {bloodReports.map((report) => (
-                                  <Grid item>
-                                    <Button
-                                      onClick={() =>
-                                        showBloodReportClicked(report)
-                                      }
-                                      startIcon={<SearchIcon />}
-                                      style={{ color: "#dc2626" }}
-                                      variant="outlined"
-                                    >
-                                      {report.filename}
-                                    </Button>
+                                    <Grid item xs={12}>
+                                      <div
+                                        style={{
+                                          color: "#dc2626",
+                                          fontWeight: "600",
+                                          fontSize: "1rem",
+                                        }}
+                                      >
+                                        Blood Results :
+                                      </div>
+                                    </Grid>
+                                    {bloodReports.map((report) => (
+                                      <Grid item>
+                                        <Button
+                                          onClick={() =>
+                                            showBloodReportClicked(report)
+                                          }
+                                          startIcon={<SearchIcon />}
+                                          style={{ color: "#dc2626" }}
+                                          variant="outlined"
+                                        >
+                                          {report.filename}
+                                        </Button>
+                                      </Grid>
+                                    ))}
                                   </Grid>
-                                ))}
-                              </Grid>
-                            </div>
-                          </li>
+                                </div>
+                              </li>{" "}
+                            </React.Fragment>
+                          )}
                         </React.Fragment>
                       )}
                     </ul>

@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import GlobalState from "./../GlobalState";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
+import { getIsDoctor } from "../isDoctor";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -1394,200 +1395,224 @@ export default function BookingDialog(props) {
                 <Grid item xs={12} md={12} key={`panel0`}>
                   <div className={classes.infoDetails}>
                     <ul className={classes.ul}>
-                      {/* Restore Functionality ******************************************* */}
-                      <li
-                        hidden={
-                          !(
-                            restoreMode.restore &&
-                            restoreMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <div
-                          style={{
-                            fontWeight: "500",
-                            paddingBottom: "5px",
-                            paddingLeft: "5px",
-                            fontSize: "16px",
-                            color: "#333",
-                          }}
-                        >
-                          Are you sure you want to restore this record?
-                        </div>
-                      </li>
+                      {!getIsDoctor() && (
+                        <React.Fragment>
+                          {/* Restore Functionality ******************************************* */}
+                          <li
+                            hidden={
+                              !(
+                                restoreMode.restore &&
+                                restoreMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <div
+                              style={{
+                                fontWeight: "500",
+                                paddingBottom: "5px",
+                                paddingLeft: "5px",
+                                fontSize: "16px",
+                                color: "#333",
+                              }}
+                            >
+                              Are you sure you want to restore this record?
+                            </div>
+                          </li>
 
-                      <li
-                        hidden={
-                          !booking.deleted ||
-                          (restoreMode.restore &&
-                            restoreMode.person._id === booking._id)
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            handleRestoreModeChanged(true, booking);
-                          }}
-                          className={classes.RestoreButton}
-                        >
-                          Restore This Record
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !booking.deleted ||
+                              (restoreMode.restore &&
+                                restoreMode.person._id === booking._id)
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              onClick={() => {
+                                handleRestoreModeChanged(true, booking);
+                              }}
+                              className={classes.RestoreButton}
+                            >
+                              Restore This Record
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            restoreMode.restore &&
-                            restoreMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          disabled={restoring}
-                          onClick={() => {
-                            handleRestoreModeChanged(false, booking);
-                          }}
-                          className={classes.SaveButton}
-                        >
-                          YES, Restore this!
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                restoreMode.restore &&
+                                restoreMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              disabled={restoring}
+                              onClick={() => {
+                                handleRestoreModeChanged(false, booking);
+                              }}
+                              className={classes.SaveButton}
+                            >
+                              YES, Restore this!
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            restoreMode.restore &&
-                            restoreMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="default"
-                          disabled={restoring}
-                          onClick={() => {
-                            handleRestoreModeChanged(false, null);
-                          }}
-                          className={classes.CancelButton}
-                        >
-                          Cancel
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                restoreMode.restore &&
+                                restoreMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="default"
+                              disabled={restoring}
+                              onClick={() => {
+                                handleRestoreModeChanged(false, null);
+                              }}
+                              className={classes.CancelButton}
+                            >
+                              Cancel
+                            </Button>
+                          </li>
 
-                      {/*  ******************************************************************* */}
+                          {/*  ******************************************************************* */}
 
-                      {/* Edit Functionality ******************************************* */}
+                          {/* Edit Functionality ******************************************* */}
 
-                      <li
-                        hidden={
-                          booking.deleted ||
-                          deleteMode.delete ||
-                          (editMode.edit && editMode.person._id === booking._id)
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            handleEditModeChanged(true, booking);
-                          }}
-                          className={classes.EditButton}
-                        >
-                          Edit Booking Info
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              booking.deleted ||
+                              deleteMode.delete ||
+                              (editMode.edit &&
+                                editMode.person._id === booking._id)
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              onClick={() => {
+                                handleEditModeChanged(true, booking);
+                              }}
+                              className={classes.EditButton}
+                            >
+                              Edit Booking Info
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            editMode.edit && editMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          disabled={saving || !recordChanged}
-                          onClick={() => {
-                            handleEditModeChanged(false, booking);
-                          }}
-                          className={classes.SaveButton}
-                        >
-                          Save Changes
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              disabled={saving || !recordChanged}
+                              onClick={() => {
+                                handleEditModeChanged(false, booking);
+                              }}
+                              className={classes.SaveButton}
+                            >
+                              Save Changes
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            editMode.edit && editMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="default"
-                          disabled={saving}
-                          onClick={() => {
-                            handleEditModeChanged(false, null);
-                          }}
-                          className={classes.CancelButton}
-                        >
-                          Cancel
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="default"
+                              disabled={saving}
+                              onClick={() => {
+                                handleEditModeChanged(false, null);
+                              }}
+                              className={classes.CancelButton}
+                            >
+                              Cancel
+                            </Button>
+                          </li>
 
-                      {/* ****************************************************************************************** */}
+                          {/* ****************************************************************************************** */}
 
-                      {/* Delete Functionality ******************************************* */}
+                          {/* Delete Functionality ******************************************* */}
 
-                      <li
-                        hidden={
-                          !(
-                            deleteMode.delete &&
-                            deleteMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <div
-                          style={{
-                            fontWeight: "600",
-                            paddingBottom: "5px",
-                            paddingLeft: "5px",
-                            fontSize: "16px",
-                          }}
-                        >
-                          Are you sure you want to delete this record?
-                        </div>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                deleteMode.delete &&
+                                deleteMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <div
+                              style={{
+                                fontWeight: "600",
+                                paddingBottom: "5px",
+                                paddingLeft: "5px",
+                                fontSize: "16px",
+                              }}
+                            >
+                              Are you sure you want to delete this record?
+                            </div>
+                          </li>
 
-                      <li
-                        hidden={
-                          props.deleteButtonDisabled ||
-                          booking.deleted ||
-                          editMode.edit ||
-                          (deleteMode.delete &&
-                            deleteMode.person._id === booking._id)
-                        }
-                      >
-                        {booking.OTCCharges > 0 && (
-                          <Tooltip title={"Paid Records Cannot be Deleted!"}>
-                            <div>
+                          <li
+                            hidden={
+                              props.deleteButtonDisabled ||
+                              booking.deleted ||
+                              editMode.edit ||
+                              (deleteMode.delete &&
+                                deleteMode.person._id === booking._id)
+                            }
+                          >
+                            {booking.OTCCharges > 0 && (
+                              <Tooltip
+                                title={"Paid Records Cannot be Deleted!"}
+                              >
+                                <div>
+                                  <Button
+                                    disabled={booking.OTCCharges > 0}
+                                    type="button"
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => {
+                                      handleDeleteModeChanged(true, booking);
+                                    }}
+                                    className={classes.DeleteButton}
+                                  >
+                                    Delete This Record
+                                  </Button>
+                                </div>
+                              </Tooltip>
+                            )}
+                            {booking.OTCCharges === 0 && (
                               <Button
                                 disabled={booking.OTCCharges > 0}
                                 type="button"
@@ -1601,74 +1626,58 @@ export default function BookingDialog(props) {
                               >
                                 Delete This Record
                               </Button>
-                            </div>
-                          </Tooltip>
-                        )}
-                        {booking.OTCCharges === 0 && (
-                          <Button
-                            disabled={booking.OTCCharges > 0}
-                            type="button"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            onClick={() => {
-                              handleDeleteModeChanged(true, booking);
-                            }}
-                            className={classes.DeleteButton}
+                            )}
+                          </li>
+
+                          <li
+                            hidden={
+                              !(
+                                deleteMode.delete &&
+                                deleteMode.person._id === booking._id
+                              )
+                            }
                           >
-                            Delete This Record
-                          </Button>
-                        )}
-                      </li>
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              disabled={deleting}
+                              onClick={() => {
+                                handleDeleteModeChanged(false, booking);
+                              }}
+                              className={classes.SaveButton}
+                            >
+                              YES, Delete this!
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            deleteMode.delete &&
-                            deleteMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          disabled={deleting}
-                          onClick={() => {
-                            handleDeleteModeChanged(false, booking);
-                          }}
-                          className={classes.SaveButton}
-                        >
-                          YES, Delete this!
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                deleteMode.delete &&
+                                deleteMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="default"
+                              disabled={deleting}
+                              onClick={() => {
+                                handleDeleteModeChanged(false, null);
+                              }}
+                              className={classes.CancelButton}
+                            >
+                              Cancel
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            deleteMode.delete &&
-                            deleteMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="default"
-                          disabled={deleting}
-                          onClick={() => {
-                            handleDeleteModeChanged(false, null);
-                          }}
-                          className={classes.CancelButton}
-                        >
-                          Cancel
-                        </Button>
-                      </li>
-
-                      {/* ****************************************************************************************** */}
-
+                          {/* ****************************************************************************************** */}
+                        </React.Fragment>
+                      )}
                       <li className={classes.li}>
                         <Grid container spacing={2}>
                           <Grid item xs={6}>
@@ -1920,506 +1929,558 @@ export default function BookingDialog(props) {
                           </Grid>
                         </Grid>
                       </li>
-
-                      <li className={classes.li} style={{ paddingTop: "20px" }}>
-                        <span className={classes.infoTitle}>STATUS</span>{" "}
-                        {getStatusLabel(booking.status)}
-                        {booking.status === "patient_attended" &&
-                          !(
-                            editMode.edit && editMode.person._id === booking._id
-                          ) &&
-                          !booking.deleted && (
-                            <Button
-                              variant="outlined"
-                              color="primary"
-                              disabled={saving}
-                              style={{ width: "300px" }}
-                              onClick={(event) =>
-                                changeBackToBookingMade(event, booking._id)
-                              }
-                            >
-                              Change Back To Booking Made
-                            </Button>
-                          )}
-                        {booking.status === "booked" &&
-                          !(
-                            editMode.edit && editMode.person._id === booking._id
-                          ) &&
-                          !booking.deleted && (
-                            <Button
-                              variant="outlined"
-                              color="default"
-                              disabled={saving}
-                              style={{ width: "300px" }}
-                              onClick={(event) => openPatientsModal(booking)}
-                            >
-                              Change To Patient Attended
-                            </Button>
-                          )}
-                      </li>
-
-                      <li hidden={booking.deleted || editMode.edit}>
-                        <Button
-                          disabled={isPrinting}
-                          startIcon={<PrintIcon />}
-                          type="button"
-                          fullWidth
-                          variant="outlined"
-                          color="primary"
-                          onClick={printLabel}
-                          className={classes.DownloadForm}
-                        >
-                          {!booking.printStatus && "Print LAB Label"}
-                          {booking.printStatus === "printed" &&
-                            "Print LAB Label Again"}
-                          {booking.printStatus === "printing" && "Printing"}
-                          {booking.printStatus === "preparing" &&
-                            "Preparing for print"}
-                        </Button>
-                      </li>
-
-                      <li hidden={booking.deleted || editMode.edit}>
-                        <Button
-                          disabled={!booking.formData}
-                          startIcon={<PrintIcon />}
-                          type="button"
-                          fullWidth
-                          variant="outlined"
-                          color="primary"
-                          onClick={() => {
-                            downloadRegForm(booking._id);
-                          }}
-                          className={classes.DownloadForm}
-                        >
-                          Download Registration Form
-                        </Button>
-                      </li>
-
-                      <li
-                        hidden={
-                          booking.deleted || editMode.edit || booking.formData
-                        }
-                      >
-                        <Button
-                          disabled={!booking.email || booking.email.length < 3}
-                          startIcon={<SendIcon />}
-                          type="button"
-                          fullWidth
-                          variant="outlined"
-                          color="primary"
-                          onClick={() => {
-                            sendRegForm(booking._id);
-                          }}
-                          className={classes.DownloadForm}
-                          style={{ position: "relative" }}
-                        >
-                          Send Registration Form Email
-                          {emailSent && (
-                            <div
-                              style={{
-                                position: "absolute",
-                                right: "10px",
-                                top: "5px",
-                                color: "#05ad19",
-                              }}
-                            >
-                              Email Sent
-                            </div>
-                          )}
-                        </Button>
-                      </li>
-
-                      <Divider />
-
-                      <li className={classes.li} style={{ marginTop: "20px" }}>
-                        <span className={classes.infoTitle}>INVOICE # : </span>{" "}
-                        <span style={{ paddingLeft: "0px" }}>
-                          {!invoiceLoaded && (
-                            <span className={classes.invoiceNumber}> ... </span>
-                          )}
-                          {invoiceLoaded && invoice && (
-                            <span className={classes.invoiceNumber}>
-                              {" "}
-                              {invoice.invoiceNumber}{" "}
-                            </span>
-                          )}
-                          {invoiceLoaded && !invoice && (
-                            <span
-                              className={classes.invoiceNumber}
-                              style={{ color: "red", fontSize: "0.9rem" }}
-                            >
-                              {" "}
-                              N/A{" "}
-                            </span>
-                          )}
-                        </span>
-                        {!(
-                          editMode.edit && editMode.person._id === booking._id
-                        ) &&
-                          !booking.deleted && (
-                            <React.Fragment>
-                              {invoiceLoaded && !invoice && (
+                      {!getIsDoctor() && (
+                        <React.Fragment>
+                          <li
+                            className={classes.li}
+                            style={{ paddingTop: "20px" }}
+                          >
+                            <span className={classes.infoTitle}>STATUS</span>{" "}
+                            {getStatusLabel(booking.status)}
+                            {booking.status === "patient_attended" &&
+                              !(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              ) &&
+                              !booking.deleted && (
                                 <Button
                                   variant="outlined"
                                   color="primary"
-                                  className={classes.PayButton}
-                                  onClick={() => OpenInvoiceDialog()}
+                                  disabled={saving}
+                                  style={{ width: "300px" }}
+                                  onClick={(event) =>
+                                    changeBackToBookingMade(event, booking._id)
+                                  }
                                 >
-                                  Issue Invoice
+                                  Change Back To Booking Made
                                 </Button>
                               )}
+                            {booking.status === "booked" &&
+                              !(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              ) &&
+                              !booking.deleted && (
+                                <Button
+                                  variant="outlined"
+                                  color="default"
+                                  disabled={saving}
+                                  style={{ width: "300px" }}
+                                  onClick={(event) =>
+                                    openPatientsModal(booking)
+                                  }
+                                >
+                                  Change To Patient Attended
+                                </Button>
+                              )}
+                          </li>
 
+                          <li hidden={booking.deleted || editMode.edit}>
+                            <Button
+                              disabled={isPrinting}
+                              startIcon={<PrintIcon />}
+                              type="button"
+                              fullWidth
+                              variant="outlined"
+                              color="primary"
+                              onClick={printLabel}
+                              className={classes.DownloadForm}
+                            >
+                              {!booking.printStatus && "Print LAB Label"}
+                              {booking.printStatus === "printed" &&
+                                "Print LAB Label Again"}
+                              {booking.printStatus === "printing" && "Printing"}
+                              {booking.printStatus === "preparing" &&
+                                "Preparing for print"}
+                            </Button>
+                          </li>
+
+                          <li hidden={booking.deleted || editMode.edit}>
+                            <Button
+                              disabled={!booking.formData}
+                              startIcon={<PrintIcon />}
+                              type="button"
+                              fullWidth
+                              variant="outlined"
+                              color="primary"
+                              onClick={() => {
+                                downloadRegForm(booking._id);
+                              }}
+                              className={classes.DownloadForm}
+                            >
+                              Download Registration Form
+                            </Button>
+                          </li>
+
+                          <li
+                            hidden={
+                              booking.deleted ||
+                              editMode.edit ||
+                              booking.formData
+                            }
+                          >
+                            <Button
+                              disabled={
+                                !booking.email || booking.email.length < 3
+                              }
+                              startIcon={<SendIcon />}
+                              type="button"
+                              fullWidth
+                              variant="outlined"
+                              color="primary"
+                              onClick={() => {
+                                sendRegForm(booking._id);
+                              }}
+                              className={classes.DownloadForm}
+                              style={{ position: "relative" }}
+                            >
+                              Send Registration Form Email
+                              {emailSent && (
+                                <div
+                                  style={{
+                                    position: "absolute",
+                                    right: "10px",
+                                    top: "5px",
+                                    color: "#05ad19",
+                                  }}
+                                >
+                                  Email Sent
+                                </div>
+                              )}
+                            </Button>
+                          </li>
+
+                          <Divider />
+
+                          <li
+                            className={classes.li}
+                            style={{ marginTop: "20px" }}
+                          >
+                            <span className={classes.infoTitle}>
+                              INVOICE # :{" "}
+                            </span>{" "}
+                            <span style={{ paddingLeft: "0px" }}>
+                              {!invoiceLoaded && (
+                                <span className={classes.invoiceNumber}>
+                                  {" "}
+                                  ...{" "}
+                                </span>
+                              )}
                               {invoiceLoaded && invoice && (
+                                <span className={classes.invoiceNumber}>
+                                  {" "}
+                                  {invoice.invoiceNumber}{" "}
+                                </span>
+                              )}
+                              {invoiceLoaded && !invoice && (
+                                <span
+                                  className={classes.invoiceNumber}
+                                  style={{ color: "red", fontSize: "0.9rem" }}
+                                >
+                                  {" "}
+                                  N/A{" "}
+                                </span>
+                              )}
+                            </span>
+                            {!(
+                              editMode.edit &&
+                              editMode.person._id === booking._id
+                            ) &&
+                              !booking.deleted && (
                                 <React.Fragment>
-                                  <Button
-                                    variant="outlined"
-                                    startIcon={<PrintIcon />}
-                                    color="primary"
-                                    className={classes.printInvoiceButton}
-                                    onClick={() => downloadInvoice(invoice._id)}
-                                  >
-                                    Download Invoice
-                                  </Button>
+                                  {invoiceLoaded && !invoice && (
+                                    <Button
+                                      variant="outlined"
+                                      color="primary"
+                                      className={classes.PayButton}
+                                      onClick={() => OpenInvoiceDialog()}
+                                    >
+                                      Issue Invoice
+                                    </Button>
+                                  )}
 
+                                  {invoiceLoaded && invoice && (
+                                    <React.Fragment>
+                                      <Button
+                                        variant="outlined"
+                                        startIcon={<PrintIcon />}
+                                        color="primary"
+                                        className={classes.printInvoiceButton}
+                                        onClick={() =>
+                                          downloadInvoice(invoice._id)
+                                        }
+                                      >
+                                        Download Invoice
+                                      </Button>
+
+                                      <Button
+                                        variant="outlined"
+                                        color="secondary"
+                                        className={classes.editInvoiceButton}
+                                        onClick={() => OpenInvoiceDialog()}
+                                      >
+                                        Edit Invoice
+                                      </Button>
+
+                                      <Button
+                                        disabled={
+                                          !booking.email ||
+                                          booking.email.length < 3
+                                        }
+                                        startIcon={<SendIcon />}
+                                        type="button"
+                                        variant="outlined"
+                                        color="primary"
+                                        onClick={() => {
+                                          sendInvoiceEmail(
+                                            invoice._id,
+                                            booking.email
+                                          );
+                                        }}
+                                        style={{
+                                          position: "relative",
+                                          marginLeft: "10px",
+                                          paddingRight: "130px",
+                                          fontSize: "0.8rem",
+                                        }}
+                                      >
+                                        Send Invoice By Email
+                                        {emailSentInvoice && (
+                                          <div
+                                            style={{
+                                              position: "absolute",
+                                              right: "10px",
+                                              top: "5px",
+                                              color: "#05ad19",
+                                            }}
+                                          >
+                                            Email Sent
+                                          </div>
+                                        )}
+                                      </Button>
+                                    </React.Fragment>
+                                  )}
+                                </React.Fragment>
+                              )}
+                          </li>
+
+                          <li className={classes.li}>
+                            <div
+                              style={{
+                                borderTop: "1px solid #ddd",
+                                paddingTop: "20px",
+                              }}
+                            >
+                              <span className={classes.infoTitle}>
+                                {booking.paymentInfo ? "ONLINE" : "PHONE"}{" "}
+                                DEPOSIT
+                              </span>{" "}
+                              <span
+                                className={
+                                  !booking.deposit || booking.deposit === 0
+                                    ? classes.infoDataChargesHigher
+                                    : classes.infoDataCharges
+                                }
+                              >{`£${booking.deposit.toLocaleString(
+                                "en-GB"
+                              )}`}</span>
+                              {!(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              ) &&
+                                !booking.paid &&
+                                booking.deleted &&
+                                booking.deposit > 0 &&
+                                booking.paymentInfo && (
                                   <Button
                                     variant="outlined"
                                     color="secondary"
-                                    className={classes.editInvoiceButton}
-                                    onClick={() => OpenInvoiceDialog()}
-                                  >
-                                    Edit Invoice
-                                  </Button>
-
-                                  <Button
-                                    disabled={
-                                      !booking.email || booking.email.length < 3
+                                    className={classes.PayButton}
+                                    onClick={(event) =>
+                                      setOpenRefundDialog(true)
                                     }
-                                    startIcon={<SendIcon />}
-                                    type="button"
+                                  >
+                                    Refund Deposit
+                                  </Button>
+                                )}
+                              {!(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              ) &&
+                                !booking.paid &&
+                                booking.deleted &&
+                                booking.deposit > 0 &&
+                                !booking.paymentInfo && (
+                                  <Button
                                     variant="outlined"
                                     color="primary"
-                                    onClick={() => {
-                                      sendInvoiceEmail(
-                                        invoice._id,
-                                        booking.email
-                                      );
-                                    }}
-                                    style={{
-                                      position: "relative",
-                                      marginLeft: "10px",
-                                      paddingRight: "130px",
-                                      fontSize: "0.8rem",
-                                    }}
+                                    className={classes.PayButton}
+                                    onClick={(event) => manualRefund()}
                                   >
-                                    Send Invoice By Email
-                                    {emailSentInvoice && (
-                                      <div
-                                        style={{
-                                          position: "absolute",
-                                          right: "10px",
-                                          top: "5px",
-                                          color: "#05ad19",
-                                        }}
-                                      >
-                                        Email Sent
-                                      </div>
-                                    )}
+                                    <span
+                                      style={{ textTransform: "capitalize" }}
+                                    >
+                                      I made the refund manually
+                                    </span>
                                   </Button>
+                                )}
+                              {!(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              ) &&
+                                // !booking.paid &&
+                                !booking.deleted &&
+                                // booking.deposit > 0 &&
+                                !booking.paymentInfo && (
+                                  <FormControlLabel
+                                    style={{ marginLeft: "90px" }}
+                                    control={
+                                      <Switch
+                                        color="primary"
+                                        checked={booking.deposit > 0}
+                                        onChange={depositChanged}
+                                        name="deposit"
+                                      />
+                                    }
+                                    label={
+                                      booking.deposit > 0 ? (
+                                        <span
+                                          className={classes.PriceLabelPaid}
+                                        >
+                                          £100 Deposit Paid
+                                        </span>
+                                      ) : (
+                                        <span
+                                          className={classes.PriceLabelNotPaid}
+                                        >
+                                          £100 Deposit Not Paid
+                                        </span>
+                                      )
+                                    }
+                                  />
+                                )}
+                              {!(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              ) &&
+                                booking.refund && (
+                                  <React.Fragment>
+                                    <span className={classes.PayLabel}>
+                                      {" "}
+                                      <CheckIcon
+                                        className={classes.checkIconSmall}
+                                      />{" "}
+                                      Refund Done
+                                      {booking.paidBy === "corporate"
+                                        ? ` "${booking.corporate}" `
+                                        : ""}
+                                    </span>
+                                  </React.Fragment>
+                                )}
+                            </div>
+                          </li>
+
+                          <li className={classes.li}>
+                            <span className={classes.infoTitle}>
+                              OTC CHARGES
+                            </span>{" "}
+                            <span
+                              style={{ paddingLeft: "15px" }}
+                              className={
+                                !booking.OTCCharges || booking.OTCCharges === 0
+                                  ? classes.infoDataChargesHigher
+                                  : classes.infoDataCharges
+                              }
+                            >{`£${booking.OTCCharges.toLocaleString(
+                              "en-GB"
+                            )}`}</span>
+                            {!(
+                              editMode.edit &&
+                              editMode.person._id === booking._id
+                            ) &&
+                              !booking.paid &&
+                              !booking.deleted && (
+                                <Button
+                                  variant="outlined"
+                                  color="secondary"
+                                  className={classes.PayButton}
+                                  onClick={(event) => Pay(event, booking._id)}
+                                >
+                                  Pay
+                                </Button>
+                              )}
+                            {!(
+                              editMode.edit &&
+                              editMode.person._id === booking._id
+                            ) &&
+                              booking.paid && (
+                                <React.Fragment>
+                                  <span className={classes.PayLabel}>
+                                    {" "}
+                                    <CheckIcon
+                                      className={classes.checkIconSmall}
+                                    />{" "}
+                                    Paid by {booking.paidBy}
+                                    {booking.paidBy === "corporate"
+                                      ? ` "${booking.corporate}" `
+                                      : ""}
+                                  </span>
+
+                                  <Tooltip title="Undo Payment">
+                                    <IconButton
+                                      onClick={() => setOpenUndoPayDialog(true)}
+                                    >
+                                      <UndoIcon style={{ color: "red" }} />
+                                    </IconButton>
+                                  </Tooltip>
                                 </React.Fragment>
                               )}
-                            </React.Fragment>
-                          )}
-                      </li>
+                          </li>
 
-                      <li className={classes.li}>
-                        <div
-                          style={{
-                            borderTop: "1px solid #ddd",
-                            paddingTop: "20px",
-                          }}
-                        >
-                          <span className={classes.infoTitle}>
-                            {booking.paymentInfo ? "ONLINE" : "PHONE"} DEPOSIT
-                          </span>{" "}
-                          <span
-                            className={
-                              !booking.deposit || booking.deposit === 0
-                                ? classes.infoDataChargesHigher
-                                : classes.infoDataCharges
-                            }
-                          >{`£${booking.deposit.toLocaleString(
-                            "en-GB"
-                          )}`}</span>
-                          {!(
-                            editMode.edit && editMode.person._id === booking._id
-                          ) &&
-                            !booking.paid &&
-                            booking.deleted &&
-                            booking.deposit > 0 &&
-                            booking.paymentInfo && (
-                              <Button
-                                variant="outlined"
-                                color="secondary"
-                                className={classes.PayButton}
-                                onClick={(event) => setOpenRefundDialog(true)}
-                              >
-                                Refund Deposit
-                              </Button>
-                            )}
-                          {!(
-                            editMode.edit && editMode.person._id === booking._id
-                          ) &&
-                            !booking.paid &&
-                            booking.deleted &&
-                            booking.deposit > 0 &&
-                            !booking.paymentInfo && (
-                              <Button
-                                variant="outlined"
-                                color="primary"
-                                className={classes.PayButton}
-                                onClick={(event) => manualRefund()}
-                              >
-                                <span style={{ textTransform: "capitalize" }}>
-                                  I made the refund manually
-                                </span>
-                              </Button>
-                            )}
-                          {!(
-                            editMode.edit && editMode.person._id === booking._id
-                          ) &&
-                            // !booking.paid &&
-                            !booking.deleted &&
-                            // booking.deposit > 0 &&
-                            !booking.paymentInfo && (
-                              <FormControlLabel
-                                style={{ marginLeft: "90px" }}
-                                control={
-                                  <Switch
-                                    color="primary"
-                                    checked={booking.deposit > 0}
-                                    onChange={depositChanged}
-                                    name="deposit"
-                                  />
-                                }
-                                label={
-                                  booking.deposit > 0 ? (
-                                    <span className={classes.PriceLabelPaid}>
-                                      £100 Deposit Paid
-                                    </span>
-                                  ) : (
-                                    <span className={classes.PriceLabelNotPaid}>
-                                      £100 Deposit Not Paid
-                                    </span>
-                                  )
-                                }
-                              />
-                            )}
-                          {!(
-                            editMode.edit && editMode.person._id === booking._id
-                          ) &&
-                            booking.refund && (
-                              <React.Fragment>
-                                <span className={classes.PayLabel}>
-                                  {" "}
-                                  <CheckIcon
-                                    className={classes.checkIconSmall}
-                                  />{" "}
-                                  Refund Done
-                                  {booking.paidBy === "corporate"
-                                    ? ` "${booking.corporate}" `
-                                    : ""}
-                                </span>
-                              </React.Fragment>
-                            )}
-                        </div>
-                      </li>
-
-                      <li className={classes.li}>
-                        <span className={classes.infoTitle}>OTC CHARGES</span>{" "}
-                        <span
-                          style={{ paddingLeft: "15px" }}
-                          className={
-                            !booking.OTCCharges || booking.OTCCharges === 0
-                              ? classes.infoDataChargesHigher
-                              : classes.infoDataCharges
-                          }
-                        >{`£${booking.OTCCharges.toLocaleString(
-                          "en-GB"
-                        )}`}</span>
-                        {!(
-                          editMode.edit && editMode.person._id === booking._id
-                        ) &&
-                          !booking.paid &&
-                          !booking.deleted && (
-                            <Button
-                              variant="outlined"
-                              color="secondary"
-                              className={classes.PayButton}
-                              onClick={(event) => Pay(event, booking._id)}
-                            >
-                              Pay
-                            </Button>
-                          )}
-                        {!(
-                          editMode.edit && editMode.person._id === booking._id
-                        ) &&
-                          booking.paid && (
-                            <React.Fragment>
-                              <span className={classes.PayLabel}>
-                                {" "}
-                                <CheckIcon
-                                  className={classes.checkIconSmall}
-                                />{" "}
-                                Paid by {booking.paidBy}
-                                {booking.paidBy === "corporate"
-                                  ? ` "${booking.corporate}" `
-                                  : ""}
-                              </span>
-
-                              <Tooltip title="Undo Payment">
-                                <IconButton
-                                  onClick={() => setOpenUndoPayDialog(true)}
-                                >
-                                  <UndoIcon style={{ color: "red" }} />
-                                </IconButton>
-                              </Tooltip>
-                            </React.Fragment>
-                          )}
-                      </li>
-
-                      <li className={classes.li}>
-                        <div
-                          style={{
-                            borderTop: "1px solid #ddd",
-                            paddingTop: "10px",
-                          }}
-                        >
-                          <span className={classes.infoTitle}>
-                            TOTAL CHARGES
-                          </span>{" "}
-                          <span
-                            className={
-                              !booking.OTCCharges || booking.OTCCharges === 0
-                                ? classes.infoDataChargesHigher
-                                : classes.infoDataCharges
-                            }
-                          >{`£${(
-                            booking.deposit + booking.OTCCharges
-                          ).toLocaleString("en-GB")}`}</span>
-                        </div>
-                      </li>
-
-                      {invoice && (
-                        <li
-                          style={{
-                            lineHeight: "0.5rem",
-                            border: "1px dashed #999",
-                            padding: "0px 10px",
-                            marginBottom: "10px",
-                            marginTop: "-10px",
-                          }}
-                        >
-                          {invoice.items.map((item) => (
-                            <p>
-                              <span
-                                style={{
-                                  width: "110px",
-                                  display: "inline-block",
-                                }}
-                              >
-                                {" "}
-                                {item.code}{" "}
-                              </span>
-                              <span> £{item.price}</span>
-                            </p>
-                          ))}
-
-                          <p>
-                            <span
+                          <li className={classes.li}>
+                            <div
                               style={{
-                                width: "110px",
-                                display: "inline-block",
-                                fontWeight: "500",
+                                borderTop: "1px solid #ddd",
+                                paddingTop: "10px",
                               }}
                             >
-                              {" "}
-                              TOTAL{" "}
-                            </span>
-                            <span style={{ fontWeight: "600", color: "green" }}>
-                              {" "}
-                              £{getTotalPrice(invoice.items)}
-                            </span>
-                          </p>
-                        </li>
-                      )}
-
-                      <li className={classes.li}>
-                        <div
-                          style={{
-                            border: "1px dashed #285927",
-                            background: "#fafffa",
-                            padding: "10px",
-                          }}
-                        >
-                          <Grid
-                            container
-                            direction="row"
-                            justifyContent="flex-start"
-                            alignItems="center"
-                          >
-                            <Grid item>
+                              <span className={classes.infoTitle}>
+                                TOTAL CHARGES
+                              </span>{" "}
                               <span
-                                className={classes.infoTitle}
-                                style={{ color: "#2a422a" }}
-                              >
-                                Ask for Review By EMAIL
-                              </span>
-                            </Grid>
-                            <Grid item>
-                              <span>
-                                {booking.smsSent ? (
-                                  <CheckIcon className={classes.checkIcon} />
-                                ) : (
-                                  <CloseIcon className={classes.closeIcon} />
-                                )}
-                              </span>
-                            </Grid>
-                            <Grid item xs={4} style={{ paddingLeft: "20px" }}>
-                              <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">
-                                  Patient Source
-                                </InputLabel>
-                                <Select
-                                  labelId="demo-simple-select-label"
-                                  id="demo-simple-select"
-                                  value={smsType}
-                                  onChange={smsTypeChanged}
-                                  label="Source"
-                                  fullWidth
-                                >
-                                  {smsTypes.map((element) => (
-                                    <MenuItem
-                                      value={element.value}
-                                    >{`${element.text}`}</MenuItem>
-                                  ))}
-                                </Select>
-                              </FormControl>
-                            </Grid>
-                            <Grid item xs={3}>
-                              <Button
-                                variant="contained"
-                                disabled={
-                                  smsSending || !isValidPhone(booking.email)
+                                className={
+                                  !booking.OTCCharges ||
+                                  booking.OTCCharges === 0
+                                    ? classes.infoDataChargesHigher
+                                    : classes.infoDataCharges
                                 }
-                                color="primary"
-                                className={classes.PayButton}
-                                onClick={SendSMS}
-                              >
-                                Send EMAIL
-                              </Button>
-                            </Grid>
+                              >{`£${(
+                                booking.deposit + booking.OTCCharges
+                              ).toLocaleString("en-GB")}`}</span>
+                            </div>
+                          </li>
 
-                            {/* <Grid item xs={12} style={{paddingTop:"20px"}}>
+                          {invoice && (
+                            <li
+                              style={{
+                                lineHeight: "0.5rem",
+                                border: "1px dashed #999",
+                                padding: "0px 10px",
+                                marginBottom: "10px",
+                                marginTop: "-10px",
+                              }}
+                            >
+                              {invoice.items.map((item) => (
+                                <p>
+                                  <span
+                                    style={{
+                                      width: "110px",
+                                      display: "inline-block",
+                                    }}
+                                  >
+                                    {" "}
+                                    {item.code}{" "}
+                                  </span>
+                                  <span> £{item.price}</span>
+                                </p>
+                              ))}
+
+                              <p>
+                                <span
+                                  style={{
+                                    width: "110px",
+                                    display: "inline-block",
+                                    fontWeight: "500",
+                                  }}
+                                >
+                                  {" "}
+                                  TOTAL{" "}
+                                </span>
+                                <span
+                                  style={{ fontWeight: "600", color: "green" }}
+                                >
+                                  {" "}
+                                  £{getTotalPrice(invoice.items)}
+                                </span>
+                              </p>
+                            </li>
+                          )}
+
+                          <li className={classes.li}>
+                            <div
+                              style={{
+                                border: "1px dashed #285927",
+                                background: "#fafffa",
+                                padding: "10px",
+                              }}
+                            >
+                              <Grid
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="center"
+                              >
+                                <Grid item>
+                                  <span
+                                    className={classes.infoTitle}
+                                    style={{ color: "#2a422a" }}
+                                  >
+                                    Ask for Review By EMAIL
+                                  </span>
+                                </Grid>
+                                <Grid item>
+                                  <span>
+                                    {booking.smsSent ? (
+                                      <CheckIcon
+                                        className={classes.checkIcon}
+                                      />
+                                    ) : (
+                                      <CloseIcon
+                                        className={classes.closeIcon}
+                                      />
+                                    )}
+                                  </span>
+                                </Grid>
+                                <Grid
+                                  item
+                                  xs={4}
+                                  style={{ paddingLeft: "20px" }}
+                                >
+                                  <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">
+                                      Patient Source
+                                    </InputLabel>
+                                    <Select
+                                      labelId="demo-simple-select-label"
+                                      id="demo-simple-select"
+                                      value={smsType}
+                                      onChange={smsTypeChanged}
+                                      label="Source"
+                                      fullWidth
+                                    >
+                                      {smsTypes.map((element) => (
+                                        <MenuItem
+                                          value={element.value}
+                                        >{`${element.text}`}</MenuItem>
+                                      ))}
+                                    </Select>
+                                  </FormControl>
+                                </Grid>
+                                <Grid item xs={3}>
+                                  <Button
+                                    variant="contained"
+                                    disabled={
+                                      smsSending || !isValidPhone(booking.email)
+                                    }
+                                    color="primary"
+                                    className={classes.PayButton}
+                                    onClick={SendSMS}
+                                  >
+                                    Send EMAIL
+                                  </Button>
+                                </Grid>
+
+                                {/* <Grid item xs={12} style={{paddingTop:"20px"}}>
 
                               <TextField
                                 label="SMS TEXT" 
@@ -2431,44 +2492,50 @@ export default function BookingDialog(props) {
                               ></TextField>
 
                             </Grid> */}
-                          </Grid>
-                        </div>
-                      </li>
-
-                      {bloodReports && bloodReports.length > 0 && (
-                        <React.Fragment>
-                          <Divider />
-                          <li>
-                            <div style={{ padding: "20px" }}>
-                              <Grid container spacing={2} alignItems="center">
-                                <Grid item xs={12}>
-                                  <div
-                                    style={{
-                                      color: "#dc2626",
-                                      fontWeight: "600",
-                                      fontSize: "1rem",
-                                    }}
-                                  >
-                                    Blood Results :
-                                  </div>
-                                </Grid>
-                                {bloodReports.map((report) => (
-                                  <Grid item>
-                                    <Button
-                                      onClick={() =>
-                                        showBloodReportClicked(report)
-                                      }
-                                      startIcon={<SearchIcon />}
-                                      style={{ color: "#dc2626" }}
-                                      variant="outlined"
-                                    >
-                                      {report.filename}
-                                    </Button>
-                                  </Grid>
-                                ))}
                               </Grid>
                             </div>
                           </li>
+
+                          {bloodReports && bloodReports.length > 0 && (
+                            <React.Fragment>
+                              <Divider />
+                              <li>
+                                <div style={{ padding: "20px" }}>
+                                  <Grid
+                                    container
+                                    spacing={2}
+                                    alignItems="center"
+                                  >
+                                    <Grid item xs={12}>
+                                      <div
+                                        style={{
+                                          color: "#dc2626",
+                                          fontWeight: "600",
+                                          fontSize: "1rem",
+                                        }}
+                                      >
+                                        Blood Results :
+                                      </div>
+                                    </Grid>
+                                    {bloodReports.map((report) => (
+                                      <Grid item>
+                                        <Button
+                                          onClick={() =>
+                                            showBloodReportClicked(report)
+                                          }
+                                          startIcon={<SearchIcon />}
+                                          style={{ color: "#dc2626" }}
+                                          variant="outlined"
+                                        >
+                                          {report.filename}
+                                        </Button>
+                                      </Grid>
+                                    ))}
+                                  </Grid>
+                                </div>
+                              </li>
+                            </React.Fragment>
+                          )}
                         </React.Fragment>
                       )}
                     </ul>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import GlobalState from "./../GlobalState";
 import Grid from "@material-ui/core/Grid";
+import { getIsDoctor } from "../isDoctor";
 import {
   Button,
   Checkbox,
@@ -1171,260 +1172,265 @@ export default function BookingDialog(props) {
                 <Grid item xs={12} md={12} key={`panel0`}>
                   <div className={classes.infoDetails}>
                     <ul className={classes.ul}>
-                      {/* Restore Functionality ******************************************* */}
-                      <li
-                        hidden={
-                          !(
-                            restoreMode.restore &&
-                            restoreMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <div
-                          style={{
-                            fontWeight: "500",
-                            paddingBottom: "5px",
-                            paddingLeft: "5px",
-                            fontSize: "16px",
-                            color: "#333",
-                          }}
-                        >
-                          Are you sure you want to restore this record?
-                        </div>
-                      </li>
+                      {!getIsDoctor() && (
+                        <React.Fragment>
+                          {/* Restore Functionality ******************************************* */}
+                          <li
+                            hidden={
+                              !(
+                                restoreMode.restore &&
+                                restoreMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <div
+                              style={{
+                                fontWeight: "500",
+                                paddingBottom: "5px",
+                                paddingLeft: "5px",
+                                fontSize: "16px",
+                                color: "#333",
+                              }}
+                            >
+                              Are you sure you want to restore this record?
+                            </div>
+                          </li>
 
-                      <li
-                        hidden={
-                          !booking.deleted ||
-                          (restoreMode.restore &&
-                            restoreMode.person._id === booking._id)
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            handleRestoreModeChanged(true, booking);
-                          }}
-                          className={classes.RestoreButton}
-                        >
-                          Restore This Record
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !booking.deleted ||
+                              (restoreMode.restore &&
+                                restoreMode.person._id === booking._id)
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              onClick={() => {
+                                handleRestoreModeChanged(true, booking);
+                              }}
+                              className={classes.RestoreButton}
+                            >
+                              Restore This Record
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            restoreMode.restore &&
-                            restoreMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          disabled={restoring}
-                          onClick={() => {
-                            handleRestoreModeChanged(false, booking);
-                          }}
-                          className={classes.SaveButton}
-                        >
-                          YES, Restore this!
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                restoreMode.restore &&
+                                restoreMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              disabled={restoring}
+                              onClick={() => {
+                                handleRestoreModeChanged(false, booking);
+                              }}
+                              className={classes.SaveButton}
+                            >
+                              YES, Restore this!
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            restoreMode.restore &&
-                            restoreMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="default"
-                          disabled={restoring}
-                          onClick={() => {
-                            handleRestoreModeChanged(false, null);
-                          }}
-                          className={classes.CancelButton}
-                        >
-                          Cancel
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                restoreMode.restore &&
+                                restoreMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="default"
+                              disabled={restoring}
+                              onClick={() => {
+                                handleRestoreModeChanged(false, null);
+                              }}
+                              className={classes.CancelButton}
+                            >
+                              Cancel
+                            </Button>
+                          </li>
 
-                      {/*  ******************************************************************* */}
+                          {/*  ******************************************************************* */}
 
-                      {/* Edit Functionality ******************************************* */}
+                          {/* Edit Functionality ******************************************* */}
 
-                      <li
-                        hidden={
-                          booking.deleted ||
-                          deleteMode.delete ||
-                          (editMode.edit &&
-                            editMode.person._id === booking._id) ||
-                          state.role === "pcrlab"
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            handleEditModeChanged(true, booking);
-                          }}
-                          className={classes.EditButton}
-                        >
-                          Edit Booking Info
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              booking.deleted ||
+                              deleteMode.delete ||
+                              (editMode.edit &&
+                                editMode.person._id === booking._id) ||
+                              state.role === "pcrlab"
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              onClick={() => {
+                                handleEditModeChanged(true, booking);
+                              }}
+                              className={classes.EditButton}
+                            >
+                              Edit Booking Info
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            editMode.edit && editMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          disabled={saving || !recordChanged}
-                          onClick={() => {
-                            handleEditModeChanged(false, booking);
-                          }}
-                          className={classes.SaveButton}
-                        >
-                          Save Changes
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              disabled={saving || !recordChanged}
+                              onClick={() => {
+                                handleEditModeChanged(false, booking);
+                              }}
+                              className={classes.SaveButton}
+                            >
+                              Save Changes
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            editMode.edit && editMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="default"
-                          disabled={saving}
-                          onClick={() => {
-                            handleEditModeChanged(false, null);
-                          }}
-                          className={classes.CancelButton}
-                        >
-                          Cancel
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                editMode.edit &&
+                                editMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="default"
+                              disabled={saving}
+                              onClick={() => {
+                                handleEditModeChanged(false, null);
+                              }}
+                              className={classes.CancelButton}
+                            >
+                              Cancel
+                            </Button>
+                          </li>
 
-                      {/* ****************************************************************************************** */}
+                          {/* ****************************************************************************************** */}
 
-                      {/* Delete Functionality ******************************************* */}
+                          {/* Delete Functionality ******************************************* */}
 
-                      <li
-                        hidden={
-                          !(
-                            deleteMode.delete &&
-                            deleteMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <div
-                          style={{
-                            fontWeight: "600",
-                            paddingBottom: "5px",
-                            paddingLeft: "5px",
-                            fontSize: "16px",
-                          }}
-                        >
-                          Are you sure you want to delete this record?
-                        </div>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                deleteMode.delete &&
+                                deleteMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <div
+                              style={{
+                                fontWeight: "600",
+                                paddingBottom: "5px",
+                                paddingLeft: "5px",
+                                fontSize: "16px",
+                              }}
+                            >
+                              Are you sure you want to delete this record?
+                            </div>
+                          </li>
 
-                      <li
-                        hidden={
-                          props.deleteButtonDisabled ||
-                          booking.deleted ||
-                          editMode.edit ||
-                          (deleteMode.delete &&
-                            deleteMode.person._id === booking._id) ||
-                          state.role === "pcrlab"
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            handleDeleteModeChanged(true, booking);
-                          }}
-                          className={classes.DeleteButton}
-                        >
-                          Delete This Record
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              props.deleteButtonDisabled ||
+                              booking.deleted ||
+                              editMode.edit ||
+                              (deleteMode.delete &&
+                                deleteMode.person._id === booking._id) ||
+                              state.role === "pcrlab"
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              onClick={() => {
+                                handleDeleteModeChanged(true, booking);
+                              }}
+                              className={classes.DeleteButton}
+                            >
+                              Delete This Record
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            deleteMode.delete &&
-                            deleteMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          disabled={deleting}
-                          onClick={() => {
-                            handleDeleteModeChanged(false, booking);
-                          }}
-                          className={classes.SaveButton}
-                        >
-                          YES, Delete this!
-                        </Button>
-                      </li>
+                          <li
+                            hidden={
+                              !(
+                                deleteMode.delete &&
+                                deleteMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              disabled={deleting}
+                              onClick={() => {
+                                handleDeleteModeChanged(false, booking);
+                              }}
+                              className={classes.SaveButton}
+                            >
+                              YES, Delete this!
+                            </Button>
+                          </li>
 
-                      <li
-                        hidden={
-                          !(
-                            deleteMode.delete &&
-                            deleteMode.person._id === booking._id
-                          )
-                        }
-                      >
-                        <Button
-                          type="button"
-                          fullWidth
-                          variant="contained"
-                          color="default"
-                          disabled={deleting}
-                          onClick={() => {
-                            handleDeleteModeChanged(false, null);
-                          }}
-                          className={classes.CancelButton}
-                        >
-                          Cancel
-                        </Button>
-                      </li>
-
+                          <li
+                            hidden={
+                              !(
+                                deleteMode.delete &&
+                                deleteMode.person._id === booking._id
+                              )
+                            }
+                          >
+                            <Button
+                              type="button"
+                              fullWidth
+                              variant="contained"
+                              color="default"
+                              disabled={deleting}
+                              onClick={() => {
+                                handleDeleteModeChanged(false, null);
+                              }}
+                              className={classes.CancelButton}
+                            >
+                              Cancel
+                            </Button>
+                          </li>
+                        </React.Fragment>
+                      )}
                       {/* ****************************************************************************************** */}
 
                       <li className={classes.li}>
@@ -2069,43 +2075,40 @@ export default function BookingDialog(props) {
                         </Grid>
                       </li>
 
-                      <li style={{ paddingTop: "10px", paddingBottom:"10px" }}>
-                      <span className={classes.infoTitle}>
-                                COVID VACCINE
-                              </span>
-                              <span
-                                hidden={
-                                  editMode.edit &&
-                                  editMode.person._id === booking._id
-                                }
-                                className={classes.infoData}
-                              >
-                                {booking.covidVaccine}
-                              </span>
-                              <span
-                                hidden={
-                                  !(
-                                    editMode.edit &&
-                                    editMode.person._id === booking._id
-                                  )
-                                }
-                                className={classes.infoData}
-                              >
-                                <TextField
-                                  fullWidth
-                                  className={classes.TextBox}
-                                  value={covidVaccine}
-                                  onChange={covidVaccineChanged}
-                                  inputProps={{
-                                    style: {
-                                      padding: 0,
-                                    },
-                                  }}
-                                ></TextField>
-                              </span>
-
-                      </li>          
-
+                      <li style={{ paddingTop: "10px", paddingBottom: "10px" }}>
+                        <span className={classes.infoTitle}>COVID VACCINE</span>
+                        <span
+                          hidden={
+                            editMode.edit && editMode.person._id === booking._id
+                          }
+                          className={classes.infoData}
+                        >
+                          {booking.covidVaccine}
+                        </span>
+                        <span
+                          hidden={
+                            !(
+                              editMode.edit &&
+                              editMode.person._id === booking._id
+                            )
+                          }
+                          className={classes.infoData}
+                        >
+                          <TextField
+                            fullWidth
+                            className={classes.TextBox}
+                            value={covidVaccine}
+                            onChange={covidVaccineChanged}
+                            inputProps={{
+                              style: {
+                                padding: 0,
+                              },
+                            }}
+                          ></TextField>
+                        </span>
+                      </li>
+                      {!getIsDoctor() && (
+                        <React.Fragment>
                       <li className={classes.li} style={{ paddingTop: "10px" }}>
                         <span className={classes.infoTitle}>STATUS</span>{" "}
                         {getStatusLabel(booking.status)}
@@ -2246,11 +2249,9 @@ export default function BookingDialog(props) {
                         </Button>
                       </li>
 
-                     
-
                       {state.role !== "pcrlab" && (
                         <div>
-                           <Divider />
+                          <Divider />
                           <li
                             className={classes.li}
                             style={{ marginTop: "20px" }}
@@ -2417,24 +2418,54 @@ export default function BookingDialog(props) {
                               )}
                           </li>
 
-                          {invoice &&
-                            <li style={{ lineHeight: "0.5rem", border: "1px dashed #999", padding: "0px 10px", marginBottom: "10px", marginTop: "-10px" }}>
-                              {invoice.items.map(item => (
+                          {invoice && (
+                            <li
+                              style={{
+                                lineHeight: "0.5rem",
+                                border: "1px dashed #999",
+                                padding: "0px 10px",
+                                marginBottom: "10px",
+                                marginTop: "-10px",
+                              }}
+                            >
+                              {invoice.items.map((item) => (
                                 <p>
-                                  <span style={{ width: "110px", display: "inline-block" }}> {item.code} </span>
+                                  <span
+                                    style={{
+                                      width: "110px",
+                                      display: "inline-block",
+                                    }}
+                                  >
+                                    {" "}
+                                    {item.code}{" "}
+                                  </span>
                                   <span> £{item.price}</span>
                                 </p>
                               ))}
 
                               <p>
-                                <span style={{ width: "110px", display: "inline-block", fontWeight: "500" }}> TOTAL </span>
-                                <span style={{ fontWeight: "600", color: "green" }}> £{getTotalPrice(invoice.items)}</span>
+                                <span
+                                  style={{
+                                    width: "110px",
+                                    display: "inline-block",
+                                    fontWeight: "500",
+                                  }}
+                                >
+                                  {" "}
+                                  TOTAL{" "}
+                                </span>
+                                <span
+                                  style={{ fontWeight: "600", color: "green" }}
+                                >
+                                  {" "}
+                                  £{getTotalPrice(invoice.items)}
+                                </span>
                               </p>
-
                             </li>
-                          }
+                          )}
                         </div>
                       )}
+                        </React.Fragment>)}
                     </ul>
                   </div>
                 </Grid>
