@@ -425,6 +425,7 @@ export default function BookingDialog(props) {
   const [email, setEmail] = React.useState("");
   const [tel, setTel] = React.useState("");
   const [notes, setNotes] = React.useState("");
+  const [doctorNote, setDoctorNote] = React.useState("");
 
 
   const [service, setService] = React.useState("");
@@ -563,7 +564,8 @@ export default function BookingDialog(props) {
         tel !== booking.phone ||
         notes !== booking.notes ||
         birthDate !== booking.birthDate ||
-        gender !== booking.gender 
+        gender !== booking.gender ||
+        doctorNote !== booking.doctorNote;
 
 
       setRecordChanged(isChanged);
@@ -615,6 +617,11 @@ export default function BookingDialog(props) {
     setNotes(event.target.value);
     setFieldChanged(!fieldChanged);
   };
+  
+  const doctorNoteChanged = (event) => {
+    setDoctorNote(event.target.value);
+    setFieldChanged(!fieldChanged);
+  };
 
   const genderChanged = (event) => {
     setGender(event.target.value);
@@ -651,6 +658,9 @@ export default function BookingDialog(props) {
       if (person.notes) {
         setNotes(person.notes);
       }
+      if (person.doctorNote) {
+        setDoctorNote(person.doctorNote);
+      }
 
       setGender(person.gender?.toUpperCase() || '')
 
@@ -668,6 +678,7 @@ export default function BookingDialog(props) {
       booking.phone = tel;
       booking.fullname = fullname;
       booking.notes = notes;
+      booking.doctorNote = doctorNote
       booking.service = service;
       booking.bookingDate = RevertFormatDateFromString(bookingDate);
       booking.bookingTime = bookingTime;
@@ -1514,83 +1525,82 @@ const isValidPhone = (phone) => {
                               Cancel
                             </Button>
                           </li>
+                        </React.Fragment>
+                      )}
+                      {/*  ******************************************************************* */}
 
-                          {/*  ******************************************************************* */}
+                      {/* Edit Functionality ******************************************* */}
 
-                          {/* Edit Functionality ******************************************* */}
+                      <li
+                        hidden={
+                          booking.deleted ||
+                          deleteMode.delete ||
+                          (editMode.edit && editMode.person._id === booking._id)
+                        }
+                      >
+                        <Button
+                          type="button"
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          onClick={() => {
+                            handleEditModeChanged(true, booking);
+                          }}
+                          className={classes.EditButton}
+                        >
+                          Edit Booking Info
+                        </Button>
+                      </li>
 
-                          <li
-                            hidden={
-                              booking.deleted ||
-                              deleteMode.delete ||
-                              (editMode.edit &&
-                                editMode.person._id === booking._id)
-                            }
-                          >
-                            <Button
-                              type="button"
-                              fullWidth
-                              variant="contained"
-                              color="primary"
-                              onClick={() => {
-                                handleEditModeChanged(true, booking);
-                              }}
-                              className={classes.EditButton}
-                            >
-                              Edit Booking Info
-                            </Button>
-                          </li>
+                      <li
+                        hidden={
+                          !(
+                            editMode.edit && editMode.person._id === booking._id
+                          )
+                        }
+                      >
+                        <Button
+                          type="button"
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          disabled={saving || !recordChanged}
+                          onClick={() => {
+                            handleEditModeChanged(false, booking);
+                          }}
+                          className={classes.SaveButton}
+                        >
+                          Save Changes
+                        </Button>
+                      </li>
 
-                          <li
-                            hidden={
-                              !(
-                                editMode.edit &&
-                                editMode.person._id === booking._id
-                              )
-                            }
-                          >
-                            <Button
-                              type="button"
-                              fullWidth
-                              variant="contained"
-                              color="primary"
-                              disabled={saving || !recordChanged}
-                              onClick={() => {
-                                handleEditModeChanged(false, booking);
-                              }}
-                              className={classes.SaveButton}
-                            >
-                              Save Changes
-                            </Button>
-                          </li>
+                      <li
+                        hidden={
+                          !(
+                            editMode.edit && editMode.person._id === booking._id
+                          )
+                        }
+                      >
+                        <Button
+                          type="button"
+                          fullWidth
+                          variant="contained"
+                          color="default"
+                          disabled={saving}
+                          onClick={() => {
+                            handleEditModeChanged(false, null);
+                          }}
+                          className={classes.CancelButton}
+                        >
+                          Cancel
+                        </Button>
+                      </li>
 
-                          <li
-                            hidden={
-                              !(
-                                editMode.edit &&
-                                editMode.person._id === booking._id
-                              )
-                            }
-                          >
-                            <Button
-                              type="button"
-                              fullWidth
-                              variant="contained"
-                              color="default"
-                              disabled={saving}
-                              onClick={() => {
-                                handleEditModeChanged(false, null);
-                              }}
-                              className={classes.CancelButton}
-                            >
-                              Cancel
-                            </Button>
-                          </li>
+                      {/* ****************************************************************************************** */}
 
-                          {/* ****************************************************************************************** */}
-
-                          {/* Delete Functionality ******************************************* */}
-
+                      {/* Delete Functionality ******************************************* */}
+                      {!getIsDoctor() && (
+                        <React.Fragment>
                           <li
                             hidden={
                               !(
@@ -1968,7 +1978,9 @@ const isValidPhone = (phone) => {
                             </span>
                           </Grid>
                           <Grid item xs={6}>
-                            <span className={classes.infoTitle}>NOTES</span>
+                            <span className={classes.infoTitle}>
+                              PATIENT'S NOTES
+                            </span>
                             <span
                               hidden={
                                 editMode.edit &&
@@ -2002,6 +2014,41 @@ const isValidPhone = (phone) => {
                           </Grid>
                         </Grid>
                       </li>
+                      <Grid item>
+                        <span className={classes.infoTitle}>
+                          DOCTOR'S NOTES
+                        </span>
+                        <span
+                          hidden={
+                            editMode.edit && editMode.person._id === booking._id
+                          }
+                          className={classes.infoData}
+                        >
+                          {booking.doctorNote}
+                        </span>
+                        <span
+                          hidden={
+                            !(
+                              editMode.edit &&
+                              editMode.person._id === booking._id
+                            )
+                          }
+                          className={classes.infoData}
+                        >
+                          <TextField
+                            fullWidth
+                            className={classes.TextBox}
+                            value={doctorNote}
+                            disabled={!getIsDoctor()}
+                            onChange={doctorNoteChanged}
+                            inputProps={{
+                              style: {
+                                padding: 0,
+                              },
+                            }}
+                          ></TextField>
+                        </span>
+                      </Grid>
                       {!getIsDoctor() && (
                         <React.Fragment>
                           <li
