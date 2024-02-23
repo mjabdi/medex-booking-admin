@@ -39,7 +39,7 @@ import { getMenuId } from "./MenuList";
 import { useMediaQuery } from 'react-responsive'
 import { borderRadius } from "@material-ui/system";
 import { setRole } from "./Role";
-import { setIsDoctor } from "./isDoctor";
+import { getIsDoctor, setIsDoctor } from "./isDoctor";
 import { getGlobalPath } from "./GlobalPath";
 
 
@@ -181,7 +181,11 @@ export default function SignIn() {
 
           setState((state) => ({ ...state, signedIn: true }));
           setRole(res.data.roles[0])
-          setIsDoctor(res.data.isDoctor || false)
+          console.log(res.data.isDoctor);
+          setIsDoctor(res.data.isDoctor)
+          console.log(
+            res.data.isDoctor, getIsDoctor()
+          );
           setState((state) => ({ ...state, currentMenuIndex: 0 }));
           history.push(getGlobalPath(`/${getMenuId(res.data.roles[0], 0)}`));
         } else if (res.data.status === "FAILED") {

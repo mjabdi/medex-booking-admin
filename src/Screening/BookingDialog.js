@@ -445,7 +445,7 @@ export default function BookingDialog(props) {
   const [saving, setSaving] = React.useState(false);
   const [deleting, setDeleting] = React.useState(false);
   const [restoring, setRestoring] = React.useState(false);
-
+ const [isDoctor, setIsDoctor] = React.useState(getIsDoctor());
   const [validationError, setValidationError] = React.useState({});
 
   const [bookingDate, setBookingDate] = React.useState("");
@@ -1624,7 +1624,7 @@ const isValidPhone = (phone) => {
                 <Grid item xs={12} md={12} key={`panel0`}>
                   <div className={classes.infoDetails}>
                     <ul className={classes.ul}>
-                      {!getIsDoctor() && (
+                      {!isDoctor && (
                         <React.Fragment>
                           {!booking.confirmed && (
                             <li style={{ margin: "20px 0px" }}>
@@ -1839,7 +1839,7 @@ const isValidPhone = (phone) => {
                       {/* ****************************************************************************************** */}
 
                       {/* Delete Functionality ******************************************* */}
-                      {!getIsDoctor() && (
+                      {!isDoctor && (
                         <React.Fragment>
                           <li
                             hidden={
@@ -2316,7 +2316,7 @@ const isValidPhone = (phone) => {
                             fullWidth
                             className={classes.TextBox}
                             value={doctorNote}
-                            disabled={!getIsDoctor()}
+                            disabled={!isDoctor}
                             onChange={doctorNoteChanged}
                             inputProps={{
                               style: {
@@ -2326,7 +2326,7 @@ const isValidPhone = (phone) => {
                           ></TextField>
                         </span>
                       </Grid>
-                      {!getIsDoctor() && (
+                      {!isDoctor && (
                         <React.Fragment>
                           <li
                             className={classes.li}

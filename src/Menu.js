@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
 export default function MyMenu() {
   const classes = useStyles();
   const [state, setState] = React.useContext(GlobalState);
-
+ const [isDoctor, setIsDoctor] = React.useState(getIsDoctor());
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   let history = useHistory();
@@ -165,7 +165,7 @@ export default function MyMenu() {
           getMenuRole(state.role).map(
             (item) =>
               !item.hidden &&
-              !(item.doctorHide && getIsDoctor()) && (
+              !(item.doctorHide && isDoctor ) && (
                 // <ListItem button selected={selectedIndex === item.index} onClick={(event) => handleListItemClick(event, item.index)}>
                 // <ListItemIcon>
                 //     {item.icon}

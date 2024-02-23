@@ -390,7 +390,7 @@ export default function BookingDialog(props) {
   const [copied, setCopied] = useState(false);
 
   const [emailSent, setEmailSent] = React.useState(false);
-
+ const [isDoctor, setIsDoctor] = React.useState(getIsDoctor());
   const [openResendDialog, setOpenResendDialog] = React.useState(false);
   const [openPayDialog, setOpenPayDialog] = React.useState(false);
   const [openRefundDialog, setOpenRefundDialog] = React.useState(false);
@@ -1337,7 +1337,7 @@ export default function BookingDialog(props) {
                 <Grid item xs={12} md={12} key={`panel0`}>
                   <div className={classes.infoDetails}>
                     <ul className={classes.ul}>
-                      {!getIsDoctor() && (
+                      {!isDoctor && (
                         <React.Fragment>
                           {/* Restore Functionality ******************************************* */}
                           <li
@@ -1501,7 +1501,7 @@ export default function BookingDialog(props) {
                       {/* ****************************************************************************************** */}
 
                       {/* Delete Functionality ******************************************* */}
-                      {!getIsDoctor() && (
+                      {!isDoctor && (
                         <React.Fragment>
                           <li
                             hidden={
@@ -1939,7 +1939,7 @@ export default function BookingDialog(props) {
                             fullWidth
                             className={classes.TextBox}
                             value={doctorNote}
-                            disabled={!getIsDoctor()}
+                            disabled={!isDoctor}
                             onChange={doctorNoteChanged}
                             inputProps={{
                               style: {
@@ -1949,7 +1949,7 @@ export default function BookingDialog(props) {
                           ></TextField>
                         </span>
                       </Grid>
-                      {!getIsDoctor() && (
+                      {!isDoctor && (
                         <React.Fragment>
                           <li
                             className={classes.li}

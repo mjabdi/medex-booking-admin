@@ -28,6 +28,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import dateformat from "dateformat";
 import { getRole, setRole, clearRole } from "./Role";
+import { clearIsDoctor } from "./isDoctor";
 import { getGlobalPath, getMenuIdFromGlobalPath } from "./GlobalPath";
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import AirplayIcon from '@material-ui/icons/Airplay';
@@ -438,7 +439,7 @@ export default function Dashboard() {
     localStorage.removeItem("medexadmin-auth-token");
     sessionStorage.removeItem("medexadmin-auth-token");
     clearRole();
-
+    clearIsDoctor();
     setState((state) => ({ signedIn: false }));
     history.replace("./login");
   };

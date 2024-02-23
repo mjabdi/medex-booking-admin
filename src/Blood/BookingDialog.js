@@ -469,7 +469,8 @@ export default function BookingDialog(props) {
  const [patientGenderType, setPatientGenderType] = React.useState(null);
  const [patientForename, setPatientForename] = React.useState(null);
  const [patientSurname, setPatientSurname] = React.useState(null);
-
+ const [isDoctor, setIsDoctor] = React.useState(getIsDoctor());
+  
   const handleCloseTimeStampDialog = () => {
     setOpenTimeStampDialog(false);
     setSelectedBooking(null);
@@ -1509,7 +1510,7 @@ const isValidPhone = (phone) => {
                 <Grid item xs={12} md={12} key={`panel0`}>
                   <div className={classes.infoDetails}>
                     <ul className={classes.ul}>
-                      {!getIsDoctor() && (
+                      {!isDoctor && (
                         <React.Fragment>
                           {/* Restore Functionality ******************************************* */}
                           <li
@@ -1672,7 +1673,7 @@ const isValidPhone = (phone) => {
                       {/* ****************************************************************************************** */}
 
                       {/* Delete Functionality ******************************************* */}
-                      {!getIsDoctor() && (
+                      {!isDoctor && (
                         <React.Fragment>
                           <li
                             hidden={
@@ -2146,7 +2147,7 @@ const isValidPhone = (phone) => {
                             fullWidth
                             className={classes.TextBox}
                             value={doctorNote}
-                            disabled={!getIsDoctor()}
+                            disabled={!isDoctor}
                             onChange={doctorNoteChanged}
                             inputProps={{
                               style: {
@@ -2156,7 +2157,7 @@ const isValidPhone = (phone) => {
                           ></TextField>
                         </span>
                       </Grid>
-                      {!getIsDoctor() && (
+                      {!isDoctor && (
                         <React.Fragment>
                           <li
                             className={classes.li}

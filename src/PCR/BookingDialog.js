@@ -417,7 +417,7 @@ export default function BookingDialog(props) {
   const [openResendDialog, setOpenResendDialog] = React.useState(false);
   const [openPayDialog, setOpenPayDialog] = React.useState(false);
   const [selectedBooking, setSelectedBooking] = React.useState(null);
-
+  const [isDoctor, setIsDoctor] = React.useState(getIsDoctor());
   const [editMode, setEditMode] = React.useState({ edit: false, person: null });
   const [deleteMode, setDeleteMode] = React.useState({
     delete: false,
@@ -1172,7 +1172,7 @@ export default function BookingDialog(props) {
                 <Grid item xs={12} md={12} key={`panel0`}>
                   <div className={classes.infoDetails}>
                     <ul className={classes.ul}>
-                      {!getIsDoctor() && (
+                      {!isDoctor && (
                         <React.Fragment>
                           {/* Restore Functionality ******************************************* */}
                           <li
@@ -2107,7 +2107,7 @@ export default function BookingDialog(props) {
                           ></TextField>
                         </span>
                       </li>
-                      {!getIsDoctor() && (
+                      {!isDoctor && (
                         <React.Fragment>
                       <li className={classes.li} style={{ paddingTop: "10px" }}>
                         <span className={classes.infoTitle}>STATUS</span>{" "}

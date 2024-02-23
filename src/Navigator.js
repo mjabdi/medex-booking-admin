@@ -17,6 +17,7 @@ import { getUserIdFromToken } from './TokenVerifier';
 import UserService from './services/UserService';
 import { getMenuId } from './MenuList';
 import { getRole, setRole } from './Role';
+import { getIsDoctor, setIsDoctor } from "./isDoctor";
 import { getGlobalPath } from './GlobalPath';
 
 
@@ -87,7 +88,18 @@ export default function Navigator() {
             {
              setRole(userId.roles[0])
             }
-             setState(state => ({...state, signedIn: true, signedUp: false, forgotPassword: false, userId: userId, role: getRole()}));
+            if (!getIsDoctor()) {
+              setIsDoctor(userId.isDoctor);
+            }
+             setState((state) => ({
+               ...state,
+               signedIn: true,
+               signedUp: false,
+               forgotPassword: false,
+               userId: userId,
+               isDoctor: getIsDoctor(),
+               role: getRole(),
+             }));
             
              history.push(getGlobalPath(`/${getMenuId(getRole(),0)}`));
            }
@@ -97,7 +109,11 @@ export default function Navigator() {
               {
                setRole(userId.roles[0])
               }
-             setState(state => ({...state, signedIn: true, userId: userId, role: getRole()}));
+              if (!getIsDoctor()) {
+                setIsDoctor(userId.isDoctor);
+              }
+              console.log('user', userId)
+             setState(state => ({...state, signedIn: true, userId: userId, isDoctor: getIsDoctor(), role: getRole()}));
            }
 
            setLoaded(true)
