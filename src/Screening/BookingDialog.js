@@ -1643,7 +1643,7 @@ const isValidPhone = (phone) => {
             <DialogContent>
               <div
                 style={{
-                  height: "400px",
+                  height: "500px",
                   paddingTop: "10px",
                 }}
               >

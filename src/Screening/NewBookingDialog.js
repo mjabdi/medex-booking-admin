@@ -498,7 +498,7 @@ export default function NewBookingDialog(props) {
             <DialogContent>
               <div
                 style={{
-                  height: "400px",
+                  height: "500px",
                 }}
               >
                 <Grid

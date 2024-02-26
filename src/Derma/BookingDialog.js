@@ -1105,7 +1105,7 @@ const editDoctorNote = (person) => {
             <DialogContent>
               <div
                 style={{
-                  height: "400px",
+                  height: "500px",
                   paddingTop: "0px",
                 }}
               >
