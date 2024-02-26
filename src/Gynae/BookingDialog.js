@@ -325,6 +325,9 @@ const useStyles = makeStyles((theme) => ({
   TextBox: {
     padding: "0px",
   },
+  active: {
+    border: "1px solid green",
+  },
 
   checkIcon: {
     color: "green",
@@ -406,6 +409,8 @@ export default function BookingDialog(props) {
   const [openResendDialog, setOpenResendDialog] = React.useState(false);
   const [openPayDialog, setOpenPayDialog] = React.useState(false);
   const [openRefundDialog, setOpenRefundDialog] = React.useState(false);
+    const [isDoctorNoteEditShow, setIsDoctorNoteEditShow] =
+      React.useState(false);
 
   const [selectedBooking, setSelectedBooking] = React.useState(null);
 
@@ -561,7 +566,21 @@ export default function BookingDialog(props) {
       return "Unknown";
     }
   };
-
+const editDoctorNote = (person) => {
+  setFullname(person.fullname);
+  setBookingDate(FormatDateFromString(person.bookingDate));
+  setBookingTime(person.bookingTime.toUpperCase());
+  setEmail(person.email);
+  setTel(person.phone);
+  setService(person.service);
+  if (person.notes) {
+    setNotes(person.notes);
+  }
+  if (person.doctorNote) {
+    setDoctorNote(person.doctorNote);
+  }
+  setIsDoctorNoteEditShow(true);
+};
   const handleEditModeChanged = (edit, person) => {
     if (edit) {
       setFullname(person.fullname);
@@ -596,6 +615,7 @@ export default function BookingDialog(props) {
 
       if (validateBooking(booking)) {
         updateBooking({ bookingId: bookingId, person: booking });
+               setIsDoctorNoteEditShow(false);
       }
     }
   };
@@ -1400,7 +1420,7 @@ export default function BookingDialog(props) {
             <DialogContent>
               <div
                 style={{
-                  // height: "550px",
+                  height: "400px",
                   paddingTop: "0px",
                 }}
               >
@@ -1942,13 +1962,61 @@ export default function BookingDialog(props) {
                           </Grid>
                         </Grid>
                       </li>
-                      <Grid item>
-                        <span className={classes.infoTitle}>
-                          DOCTOR'S NOTES
+                      <Grid item fullWidth style={{ paddingBottom: "16px" }}>
+                        <span
+                          className={classes.infoTitle}
+                          style={{
+                            display: `flex`,
+                            width: "full",
+                            justifyContent: "space-between",
+                            justifyItems: "center",
+                          }}
+                        >
+                          <span>DOCTOR'S NOTES</span>
+                          <li
+                            hidden={
+                              editMode.edit &&
+                              editMode.person._id === booking._id
+                            }
+                          >
+                            {!isDoctorNoteEditShow && isDoctor && (
+                              <React.Fragment>
+                                <Button
+                                  type="button"
+                                  variant="contained"
+                                  color="primary"
+                                  onClick={() => {
+                                    editDoctorNote(booking);
+                                  }}
+                                  className={classes.SaveButton}
+                                >
+                                  Add/Edit Doctor Note
+                                </Button>
+                              </React.Fragment>
+                            )}
+                            {isDoctorNoteEditShow && (
+                              <React.Fragment>
+                                <Button
+                                  type="button"
+                                  variant="contained"
+                                  color="primary"
+                                  onClick={() => {
+                                    handleEditModeChanged(false, booking);
+                                  }}
+                                  className={classes.SaveButton}
+                                >
+                                  Save Note
+                                </Button>
+                              </React.Fragment>
+                            )}
+                          </li>
                         </span>
+
                         <span
                           hidden={
-                            editMode.edit && editMode.person._id === booking._id
+                            (editMode.edit &&
+                              editMode.person._id === booking._id) ||
+                            isDoctorNoteEditShow
                           }
                           className={classes.infoData}
                         >
@@ -1957,15 +2025,19 @@ export default function BookingDialog(props) {
                         <span
                           hidden={
                             !(
-                              editMode.edit &&
-                              editMode.person._id === booking._id
+                              (editMode.edit &&
+                                editMode.person._id === booking._id) ||
+                              isDoctorNoteEditShow
                             )
                           }
                           className={classes.infoData}
                         >
                           <TextField
                             fullWidth
-                            className={classes.TextBox}
+                            multiline
+                            rows={4}
+                            type="text"
+                            className={[classes.TextBox, classes.active]}
                             value={doctorNote}
                             disabled={!isDoctor}
                             onChange={doctorNoteChanged}

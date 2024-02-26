@@ -1120,7 +1120,7 @@ export default function BloodReportDialog(props) {
             <DialogContent>
               <div
                 style={{
-                  // height: "550px",
+                  // height: "560px",
                   paddingTop: "0px",
                 }}
               >

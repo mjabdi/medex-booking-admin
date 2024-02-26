@@ -292,7 +292,7 @@ const useStyles = makeStyles((theme) => ({
 
   DeleteButton: {
     marginBottom: "20px",
-    backgroundColor: "#b80012", 
+    backgroundColor: "#b80012",
     color: "#fff",
     "&:hover": {
       background: "#d90015",
@@ -307,7 +307,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
     color: "#fff",
 
-    backgroundColor:  "#bd0d50",
+    backgroundColor: "#bd0d50",
     "&:hover": {
       background: "#d1175e",
       color: "#fff",
@@ -321,6 +321,9 @@ const useStyles = makeStyles((theme) => ({
 
   TextBox: {
     padding: "0px",
+  },
+  active: {
+    border: "1px solid green",
   },
 
   checkIcon: {
@@ -359,21 +362,18 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
 
-  question:{
-    fontSize:"1.3rem",
+  question: {
+    fontSize: "1.3rem",
     fontWeight: "400",
     color: theme.palette.secondary.main,
-    marginTop:"30px"
+    marginTop: "30px",
   },
 
-  answer:{
-    fontSize:"1.3rem",
+  answer: {
+    fontSize: "1.3rem",
     fontWeight: "500",
     color: theme.palette.primary.main,
   },
-
-
-
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -404,6 +404,8 @@ export default function BookingDialog(props) {
   const [openResendDialog, setOpenResendDialog] = React.useState(false);
   const [openPayDialog, setOpenPayDialog] = React.useState(false);
   const [openRefundDialog, setOpenRefundDialog] = React.useState(false);
+    const [isDoctorNoteEditShow, setIsDoctorNoteEditShow] =
+      React.useState(false);
 
   const [openInvoiceDialog, setOpenInvoiceDialog] = React.useState(false);
 
@@ -506,7 +508,20 @@ export default function BookingDialog(props) {
       return "Unknown";
     }
   };
-
+const editDoctorNote = (person) => {
+  setFullname(person.fullname);
+  setBookingDate(FormatDateFromString(person.bookingDate));
+  setBookingTime(person.bookingTime.toUpperCase());
+  setEmail(person.email);
+  setTel(person.phone);
+  if (person.notes) {
+    setNotes(person.notes);
+  }
+  // if (person.doctorNote) {
+  //   setDoctorNote(person.doctorNote);
+  // }
+  setIsDoctorNoteEditShow(true);
+};
   const handleEditModeChanged = (edit, person) => {
     if (edit) {
       setFullname(person.fullname);
@@ -536,6 +551,7 @@ export default function BookingDialog(props) {
 
       if (validateBooking(booking)) {
         updateBooking({ bookingId: bookingId, person: booking });
+               setIsDoctorNoteEditShow(false);
       }
     }
   };
@@ -937,7 +953,7 @@ export default function BookingDialog(props) {
             <DialogContent>
               <div
                 style={{
-                  // height: "550px",
+                  height: "400px",
                   paddingTop: "0px",
                 }}
               >
