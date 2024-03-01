@@ -470,7 +470,9 @@ export default function SearchBookingTable({ bookingsData }) {
       width: 240,
       valueGetter: (params) => {
         if (!params.value || params.value.length === 0) {
-          return `${params.getValue("forename")} ${params.getValue("surname")}`;
+          return params.getValue("forename") || params.getValue("surname")
+            ? `${params.getValue("forename")} ${params.getValue("surname")}`
+            : params.getValue("name");
         } else {
           return params.value;
         }

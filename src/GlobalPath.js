@@ -4,8 +4,10 @@ export const authToken = 'Basic QXp1cmXEaWFtb45kOmh1bnRlcjO='
 
 //  export const backendAPI = 'http://52.56.183.230/'
 
-export const backendAPI = 'https://www.travelpcrtest.com/'
+export const backendAPI = "https://www.travelpcrtest.com/";
 // export const backendAPI = 'http://localhost:9090/'
+// export const backendAPI = "https://test.travelpcrtest.com/";
+
 
 export function getGlobalPath(path){
     return '/medicalexpressclinic/admin' + path
